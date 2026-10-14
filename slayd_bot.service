@@ -1,0 +1,16 @@
+[Unit]
+Description=Slayd Yasovchi Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/slayd_bot
+ExecStart=/root/slayd_bot/venv/bin/python /root/slayd_bot/main.py
+Restart=always
+RestartSec=5
+StandardOutput=append:/root/slayd_bot/bot.log
+StandardError=append:/root/slayd_bot/bot.log
+
+[Install]
+WantedBy=multi-user.target

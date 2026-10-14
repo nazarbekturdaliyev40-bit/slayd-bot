@@ -1,0 +1,10 @@
+venv
+__pycache__
+*.pyc
+.git
+bot.log
+.env
+*.db
+downloads
+user_cache
+lo_profile

@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+*.pyc
+.env
+*.db
+bot.log
+downloads/
+user_cache/
+lo_profile/
