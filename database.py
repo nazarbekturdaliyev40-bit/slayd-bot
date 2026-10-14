@@ -297,12 +297,17 @@ async def get_stats():
             total_users = row[0] or 0
             total_slides = row[1] or 0
 
+        async with db.execute("SELECT COUNT(*) FROM users WHERE total_generated > 0") as cursor:
+            act_row = await cursor.fetchone()
+            active_users = act_row[0] or 0
+
         async with db.execute("SELECT COUNT(*) FROM referrals") as cursor:
             ref_row = await cursor.fetchone()
             total_referrals = ref_row[0] or 0
 
         return {
             "total_users": total_users,
+            "active_users": active_users,
             "total_slides": total_slides,
             "total_referrals": total_referrals
         }

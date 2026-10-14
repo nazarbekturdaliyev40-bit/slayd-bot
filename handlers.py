@@ -38,6 +38,9 @@ class PaymentReceiptState(StatesGroup):
 class AdminContactState(StatesGroup):
     waiting_for_message = State()
 
+class AdminSendReplyState(StatesGroup):
+    waiting_for_reply_text = State()
+
 class MediaChoiceState(StatesGroup):
     waiting_for_action = State()
 
@@ -147,6 +150,7 @@ async def show_referral_program(message: Message):
     )
 
 @router.message(F.text == "👤 Mening profilim")
+@router.message(Command("profil"))
 async def show_profile(message: Message):
     user = await database.get_user(message.from_user.id)
     if not user:
@@ -205,6 +209,8 @@ async def show_profile(message: Message):
     await message.answer(text, parse_mode="Markdown")
 
 @router.message(F.text.in_({"💳 Limit sotib olish", "💳 Limit va Obuna", "💳 Tariflar"}))
+@router.message(Command("limit"))
+@router.message(Command("obuna"))
 async def buy_limits(message: Message):
     user = await database.get_user(message.from_user.id)
     is_unlimited = (user and bool(user.get("is_unlimited"))) or config.is_unlimited(message.from_user.id)
@@ -493,45 +499,52 @@ async def adm_reject_payment(callback: CallbackQuery):
             await callback.message.edit_reply_markup(reply_markup=None)
 
 # ----------------- ADMINGA MUROJAAT QILISH -----------------
-@router.message(F.text.in_({"👨‍💻 Adminga murojaat", "Adminga murojaat"}))
+@router.message(F.text.in_({"👨‍💻 Adminga murojaat", "Adminga murojaat", "Admin bilan bog'lanish", "Murojaat", "Admin"}))
+@router.message(Command("murojaat"))
+@router.message(Command("admin"))
+@router.message(Command("boglanish"))
+@router.message(Command("contact"))
+@router.message(Command("support"))
 async def contact_admin_menu(message: Message, state: FSMContext):
     await state.clear()
+    buttons = []
     if config.ADMIN_USERNAME:
-        await message.answer(
-            f"👨‍💻 <b>Admin bilan bog'lanish:</b>\n\n"
-            f"Adminga yozish uchun: @{config.ADMIN_USERNAME}",
-            parse_mode="HTML"
-        )
-        return
+        buttons.append([
+            InlineKeyboardButton(text=f"✈️ Admin profili (@{config.ADMIN_USERNAME.lstrip('@')})", url=f"https://t.me/{config.ADMIN_USERNAME.lstrip('@')}")
+        ])
+    buttons.append([
+        InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_contact")
+    ])
 
     await state.set_state(AdminContactState.waiting_for_message)
     await message.answer(
-        "✍️ <b>Adminga xabar yuborish:</b>\n\n"
-        "Savolingiz yoki murojaatingizni shu yerga yozing. Admin ko'rib chiqib, sizga tez orada javob beradi.",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_contact")]
-        ]),
+        "👨‍💻 <b>Adminga murojaat qilish:</b>\n\n"
+        "Savollaringiz, takliflaringiz yoki biron-bir muammo bo'lsa, xabaringizni yozib yuboring.\n"
+        "<i>(Xabar bilan birga skrinshot / rasm, fayl yoki ovozli xabar ham yuborishingiz mumkin)</i>\n\n"
+        "Admin xabaringizni ko'rib chiqib, tez orada sizga javob qaytaradi.",
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons),
         parse_mode="HTML"
     )
 
 @router.callback_query(F.data == "contact_admin")
 async def contact_admin_callback(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
+    buttons = []
     if config.ADMIN_USERNAME:
-        await callback.message.answer(
-            f"👨‍💻 <b>Admin bilan bog'lanish:</b>\n\n"
-            f"Adminga yozish uchun: @{config.ADMIN_USERNAME}",
-            parse_mode="HTML"
-        )
-        return
+        buttons.append([
+            InlineKeyboardButton(text=f"✈️ Admin profili (@{config.ADMIN_USERNAME.lstrip('@')})", url=f"https://t.me/{config.ADMIN_USERNAME.lstrip('@')}")
+        ])
+    buttons.append([
+        InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_contact")
+    ])
 
     await state.set_state(AdminContactState.waiting_for_message)
     await callback.message.answer(
-        "✍️ <b>Adminga xabar yuborish:</b>\n\n"
-        "Savolingiz yoki murojaatingizni shu yerga yozing. Admin ko'rib chiqib, sizga tez orada javob beradi.",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_contact")]
-        ]),
+        "👨‍💻 <b>Adminga murojaat qilish:</b>\n\n"
+        "Savollaringiz, takliflaringiz yoki biron-bir muammo bo'lsa, xabaringizni yozib yuboring.\n"
+        "<i>(Xabar bilan birga skrinshot / rasm, fayl yoki ovozli xabar ham yuborishingiz mumkin)</i>\n\n"
+        "Admin xabaringizni ko'rib chiqib, tez orada sizga javob qaytaradi.",
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons),
         parse_mode="HTML"
     )
 
@@ -541,74 +554,265 @@ async def cancel_contact_callback(callback: CallbackQuery, state: FSMContext):
     await callback.answer("Murojaat bekor qilindi.")
     await callback.message.answer("❌ Adminga murojaat bekor qilindi.", reply_markup=keyboards.get_main_menu(is_admin=config.is_admin(callback.from_user.id)))
 
-@router.message(AdminContactState.waiting_for_message, F.text)
+@router.message(AdminContactState.waiting_for_message)
 async def process_admin_contact(message: Message, state: FSMContext):
-    if message.text.startswith("/") or message.text in [
-        "📊 Yangi slayd tayyorlash", "📄 PPTX ni PDF ga aylantirish",
-        "🖼 Rasmni PDF ga aylantirish", "👤 Mening profilim",
-        "🎁 Bepul limit olish", "💳 Limit va Obuna", "💳 Limit sotib olish",
-        "ℹ️ Bot haqida", "👨‍💻 Adminga murojaat", "⚙️ Admin panel"
-    ]:
-        await state.clear()
-        if message.text.startswith("/start"):
-            await cmd_start(message, state)
-        elif message.text == "📊 Yangi slayd tayyorlash":
-            await start_new_slide(message, state)
-        elif message.text == "📄 PPTX ni PDF ga aylantirish":
-            await prompt_pptx_to_pdf(message, state)
-        elif message.text == "🖼 Rasmni PDF ga aylantirish":
-            await prompt_image_to_pdf(message, state)
-        elif message.text == "👤 Mening profilim":
-            await show_profile(message)
-        elif message.text == "🎁 Bepul limit olish":
-            await show_referral_program(message)
-        elif message.text in ("💳 Limit va Obuna", "💳 Limit sotib olish"):
-            await buy_limits(message)
-        elif message.text == "ℹ️ Bot haqida":
-            await about_bot(message)
-        elif message.text == "⚙️ Admin panel" and config.is_admin(message.from_user.id):
-            await admin_panel(message)
-        elif message.text in ("👨‍💻 Adminga murojaat", "Adminga murojaat"):
-            await contact_admin_menu(message, state)
-        return
+    # Agar foydalanuvchi menyu tugmasini bosgan yoki buyruq bergan bo'lsa
+    if message.text:
+        menu_items = {
+            "📊 Yangi slayd tayyorlash", "📄 PPTX ni PDF ga aylantirish",
+            "🖼 Rasmni PDF ga aylantirish", "👤 Mening profilim",
+            "🎁 Bepul limit olish", "💳 Limit va Obuna", "💳 Limit sotib olish", "💳 Tariflar",
+            "ℹ️ Bot haqida", "👨‍💻 Adminga murojaat", "Adminga murojaat", "⚙️ Admin panel"
+        }
+        if message.text.startswith("/") or message.text in menu_items:
+            await state.clear()
+            if message.text.startswith("/start"):
+                await cmd_start(message, state)
+            elif message.text in ("📊 Yangi slayd tayyorlash", "/yangi_slayd"):
+                await start_new_slide(message, state)
+            elif message.text == "📄 PPTX ni PDF ga aylantirish":
+                await prompt_pptx_to_pdf(message, state)
+            elif message.text == "🖼 Rasmni PDF ga aylantirish":
+                await prompt_image_to_pdf(message, state)
+            elif message.text in ("👤 Mening profilim", "/profil"):
+                await show_profile(message)
+            elif message.text == "🎁 Bepul limit olish":
+                await show_referral_program(message)
+            elif message.text in ("💳 Limit va Obuna", "💳 Limit sotib olish", "💳 Tariflar", "/limit", "/obuna"):
+                await buy_limits(message)
+            elif message.text in ("ℹ️ Bot haqida", "/haqida", "/help"):
+                await about_bot(message)
+            elif message.text == "⚙️ Admin panel" and config.is_admin(message.from_user.id):
+                await admin_panel(message)
+            elif message.text in ("👨‍💻 Adminga murojaat", "Adminga murojaat", "/murojaat", "/admin"):
+                await contact_admin_menu(message, state)
+            return
 
     await state.clear()
     user_id = message.from_user.id
     user_name = message.from_user.full_name or "Foydalanuvchi"
     username = f"@{message.from_user.username}" if message.from_user.username else "Username yo'q"
-    user_text = message.text
 
     await message.answer(
-        "✅ <b>Xabaringiz adminga yetkazildi!</b> Tez orada sizga javob beramiz.",
+        "✅ <b>Xabaringiz adminga yetkazildi!</b>\n\nAdmin tez orada xabaringizni ko'rib chiqib, javob beradi.",
         reply_markup=keyboards.get_main_menu(is_admin=config.is_admin(user_id)),
         parse_mode="HTML"
     )
 
     safe_name = html.escape(user_name)
     safe_username = html.escape(username)
-    safe_text = html.escape(user_text)
+    admin_targets = set([config.ADMIN_ID] + config.UNLIMITED_USERS)
 
-    admin_msg = (
-        f"📩 <b>YANGI MUROJAAT (Adminga xabar):</b>\n\n"
-        f"👤 <b>Yuboruvchi:</b> {safe_name} ({safe_username})\n"
-        f"🆔 <b>Telegram ID:</b> <code>{user_id}</code>\n\n"
-        f"💬 <b>Xabar matni:</b>\n{safe_text}\n\n"
-        f"Javob berish uchun: <code>/reply {user_id} Javob matni</code>"
+    reply_kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="✉️ Javob yozish", callback_data=f"admin_reply_btn_{user_id}")]
+    ])
+
+    if message.photo:
+        photo = message.photo[-1]
+        caption = message.caption or "(Matnsiz rasm)"
+        safe_caption = html.escape(caption)
+        admin_caption = (
+            f"📩 <b>YANGI MUROJAAT (Rasm / Skrinshot):</b>\n\n"
+            f"👤 <b>Yuboruvchi:</b> {safe_name} ({safe_username})\n"
+            f"🆔 <b>Telegram ID:</b> <code>{user_id}</code>\n\n"
+            f"💬 <b>Tavsif:</b> {safe_caption}\n\n"
+            f"✍️ <i>Javob berish:</i> Ushbu xabarga <b>Reply</b> qiling yoki pastdagi tugmani bosing."
+        )
+        for adm_id in admin_targets:
+            try:
+                await message.bot.send_photo(
+                    chat_id=adm_id,
+                    photo=photo.file_id,
+                    caption=admin_caption,
+                    reply_markup=reply_kb,
+                    parse_mode="HTML"
+                )
+            except Exception as e:
+                logger.error(f"Photo forward failed for admin {adm_id}: {e}")
+    elif message.voice:
+        admin_caption = (
+            f"📩 <b>YANGI MUROJAAT (Ovozli xabar):</b>\n\n"
+            f"👤 <b>Yuboruvchi:</b> {safe_name} ({safe_username})\n"
+            f"🆔 <b>Telegram ID:</b> <code>{user_id}</code>\n\n"
+            f"✍️ <i>Javob berish:</i> Ushbu xabarga <b>Reply</b> qiling yoki pastdagi tugmani bosing."
+        )
+        for adm_id in admin_targets:
+            try:
+                await message.bot.send_voice(
+                    chat_id=adm_id,
+                    voice=message.voice.file_id,
+                    caption=admin_caption,
+                    reply_markup=reply_kb,
+                    parse_mode="HTML"
+                )
+            except Exception as e:
+                logger.error(f"Voice forward failed for admin {adm_id}: {e}")
+    elif message.document:
+        caption = message.caption or ""
+        safe_caption = html.escape(caption)
+        admin_caption = (
+            f"📩 <b>YANGI MUROJAAT (Hujjat / Fayl):</b>\n\n"
+            f"👤 <b>Yuboruvchi:</b> {safe_name} ({safe_username})\n"
+            f"🆔 <b>Telegram ID:</b> <code>{user_id}</code>\n"
+            + (f"\n💬 <b>Tavsif:</b> {safe_caption}\n" if safe_caption else "") +
+            f"\n✍️ <i>Javob berish:</i> Ushbu xabarga <b>Reply</b> qiling yoki pastdagi tugmani bosing."
+        )
+        for adm_id in admin_targets:
+            try:
+                await message.bot.send_document(
+                    chat_id=adm_id,
+                    document=message.document.file_id,
+                    caption=admin_caption,
+                    reply_markup=reply_kb,
+                    parse_mode="HTML"
+                )
+            except Exception as e:
+                logger.error(f"Document forward failed for admin {adm_id}: {e}")
+    else:
+        user_text = message.text or ""
+        safe_text = html.escape(user_text)
+        admin_msg = (
+            f"📩 <b>YANGI MUROJAAT (Adminga xabar):</b>\n\n"
+            f"👤 <b>Yuboruvchi:</b> {safe_name} ({safe_username})\n"
+            f"🆔 <b>Telegram ID:</b> <code>{user_id}</code>\n\n"
+            f"💬 <b>Xabar matni:</b>\n{safe_text}\n\n"
+            f"✍️ <i>Javob berish:</i>\n"
+            f"• Ushbu xabarga to'g'ridan-to'g'ri <b>Reply</b> qiling\n"
+            f"• Pastdagi <b>'✉️ Javob yozish'</b> tugmasini bosing\n"
+            f"• Yoki buyruq: <code>/reply {user_id} Javob matni</code>"
+        )
+        for adm_id in admin_targets:
+            try:
+                await message.bot.send_message(
+                    chat_id=adm_id,
+                    text=admin_msg,
+                    reply_markup=reply_kb,
+                    parse_mode="HTML"
+                )
+            except Exception as e:
+                logger.error(f"HTML forward failed for admin {adm_id}: {e}")
+                try:
+                    plain_msg = f"📩 YANGI MUROJAAT:\n\n👤 {user_name} ({username})\n🆔 ID: {user_id}\n\n💬 Xabar:\n{user_text}\n\nJavob: /reply {user_id} matn"
+                    await message.bot.send_message(chat_id=adm_id, text=plain_msg)
+                except Exception as e2:
+                    logger.error(f"Plain forward failed for admin {adm_id}: {e2}")
+
+@router.callback_query(F.data.startswith("admin_reply_btn_"))
+async def admin_reply_btn_callback(callback: CallbackQuery, state: FSMContext):
+    if not config.is_admin(callback.from_user.id):
+        await callback.answer("Ruxsat berilmagan!", show_alert=True)
+        return
+    await callback.answer()
+    target_id = int(callback.data.replace("admin_reply_btn_", ""))
+    await state.set_state(AdminSendReplyState.waiting_for_reply_text)
+    await state.update_data(target_user_id=target_id)
+    await callback.message.answer(
+        f"✍️ Foydalanuvchi (<code>{target_id}</code>) ga yuboriladigan javob matnini yozing:\n\n"
+        f"<i>(Bekor qilish uchun /cancel deb yozing)</i>",
+        parse_mode="HTML"
     )
 
-    admin_targets = set([config.ADMIN_ID] + config.UNLIMITED_USERS)
-    for adm_id in admin_targets:
-        try:
-            await message.bot.send_message(chat_id=adm_id, text=admin_msg, parse_mode="HTML")
-        except Exception as e:
-            logger.error(f"HTML forward failed for admin {adm_id}: {e}")
-            try:
-                plain_msg = f"📩 YANGI MUROJAAT:\n\n👤 {user_name} ({username})\n🆔 ID: {user_id}\n\n💬 Xabar:\n{user_text}\n\nJavob: /reply {user_id} matn"
-                await message.bot.send_message(chat_id=adm_id, text=plain_msg)
-            except Exception as e2:
-                logger.error(f"Plain forward failed for admin {adm_id}: {e2}")
+@router.message(AdminSendReplyState.waiting_for_reply_text)
+async def process_admin_reply_text(message: Message, state: FSMContext):
+    if message.text in ("/cancel", "Bekor qilish", "❌ Bekor qilish"):
+        await state.clear()
+        await message.answer("❌ Javob yuborish bekor qilindi.")
+        return
+    data = await state.get_data()
+    target_id = data.get("target_user_id")
+    await state.clear()
+    if not target_id:
+        await message.answer("❌ Foydalanuvchi ID topilmadi.")
+        return
+
+    reply_text = message.text or message.caption or ""
+    safe_reply = html.escape(reply_text)
+
+    try:
+        if message.photo:
+            await message.bot.send_photo(
+                chat_id=target_id,
+                photo=message.photo[-1].file_id,
+                caption=f"👨‍💻 <b>Admindan javob:</b>\n\n{safe_reply}" if safe_reply else "👨‍💻 <b>Admindan javob</b>",
+                parse_mode="HTML"
+            )
+        elif message.document:
+            await message.bot.send_document(
+                chat_id=target_id,
+                document=message.document.file_id,
+                caption=f"👨‍💻 <b>Admindan javob:</b>\n\n{safe_reply}" if safe_reply else "👨‍💻 <b>Admindan javob</b>",
+                parse_mode="HTML"
+            )
+        elif message.voice:
+            await message.bot.send_voice(
+                chat_id=target_id,
+                voice=message.voice.file_id,
+                caption="👨‍💻 <b>Admindan javob (ovozli)</b>",
+                parse_mode="HTML"
+            )
+        else:
+            await message.bot.send_message(
+                chat_id=target_id,
+                text=f"👨‍💻 <b>Admindan javob:</b>\n\n{safe_reply}",
+                parse_mode="HTML"
+            )
+        await message.answer(f"✅ Javob foydalanuvchi <code>{target_id}</code> ga muvaffaqiyatli yetkazildi!", parse_mode="HTML")
+    except Exception as e:
+        await message.answer(f"❌ Xatolik: foydalanuvchiga yuborib bo'lmadi ({e})")
+
+@router.message(F.reply_to_message)
+async def admin_direct_reply(message: Message):
+    if not config.is_admin(message.from_user.id):
+        return
+    if message.text and message.text.startswith("/"):
+        return
+
+    orig = message.reply_to_message.text or message.reply_to_message.caption or ""
+    import re
+    match = re.search(r"Telegram ID:.*?(\d{6,15})", orig) or re.search(r"ID:.*?(\d{6,15})", orig)
+    if not match:
+        return
+
+    target_id = int(match.group(1))
+    reply_text = message.text or message.caption or ""
+    safe_reply = html.escape(reply_text)
+
+    try:
+        if message.photo:
+            await message.bot.send_photo(
+                chat_id=target_id,
+                photo=message.photo[-1].file_id,
+                caption=f"👨‍💻 <b>Admindan javob:</b>\n\n{safe_reply}" if safe_reply else "👨‍💻 <b>Admindan javob</b>",
+                parse_mode="HTML"
+            )
+        elif message.document:
+            await message.bot.send_document(
+                chat_id=target_id,
+                document=message.document.file_id,
+                caption=f"👨‍💻 <b>Admindan javob:</b>\n\n{safe_reply}" if safe_reply else "👨‍💻 <b>Admindan javob</b>",
+                parse_mode="HTML"
+            )
+        elif message.voice:
+            await message.bot.send_voice(
+                chat_id=target_id,
+                voice=message.voice.file_id,
+                caption="👨‍💻 <b>Admindan javob (ovozli)</b>",
+                parse_mode="HTML"
+            )
+        else:
+            await message.bot.send_message(
+                chat_id=target_id,
+                text=f"👨‍💻 <b>Admindan javob:</b>\n\n{safe_reply}",
+                parse_mode="HTML"
+            )
+        await message.answer(f"✅ Javobingiz foydalanuvchi <code>{target_id}</code> ga yetkazildi!", parse_mode="HTML")
+    except Exception as e:
+        await message.answer(f"❌ Javob yuborishda xatolik: {e}")
 
 @router.message(F.text == "ℹ️ Bot haqida")
+@router.message(Command("haqida"))
+@router.message(Command("help"))
+@router.message(Command("yordam"))
 async def about_bot(message: Message):
     text = (
         f"ℹ️ **Talabalar uchun Slayd & PDF Generator Bot haqida:**\n\n"
@@ -622,9 +826,9 @@ async def about_bot(message: Message):
         f"🔹 **Rasmni PDF ga aylantirish:** Istalgan rasm(lar)ni bir zumda PDF qilib beradi.\n"
         f"🔹 **Tariflar:** 2 ta bepul taqdimot, so'ngra 1 ta taqdimot — 5 000 so'm, oylik cheksiz — 20 000 so'm.\n"
         f"🔹 **Referal:** Har 2 ta do'st taklif qilsangiz, +1 ta bepul limit beriladi!\n\n"
-        f"Savol va takliflar uchun adminga murojaat qiling."
+        f"Savol va takliflar uchun quyidagi tugma orqali adminga murojaat qilishingiz mumkin."
     )
-    await message.answer(text, parse_mode="Markdown")
+    await message.answer(text, reply_markup=keyboards.get_about_keyboard(), parse_mode="Markdown")
 
 
 # ================= RASMNI PDF GA AYLANTIRISH =================
@@ -829,6 +1033,7 @@ async def handle_document_to_pdf(message: Message, state: FSMContext = None):
 
 
 @router.message(F.text == "📊 Yangi slayd tayyorlash")
+@router.message(Command("yangi_slayd"))
 async def start_new_slide(message: Message, state: FSMContext):
     # Check limit first
     user = await database.get_or_create_user(
@@ -1459,15 +1664,32 @@ async def admin_panel(message: Message):
     text = (
         f"⚙️ **Admin paneli va Statistika:**\n\n"
         f"👥 Jami foydalanuvchilar: **{stats['total_users']} nafar**\n"
-        f"🤝 Jami taklif qilingan do'stlar: **{stats.get('total_referrals', 0)} ta**\n"
-        f"📑 Jami yaratilgan taqdimotlar: **{stats['total_slides']} ta**\n\n"
+        f"🎨 Slayd tayyorlaganlar: **{stats.get('active_users', 0)} nafar**\n"
+        f"📑 Jami yaratilgan taqdimotlar: **{stats['total_slides']} ta**\n"
+        f"🤝 Jami taklif qilingan do'stlar: **{stats.get('total_referrals', 0)} ta**\n\n"
         f"👑 VIP maqom berish: `/set_vip <id>`\n"
         f"🚫 VIP ni bekor qilish: `/remove_vip <id>`\n"
         f"➕ Limit qo'shish: `/add_limit <id> <soni>`\n"
         f"⭐️ Obuna yoqish: `/add_sub <id> [kun]`\n"
         f"💬 Javob qaytarish: `/reply <id> <matn>`"
     )
-    await message.answer(text, parse_mode="Markdown")
+    await message.answer(text, reply_markup=keyboards.get_admin_keyboard(), parse_mode="Markdown")
+
+@router.callback_query(F.data == "admin_stats")
+async def admin_stats_callback(callback: CallbackQuery):
+    if not config.is_admin(callback.from_user.id):
+        await callback.answer("Ruxsat berilmagan!", show_alert=True)
+        return
+    await callback.answer()
+    stats = await database.get_stats()
+    text = (
+        f"📈 <b>Bot statistikasi:</b>\n\n"
+        f"👥 Jami foydalanuvchilar: <b>{stats['total_users']} nafar</b>\n"
+        f"🎨 Slayd tayyorlagan foydalanuvchilar: <b>{stats.get('active_users', 0)} nafar</b>\n"
+        f"📑 Jami tayyorlangan taqdimotlar: <b>{stats['total_slides']} ta</b>\n"
+        f"🤝 Jami taklif qilingan do'stlar: <b>{stats.get('total_referrals', 0)} ta</b>"
+    )
+    await callback.message.answer(text, parse_mode="HTML")
 
 @router.message(F.voice)
 @router.message(F.audio)

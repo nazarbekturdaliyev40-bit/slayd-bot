@@ -99,6 +99,13 @@ def get_admin_keyboard() -> InlineKeyboardMarkup:
         ]
     ])
 
+def get_about_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text="👨‍💻 Adminga murojaat", callback_data="contact_admin")
+        ]
+    ])
+
 def get_skip_author_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [
