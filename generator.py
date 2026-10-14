@@ -423,7 +423,7 @@ Talablar:
 - QAT'IY TALAB: Taqdimot sarlavhalarida, reja bandlarida, slayd matnlarida, xulosada, manbalarda va ma'ruza nutqida MUTLAQO HECH QANDAY emoji, stiker, piktogramma yoki smayliklar ISHLATILMASIN! Taqdimot sof akademik, rasmiy va ilmiy uslubda bo'lsin.
 - 1-slayd kirish va dolzarblik bo'lsin.
 - Keyingi slaydlar mavzuni bosqichma-bosqich, chuqur, qiziqarli va aniq yoritib bersin.
-- Har bir slaydda 3 tadan 5 tagacha sifatli band (bullet_points) bo'lsin (har bir band qisqa va lo'nda bo'lsin).
+- Har bir slaydda 3 tadan 5 tagacha sifatli band (bullet_points) bo'lsin. Har bir bandni "Kalit so'z: Tavsif" ko'rinishida yozing (masalan: "Asosiy omillar: Bozor talabining o'sishi va raqobatbardoshlik").
 - Har bir slaydga talabaning himoyasi uchun speaker_notes (ma'ruza nutqi) yozilsin.
 - Har bir slaydga va muqovaga mos inglizcha aniq image_query yozilsin.
 - "references" maydonida kamida 3-4 ta haqiqiy va ishonarli adabiyot/manba bo'lsin.
@@ -724,51 +724,120 @@ def convert_images_to_pdf(image_paths: list, output_pdf_path: str) -> str:
     first.save(output_pdf_path, "PDF", resolution=100.0, save_all=True, append_images=rest)
     return output_pdf_path
 
-def _add_header(slide, title_text: str, theme: dict, slide_num: int = None, total_slides: int = None):
-    """Slaydning yuqori qismiga sarlavha va stilistika qo'shish."""
-    # Top banner shape
-    top_bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(1.3))
+def _add_styled_bullet(text_frame, bullet_text: str, theme: dict, font_size: Pt, space_after: Pt, is_first: bool = False):
+    """Slayd matn bandini kalit so'zlarni qalin qilib, yuqori sifatli infografika uslubida joylash."""
+    p = text_frame.paragraphs[0] if is_first else text_frame.add_paragraph()
+    p.space_after = space_after
+
+    clean_txt = re.sub(r"^[\s•\-\*–—\d\.\)]+", "", remove_emojis(str(bullet_text))).strip()
+    if not clean_txt:
+        return
+
+    # Bullet ikonkasi
+    r_icon = p.add_run()
+    r_icon.text = f"{theme.get('bullet_icon', '✦')}  "
+    r_icon.font.bold = True
+    r_icon.font.size = font_size
+    r_icon.font.color.rgb = theme["accent"]
+    r_icon.font.name = "Arial"
+
+    # Kalit so'z va tavsifni ajratish (masalan: "Kalit so'z: Tavsif matni" yoki "Bosqich — Izoh")
+    match = re.match(r"^([^:—–\-]{3,35}[:—–\-])\s*(.*)$", clean_txt)
+    if match:
+        lead, rest = match.groups()
+        r_lead = p.add_run()
+        r_lead.text = f"{lead} "
+        r_lead.font.bold = True
+        r_lead.font.size = font_size
+        r_lead.font.color.rgb = theme.get("primary", theme["text_dark"])
+        r_lead.font.name = "Arial"
+
+        if rest:
+            r_rest = p.add_run()
+            r_rest.text = rest
+            r_rest.font.bold = False
+            r_rest.font.size = font_size
+            r_rest.font.color.rgb = theme["text_dark"]
+            r_rest.font.name = "Arial"
+    else:
+        words = clean_txt.split()
+        if len(words) > 4:
+            lead = " ".join(words[:2]) + " "
+            rest = " ".join(words[2:])
+            r_lead = p.add_run()
+            r_lead.text = lead
+            r_lead.font.bold = True
+            r_lead.font.size = font_size
+            r_lead.font.color.rgb = theme.get("primary", theme["text_dark"])
+            r_lead.font.name = "Arial"
+
+            r_rest = p.add_run()
+            r_rest.text = rest
+            r_rest.font.bold = False
+            r_rest.font.size = font_size
+            r_rest.font.color.rgb = theme["text_dark"]
+            r_rest.font.name = "Arial"
+        else:
+            r = p.add_run()
+            r.text = clean_txt
+            r.font.bold = False
+            r.font.size = font_size
+            r.font.color.rgb = theme["text_dark"]
+            r.font.name = "Arial"
+
+def _add_header(slide, title_text: str, theme: dict, slide_num: int = None, total_slides: int = None, category: str = "ILMIY TAQDIMOT"):
+    """Slaydning yuqori qismiga zamonaviy sarlavha va stilistika qo'shish."""
+    banner_h = Inches(1.15)
+    top_bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), banner_h)
     top_bar.fill.solid()
     top_bar.fill.fore_color.rgb = theme["primary"]
     top_bar.line.fill.background()
 
-    # Small accent line under header
-    line = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, Inches(1.3), Inches(13.333), Inches(0.08))
+    # Sleek bottom accent line
+    line = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, banner_h, Inches(13.333), Inches(0.06))
     line.fill.solid()
     line.fill.fore_color.rgb = theme["accent"]
     line.line.fill.background()
 
-    # Tag badge in top banner
-    tag_tb = slide.shapes.add_textbox(Inches(1.2), Inches(0.12), Inches(8.0), Inches(0.3))
+    # Category breadcrumb (hech qachon bot ichki tema nomini chiqarmaymiz)
+    if not category:
+        category = "ILMIY TAQDIMOT"
+    tag_tb = slide.shapes.add_textbox(Inches(0.9), Inches(0.12), Inches(8.5), Inches(0.28))
     tag_tf = tag_tb.text_frame
+    tag_tf.word_wrap = True
     tag_p = tag_tf.paragraphs[0]
-    tag_p.text = theme.get("tag", "TAQDIMOT")
+    tag_p.text = f"✦  {category.upper()}"
     tag_p.font.size = Pt(10)
     tag_p.font.bold = True
     tag_p.font.color.rgb = theme["accent"]
     tag_p.font.name = "Arial"
 
     # Header title text
-    tb = slide.shapes.add_textbox(Inches(1.2), Inches(0.38), Inches(9.8), Inches(0.85))
+    tb = slide.shapes.add_textbox(Inches(0.9), Inches(0.38), Inches(9.8), Inches(0.72))
     tf = tb.text_frame
     tf.word_wrap = True
     p = tf.paragraphs[0]
-    p.text = title_text
-    p.font.size = Pt(25)
+    p.text = remove_emojis(title_text)
+    p.font.size = Pt(22 if len(title_text) > 40 else 24)
     p.font.bold = True
     p.font.color.rgb = theme["white"]
     p.font.name = "Arial"
 
-    # Slide number badge
+    # Slide number badge pill
     if slide_num and total_slides:
-        num_tb = slide.shapes.add_textbox(Inches(11.0), Inches(0.4), Inches(2.0), Inches(0.6))
-        num_tf = num_tb.text_frame
-        num_p = num_tf.paragraphs[0]
-        num_p.text = f"{slide_num} / {total_slides}"
-        num_p.font.size = Pt(16)
-        num_p.font.bold = True
-        num_p.font.color.rgb = theme["accent"]
-        num_p.alignment = PP_ALIGN.RIGHT
+        badge_w = Inches(1.3)
+        badge_h = Inches(0.42)
+        badge = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(11.1), Inches(0.36), badge_w, badge_h)
+        badge.fill.solid()
+        badge.fill.fore_color.rgb = theme["accent"]
+        badge.line.fill.background()
+        btf = badge.text_frame
+        bp = btf.paragraphs[0]
+        bp.text = f"{slide_num:02d} / {total_slides:02d}"
+        bp.font.size = Pt(12)
+        bp.font.bold = True
+        bp.font.color.rgb = RGBColor(255, 255, 255)
+        bp.alignment = PP_ALIGN.CENTER
 
 def create_pptx_file(content: dict, output_path: str, theme_name: str = "", images_map: dict = None, author_info: str = "", default_student_name: str = "", custom_bg: str = None) -> str:
     """Creates a beautiful 16:9 PowerPoint file with student academic structure, author info, references, and closing slides."""
@@ -942,7 +1011,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
     else:
         student_name = teacher_name = uni_name = faculty_name = group_val = direction_val = ""
 
-    # ================= MAVZU SLAYDI =================
+    # ================= MAVZU SLAYDI (HERO MASTER SLIDE) =================
     topic_slide_num = 2 if has_author else 1
     topic_slide = prs.slides.add_slide(blank_layout)
     if custom_bg and os.path.exists(custom_bg):
@@ -953,129 +1022,168 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         bg_topic.fill.fore_color.rgb = theme["bg_slide"]
         bg_topic.line.fill.background()
 
-    _add_header(topic_slide, "Taqdimot Mavzusi", theme, slide_num=topic_slide_num, total_slides=total_slides)
+    # Top accent bar across full width
+    top_acc = topic_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(0.2))
+    top_acc.fill.solid()
+    top_acc.fill.fore_color.rgb = theme["accent"]
+    top_acc.line.fill.background()
+
+    # Capsule Badge
+    b_tag = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(0.7), Inches(2.9), Inches(0.42))
+    b_tag.fill.solid()
+    b_tag.fill.fore_color.rgb = theme["primary"]
+    b_tag.line.fill.background()
+    bp = b_tag.text_frame.paragraphs[0]
+    bp.text = "✦  ILMIY TAQDIMOT"
+    bp.font.size = Pt(11)
+    bp.font.bold = True
+    bp.font.color.rgb = theme["accent"]
+    bp.alignment = PP_ALIGN.CENTER
+
+    # Pill slide number on top right
+    num_badge = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(11.1), Inches(0.7), Inches(1.3), Inches(0.42))
+    num_badge.fill.solid()
+    num_badge.fill.fore_color.rgb = theme["accent"]
+    num_badge.line.fill.background()
+    nb_p = num_badge.text_frame.paragraphs[0]
+    nb_p.text = f"{topic_slide_num:02d} / {total_slides:02d}"
+    nb_p.font.size = Pt(12)
+    nb_p.font.bold = True
+    nb_p.font.color.rgb = RGBColor(255, 255, 255)
+    nb_p.alignment = PP_ALIGN.CENTER
 
     cover_img = images_map.get("cover") if images_map else None
     if cover_img and os.path.exists(cover_img):
-        # 2-column layout with cover image
-        card_l = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.75), Inches(7.2), Inches(5.25))
+        # Left card layout with cover image
+        t_box = topic_slide.shapes.add_textbox(Inches(0.9), Inches(1.25), Inches(7.0), Inches(1.8))
+        t_tf = t_box.text_frame
+        t_tf.word_wrap = True
+        p_t = t_tf.paragraphs[0]
+        p_t.text = remove_emojis(title_text)
+        p_t.font.size = Pt(26 if len(title_text) > 40 else 30)
+        p_t.font.bold = True
+        p_t.font.color.rgb = theme["primary"] if not is_dark else theme["accent"]
+        p_t.font.name = "Arial"
+
+        if subtitle_text:
+            p_sub = t_tf.add_paragraph()
+            p_sub.text = remove_emojis(subtitle_text)
+            p_sub.font.size = Pt(14)
+            p_sub.font.color.rgb = theme["text_muted"]
+            p_sub.font.name = "Arial"
+            p_sub.space_before = Pt(6)
+
+        # Pillars card on left
+        card_l = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(3.25), Inches(7.0), Inches(3.8))
         card_l.fill.solid()
         card_l.fill.fore_color.rgb = theme["card_bg"]
         card_l.line.color.rgb = theme["card_border"]
         card_l.line.width = Pt(1.5)
 
-        t_box = topic_slide.shapes.add_textbox(Inches(1.2), Inches(1.95), Inches(6.6), Inches(4.85))
-        t_tf = t_box.text_frame
-        t_tf.word_wrap = True
+        cl_tf = card_l.text_frame
+        cl_tf.word_wrap = True
+        cl_tf.margin_left = Inches(0.4)
+        cl_tf.margin_top = Inches(0.25)
+        cl_tf.margin_right = Inches(0.4)
 
-        p_tag = t_tf.paragraphs[0]
-        p_tag.text = theme.get("tag", "ASOSIY MAVZU")
-        p_tag.font.size = Pt(12)
-        p_tag.font.bold = True
-        p_tag.font.color.rgb = theme["accent"]
-        p_tag.font.name = "Arial"
-        p_tag.space_after = Pt(8)
+        pillars = [
+            ("Maqsadi:", "Mavzuning nazariy va amaliy asoslarini chuqur tahlil qilish hamda tizimlashtirish."),
+            ("Dolzarbligi:", "Sohadagi zamonaviy tendensiyalar va dolzarb masalalarga ilmiy yechim topish."),
+            ("Kutilayotgan natija:", "Aniq xulosalar va amaliyotga tatbiq etish mumkin boʻlgan takliflar ishlab chiqish.")
+        ]
+        for pi_idx, (p_label, p_desc) in enumerate(pillars):
+            p = cl_tf.paragraphs[0] if pi_idx == 0 else cl_tf.add_paragraph()
+            p.space_after = Pt(12)
+            r_icon = p.add_run()
+            r_icon.text = "✦  "
+            r_icon.font.bold = True
+            r_icon.font.size = Pt(13)
+            r_icon.font.color.rgb = theme["accent"]
+            
+            r_lbl = p.add_run()
+            r_lbl.text = f"{p_label} "
+            r_lbl.font.bold = True
+            r_lbl.font.size = Pt(13)
+            r_lbl.font.color.rgb = theme["primary"] if not is_dark else theme["accent"]
 
-        p_t = t_tf.add_paragraph()
-        p_t.text = title_text
-        p_t.font.size = Pt(24 if len(title_text) > 45 else 28)
-        p_t.font.bold = True
-        p_t.font.color.rgb = theme["accent"] if is_dark else theme["primary"]
-        p_t.font.name = "Arial"
-        p_t.space_after = Pt(10)
+            r_txt = p.add_run()
+            r_txt.text = p_desc
+            r_txt.font.bold = False
+            r_txt.font.size = Pt(13)
+            r_txt.font.color.rgb = theme["text_dark"]
 
-        if subtitle_text:
-            p_sub = t_tf.add_paragraph()
-            p_sub.text = subtitle_text
-            p_sub.font.size = Pt(13)
-            p_sub.font.color.rgb = theme["text_muted"]
-            p_sub.font.name = "Arial"
-            p_sub.space_after = Pt(14)
-
-        # Highlight points
-        p_hl1 = t_tf.add_paragraph()
-        p_hl1.text = "Dolzarbligi: Mavzuning nazariy va amaliy ahamiyatini chuqur tahlil qilish."
-        p_hl1.font.size = Pt(13)
-        p_hl1.font.color.rgb = theme["text_dark"]
-        p_hl1.font.name = "Arial"
-        p_hl1.space_after = Pt(8)
-
-        p_hl2 = t_tf.add_paragraph()
-        p_hl2.text = "Maqsadi: Sohadagi zamonaviy tendensiyalar va muammolarni oʻrganish."
-        p_hl2.font.size = Pt(13)
-        p_hl2.font.color.rgb = theme["text_dark"]
-        p_hl2.font.name = "Arial"
-        p_hl2.space_after = Pt(8)
-
-        p_hl3 = t_tf.add_paragraph()
-        p_hl3.text = "Kutilayotgan natija: Ilmiy xulosalar va amaliy tavsiyalar ishlab chiqish."
-        p_hl3.font.size = Pt(13)
-        p_hl3.font.color.rgb = theme["text_dark"]
-        p_hl3.font.name = "Arial"
-
-        # Image on the right
-        topic_slide.shapes.add_picture(cover_img, Inches(8.35), Inches(1.75), width=Inches(4.1), height=Inches(5.25))
+        # Hero Image on right with sleek border
+        try:
+            topic_slide.shapes.add_picture(cover_img, Inches(8.3), Inches(1.3), width=Inches(4.1), height=Inches(5.75))
+        except Exception:
+            pass
     else:
-        # Full width layout without cover image
-        card_full = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.2), Inches(1.75), Inches(10.933), Inches(5.25))
+        # Full width hero card
+        card_full = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.3), Inches(11.533), Inches(5.75))
         card_full.fill.solid()
         card_full.fill.fore_color.rgb = theme["card_bg"]
         card_full.line.color.rgb = theme["card_border"]
         card_full.line.width = Pt(1.5)
 
-        t_box = topic_slide.shapes.add_textbox(Inches(1.6), Inches(2.0), Inches(10.133), Inches(4.75))
+        t_box = topic_slide.shapes.add_textbox(Inches(1.3), Inches(1.6), Inches(10.7), Inches(2.2))
         t_tf = t_box.text_frame
         t_tf.word_wrap = True
 
-        p_tag = t_tf.paragraphs[0]
-        p_tag.text = theme.get("tag", "ASOSIY MAVZU")
-        p_tag.font.size = Pt(13)
-        p_tag.font.bold = True
-        p_tag.font.color.rgb = theme["accent"]
-        p_tag.font.name = "Arial"
-        p_tag.alignment = PP_ALIGN.CENTER
-        p_tag.space_after = Pt(12)
-
-        p_t = t_tf.add_paragraph()
-        p_t.text = title_text
-        p_t.font.size = Pt(30 if len(title_text) > 45 else 34)
+        p_t = t_tf.paragraphs[0]
+        p_t.text = remove_emojis(title_text)
+        p_t.font.size = Pt(32 if len(title_text) > 40 else 36)
         p_t.font.bold = True
-        p_t.font.color.rgb = theme["accent"] if is_dark else theme["primary"]
+        p_t.font.color.rgb = theme["primary"] if not is_dark else theme["accent"]
         p_t.font.name = "Arial"
         p_t.alignment = PP_ALIGN.CENTER
-        p_t.space_after = Pt(12)
 
         if subtitle_text:
             p_sub = t_tf.add_paragraph()
-            p_sub.text = subtitle_text
-            p_sub.font.size = Pt(15)
+            p_sub.text = remove_emojis(subtitle_text)
+            p_sub.font.size = Pt(16)
             p_sub.font.color.rgb = theme["text_muted"]
             p_sub.font.name = "Arial"
             p_sub.alignment = PP_ALIGN.CENTER
-            p_sub.space_after = Pt(20)
+            p_sub.space_before = Pt(8)
 
-        # Highlight points
-        p_hl1 = t_tf.add_paragraph()
-        p_hl1.text = "Dolzarbligi: Zamonaviy ilmiy va amaliy talablarga mos ravishda chuqur oʻrganish."
-        p_hl1.font.size = Pt(15)
-        p_hl1.font.color.rgb = theme["text_dark"]
-        p_hl1.font.name = "Arial"
-        p_hl1.space_after = Pt(10)
+        # 3 Mini Pillar Cards inside
+        p_cols = [
+            ("MAQSADI", "Nazariy va amaliy asoslarni chuqur tahlil qilish"),
+            ("DOLZARBLIGI", "Sohadagi zamonaviy talablar va istiqbollar"),
+            ("NATIJALAR", "Ilmiy xulosalar va amaliy tavsiyalar majmuasi")
+        ]
+        p_w = Inches(3.4)
+        p_h = Inches(2.3)
+        p_gap = Inches(0.4)
+        p_start_x = Inches(1.4)
+        p_y = Inches(4.3)
 
-        p_hl2 = t_tf.add_paragraph()
-        p_hl2.text = "Asosiy maqsad: Mavzuga oid nazariy qoidalar va amaliy tajribalarni tizimlashtirish."
-        p_hl2.font.size = Pt(15)
-        p_hl2.font.color.rgb = theme["text_dark"]
-        p_hl2.font.name = "Arial"
-        p_hl2.space_after = Pt(10)
+        for p_i, (p_title, p_body) in enumerate(p_cols):
+            px = p_start_x + p_i * (p_w + p_gap)
+            p_card = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, px, p_y, p_w, p_h)
+            p_card.fill.solid()
+            p_card.fill.fore_color.rgb = theme["bg_slide"]
+            p_card.line.color.rgb = theme["accent"] if p_i == 0 else theme["card_border"]
+            p_card.line.width = Pt(1.5)
 
-        p_hl3 = t_tf.add_paragraph()
-        p_hl3.text = "Kutilayotgan natijalar: Soha boʻyicha aniq xulosalar va kelajakdagi istiqbolli tavsiyalar."
-        p_hl3.font.size = Pt(15)
-        p_hl3.font.color.rgb = theme["text_dark"]
-        p_hl3.font.name = "Arial"
+            p_box = topic_slide.shapes.add_textbox(px + Inches(0.2), p_y + Inches(0.2), p_w - Inches(0.4), p_h - Inches(0.4))
+            ptf = p_box.text_frame
+            ptf.word_wrap = True
+            pp1 = ptf.paragraphs[0]
+            pp1.text = f"✦  {p_title}"
+            pp1.font.size = Pt(14)
+            pp1.font.bold = True
+            pp1.font.color.rgb = theme["accent"] if not is_dark else theme["white"]
+            pp1.alignment = PP_ALIGN.CENTER
+            pp1.space_after = Pt(8)
 
-    # ================= 3. REJA / MUNDARIJA SLAYDI =================
+            pp2 = ptf.add_paragraph()
+            pp2.text = p_body
+            pp2.font.size = Pt(13)
+            pp2.font.color.rgb = theme["text_dark"]
+            pp2.alignment = PP_ALIGN.CENTER
+
+    # ================= 3. REJA / MUNDARIJA SLAYDI (INFOGRAPHIC CARDS) =================
     reja_slide = prs.slides.add_slide(blank_layout)
     if custom_bg and os.path.exists(custom_bg):
         reja_slide.shapes.add_picture(custom_bg, 0, 0, width=Inches(13.333), height=Inches(7.5))
@@ -1086,7 +1194,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         bg_reja.line.fill.background()
 
     reja_slide_num = 3 if has_author else 2
-    _add_header(reja_slide, "Mundarija / Taqdimot Rejasi", theme, slide_num=reja_slide_num, total_slides=total_slides)
+    _add_header(reja_slide, "Mundarija va Taqdimot Rejasi", theme, slide_num=reja_slide_num, total_slides=total_slides, category="TAQDIMOT TUZILISHI")
 
     # Reja / Agenda: qat'iy eng ko'pi 5 ta band
     raw_agenda = content.get("agenda")
@@ -1118,31 +1226,54 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         agenda_items.append("Xulosa va asosiy natijalar")
         agenda_items.append("Foydalanilgan adabiyotlar va manbalar")
 
-    # Qat'iy cheklov: ENG KO'PI 5 TA REJA BANDI
     agenda_items = [a for a in agenda_items if a][:5]
     content["agenda"] = agenda_items  # speech script uchun saqlaymiz
 
-    card = reja_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.2), Inches(1.8), Inches(10.9), Inches(5.1))
-    card.fill.solid()
-    card.fill.fore_color.rgb = theme["card_bg"]
-    card.line.color.rgb = theme["card_border"]
-    card.line.width = Pt(1.5)
+    # Infographic Horizontal Cards Layout
+    n_items = len(agenda_items)
+    card_w = Inches(11.533)
+    card_h = Inches(0.85 if n_items == 5 else 1.0)
+    gap = Inches(0.18 if n_items == 5 else 0.25)
+    start_y = Inches(1.65 if n_items == 5 else 1.8)
 
-    agenda_box = reja_slide.shapes.add_textbox(Inches(1.6), Inches(2.1), Inches(10.1), Inches(4.5))
-    ag_tf = agenda_box.text_frame
-    ag_tf.word_wrap = True
+    for i, item_text in enumerate(agenda_items):
+        y = start_y + i * (card_h + gap)
+        ag_card = reja_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), y, card_w, card_h)
+        ag_card.fill.solid()
+        ag_card.fill.fore_color.rgb = theme["card_bg"]
+        ag_card.line.color.rgb = theme["card_border"]
+        ag_card.line.width = Pt(1.5)
 
-    font_sz = Pt(21 if len(agenda_items) <= 4 else 19)
-    space_aft = Pt(18 if len(agenda_items) <= 4 else 14)
+        # Number pill on left
+        circ = reja_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.15), y + (card_h - Inches(0.55)) / 2, Inches(0.85), Inches(0.55))
+        circ.fill.solid()
+        circ.fill.fore_color.rgb = theme["accent"]
+        circ.line.fill.background()
+        cp = circ.text_frame.paragraphs[0]
+        cp.text = f"{i+1:02d}"
+        cp.font.size = Pt(14)
+        cp.font.bold = True
+        cp.font.color.rgb = RGBColor(255, 255, 255)
+        cp.alignment = PP_ALIGN.CENTER
 
-    for i, item_text in enumerate(agenda_items, 1):
-        p = ag_tf.paragraphs[0] if i == 1 else ag_tf.add_paragraph()
-        p.text = f"{i}.  {item_text}"
-        p.font.size = font_sz
-        p.font.bold = True
-        p.font.color.rgb = theme["text_dark"]
-        p.font.name = "Arial"
-        p.space_after = space_aft
+        # Agenda text
+        ag_tb = reja_slide.shapes.add_textbox(Inches(2.2), y + (card_h - Inches(0.55)) / 2, Inches(9.3), Inches(0.55))
+        ag_tf = ag_tb.text_frame
+        ag_tf.word_wrap = True
+        ag_p = ag_tf.paragraphs[0]
+        ag_p.text = item_text
+        ag_p.font.size = Pt(17 if n_items == 5 else 19)
+        ag_p.font.bold = True
+        ag_p.font.color.rgb = theme["text_dark"]
+        ag_p.font.name = "Arial"
+
+        # Sleek arrow indicator on right
+        arr_b = reja_slide.shapes.add_textbox(Inches(11.8), y + (card_h - Inches(0.55)) / 2, Inches(0.5), Inches(0.55))
+        arr_p = arr_b.text_frame.paragraphs[0]
+        arr_p.text = "➔"
+        arr_p.font.size = Pt(16)
+        arr_p.font.bold = True
+        arr_p.font.color.rgb = theme["accent"]
 
     # ================= 3. ASOSIY MAZMUN SLAYDLARI =================
     for idx, s_data in enumerate(slides_data, 1):
@@ -1157,11 +1288,10 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
 
         s_title = s_data.get("title", f"Boʻlim {idx}")
         content_slide_num = idx + (3 if has_author else 2)
-        _add_header(c_slide, s_title, theme, slide_num=content_slide_num, total_slides=total_slides)
+        _add_header(c_slide, s_title, theme, slide_num=content_slide_num, total_slides=total_slides, category=f"BOʻLIM {idx}")
 
         img_path = images_map.get(idx) if images_map else None
         bullets = s_data.get("bullet_points", [])
-        icon = theme.get("bullet_icon", "•")
         layout_type = str(s_data.get("layout", "standard")).lower().strip()
         kpi_items = s_data.get("kpi_items", [])
         comparison_data = s_data.get("comparison_data", {})
@@ -1174,7 +1304,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             card_h = Inches(4.9)
             gap = Inches(0.4)
             start_x = Inches(0.9)
-            y_pos = Inches(1.85)
+            y_pos = Inches(1.8)
 
             for k_idx, item in enumerate(items):
                 x_pos = start_x + k_idx * (card_w + gap)
@@ -1185,35 +1315,49 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
                 k_card.line.width = Pt(2.0 if k_idx == 0 else 1.5)
 
                 # Top color bar
-                c_bar = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_pos + Inches(0.3), y_pos + Inches(0.35), card_w - Inches(0.6), Inches(0.08))
+                c_bar = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_pos + Inches(0.3), y_pos + Inches(0.3), card_w - Inches(0.6), Inches(0.08))
                 c_bar.fill.solid()
                 c_bar.fill.fore_color.rgb = theme["accent"]
                 c_bar.line.fill.background()
 
                 # Big Number Textbox
-                num_box = c_slide.shapes.add_textbox(x_pos + Inches(0.2), y_pos + Inches(0.6), card_w - Inches(0.4), Inches(1.4))
+                num_box = c_slide.shapes.add_textbox(x_pos + Inches(0.2), y_pos + Inches(0.55), card_w - Inches(0.4), Inches(1.3))
                 ntf = num_box.text_frame
                 ntf.word_wrap = True
                 np = ntf.paragraphs[0]
                 raw_num = str(item.get("number", f"#{k_idx+1}"))
                 np.text = remove_emojis(raw_num)
-                np.font.size = Pt(36)
+                np.font.size = Pt(38)
                 np.font.bold = True
                 np.font.color.rgb = theme["accent"]
                 np.font.name = "Arial"
                 np.alignment = PP_ALIGN.CENTER
 
                 # Label Textbox
-                lbl_box = c_slide.shapes.add_textbox(x_pos + Inches(0.3), y_pos + Inches(2.1), card_w - Inches(0.6), Inches(2.4))
+                lbl_box = c_slide.shapes.add_textbox(x_pos + Inches(0.2), y_pos + Inches(1.9), card_w - Inches(0.4), Inches(0.7))
                 ltf = lbl_box.text_frame
                 ltf.word_wrap = True
                 lp = ltf.paragraphs[0]
                 raw_lbl = str(item.get("label", ""))
                 lp.text = remove_emojis(raw_lbl)
-                lp.font.size = Pt(17)
-                lp.font.color.rgb = theme["text_dark"]
+                lp.font.size = Pt(18)
+                lp.font.bold = True
+                lp.font.color.rgb = theme["primary"] if not is_dark else theme["white"]
                 lp.font.name = "Arial"
                 lp.alignment = PP_ALIGN.CENTER
+
+                # Desc/Bullets in KPI card
+                desc_box = c_slide.shapes.add_textbox(x_pos + Inches(0.3), y_pos + Inches(2.7), card_w - Inches(0.6), Inches(1.9))
+                dtf = desc_box.text_frame
+                dtf.word_wrap = True
+                if k_idx < len(bullets):
+                    b_txt = re.sub(r"^[\s•\-\*–—\d\.\)]+", "", remove_emojis(str(bullets[k_idx]))).strip()
+                    dp = dtf.paragraphs[0]
+                    dp.text = b_txt
+                    dp.font.size = Pt(13)
+                    dp.font.color.rgb = theme["text_muted"]
+                    dp.font.name = "Arial"
+                    dp.alignment = PP_ALIGN.CENTER
 
         elif layout_type == "comparison" and isinstance(comparison_data, dict) and comparison_data.get("col1_points") and comparison_data.get("col2_points"):
             col1_title = comparison_data.get("col1_title", "1-yondashuv")
@@ -1232,7 +1376,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             left_card.line.color.rgb = theme["card_border"]
             left_card.line.width = Pt(1.5)
 
-            lt_box = c_slide.shapes.add_textbox(Inches(1.15), y_pos + Inches(0.2), card_w - Inches(0.5), Inches(0.8))
+            lt_box = c_slide.shapes.add_textbox(Inches(1.15), y_pos + Inches(0.2), card_w - Inches(0.5), Inches(0.7))
             ltf = lt_box.text_frame
             ltf.word_wrap = True
             lp = ltf.paragraphs[0]
@@ -1242,16 +1386,11 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             lp.font.color.rgb = theme["primary"] if not is_dark else theme["accent"]
             lp.font.name = "Arial"
 
-            lb_box = c_slide.shapes.add_textbox(Inches(1.15), y_pos + Inches(1.0), card_w - Inches(0.5), card_h - Inches(1.2))
+            lb_box = c_slide.shapes.add_textbox(Inches(1.15), y_pos + Inches(0.95), card_w - Inches(0.5), card_h - Inches(1.1))
             lbtf = lb_box.text_frame
             lbtf.word_wrap = True
             for p_idx, pt in enumerate(col1_pts[:4]):
-                p = lbtf.paragraphs[0] if p_idx == 0 else lbtf.add_paragraph()
-                p.text = f"{icon}  {remove_emojis(str(pt))}"
-                p.font.size = Pt(16)
-                p.font.color.rgb = theme["text_dark"]
-                p.font.name = "Arial"
-                p.space_after = Pt(10)
+                _add_styled_bullet(lbtf, str(pt), theme, font_size=Pt(15), space_after=Pt(10), is_first=(p_idx == 0))
 
             # Right Card
             right_card = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(7.1), y_pos, card_w, card_h)
@@ -1260,7 +1399,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             right_card.line.color.rgb = theme["accent"]
             right_card.line.width = Pt(2.0)
 
-            rt_box = c_slide.shapes.add_textbox(Inches(7.35), y_pos + Inches(0.2), card_w - Inches(0.5), Inches(0.8))
+            rt_box = c_slide.shapes.add_textbox(Inches(7.35), y_pos + Inches(0.2), card_w - Inches(0.5), Inches(0.7))
             rtf = rt_box.text_frame
             rtf.word_wrap = True
             rp = rtf.paragraphs[0]
@@ -1270,16 +1409,11 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             rp.font.color.rgb = theme["accent"]
             rp.font.name = "Arial"
 
-            rb_box = c_slide.shapes.add_textbox(Inches(7.35), y_pos + Inches(1.0), card_w - Inches(0.5), card_h - Inches(1.2))
+            rb_box = c_slide.shapes.add_textbox(Inches(7.35), y_pos + Inches(0.95), card_w - Inches(0.5), card_h - Inches(1.1))
             rbtf = rb_box.text_frame
             rbtf.word_wrap = True
             for p_idx, pt in enumerate(col2_pts[:4]):
-                p = rbtf.paragraphs[0] if p_idx == 0 else rbtf.add_paragraph()
-                p.text = f"{icon}  {remove_emojis(str(pt))}"
-                p.font.size = Pt(16)
-                p.font.color.rgb = theme["text_dark"]
-                p.font.name = "Arial"
-                p.space_after = Pt(10)
+                _add_styled_bullet(rbtf, str(pt), theme, font_size=Pt(15), space_after=Pt(10), is_first=(p_idx == 0))
 
             # Central VS Badge
             vs_badge = c_slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(6.25), y_pos + Inches(2.1), Inches(0.8), Inches(0.8))
@@ -1310,8 +1444,8 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
                 step_card.line.color.rgb = theme["card_border"]
                 step_card.line.width = Pt(1.5)
 
-                # Step Number Circle
-                circ = c_slide.shapes.add_shape(MSO_SHAPE.OVAL, x_pos + Inches(0.3), y_pos + Inches(0.35), Inches(0.8), Inches(0.8))
+                # Step Number Pill
+                circ = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_pos + Inches(0.3), y_pos + Inches(0.35), Inches(0.9), Inches(0.55))
                 circ.fill.solid()
                 circ.fill.fore_color.rgb = theme["accent"]
                 circ.line.fill.background()
@@ -1319,78 +1453,69 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
                 cp = ctf.paragraphs[0]
                 step_num = str(st.get("step", f"0{st_idx+1}"))
                 cp.text = remove_emojis(step_num if len(step_num) >= 2 else f"0{step_num}")
-                cp.font.size = Pt(16)
+                cp.font.size = Pt(14)
                 cp.font.bold = True
                 cp.font.color.rgb = RGBColor(255, 255, 255)
                 cp.alignment = PP_ALIGN.CENTER
 
                 # Step Title
-                st_title_box = c_slide.shapes.add_textbox(x_pos + Inches(0.3), y_pos + Inches(1.3), card_w - Inches(0.6), Inches(1.0))
+                st_title_box = c_slide.shapes.add_textbox(x_pos + Inches(0.3), y_pos + Inches(1.1), card_w - Inches(0.6), Inches(0.9))
                 st_tf = st_title_box.text_frame
                 st_tf.word_wrap = True
                 tp = st_tf.paragraphs[0]
                 tp.text = remove_emojis(str(st.get("title", "")))
                 tp.font.size = Pt(18)
                 tp.font.bold = True
-                tp.font.color.rgb = theme["text_dark"]
+                tp.font.color.rgb = theme["primary"] if not is_dark else theme["accent"]
                 tp.font.name = "Arial"
 
                 # Step Desc
-                desc_box = c_slide.shapes.add_textbox(x_pos + Inches(0.3), y_pos + Inches(2.4), card_w - Inches(0.6), Inches(2.3))
+                desc_box = c_slide.shapes.add_textbox(x_pos + Inches(0.3), y_pos + Inches(2.1), card_w - Inches(0.6), Inches(2.6))
                 dtf = desc_box.text_frame
                 dtf.word_wrap = True
                 dp = dtf.paragraphs[0]
                 dp.text = remove_emojis(str(st.get("desc", "")))
-                dp.font.size = Pt(15)
+                dp.font.size = Pt(14)
                 dp.font.color.rgb = theme["text_dark"]
                 dp.font.name = "Arial"
 
         elif img_path and os.path.exists(img_path):
-            card = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(1.75), Inches(6.8), Inches(5.25))
+            card = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.75), Inches(6.9), Inches(5.25))
             card.fill.solid()
             card.fill.fore_color.rgb = theme["card_bg"]
             card.line.color.rgb = theme["card_border"]
             card.line.width = Pt(1.5)
 
-            content_box = c_slide.shapes.add_textbox(Inches(1.05), Inches(1.95), Inches(6.3), Inches(4.85))
+            content_box = c_slide.shapes.add_textbox(Inches(1.15), Inches(1.95), Inches(6.4), Inches(4.85))
             ctf = content_box.text_frame
             ctf.word_wrap = True
-            
-            font_sz = Pt(16 if len(bullets) >= 4 else 18)
-            space_aft = Pt(10 if len(bullets) >= 4 else 14)
+
+            font_sz = Pt(15 if len(bullets) >= 4 else 17)
+            space_aft = Pt(12 if len(bullets) >= 4 else 16)
 
             for b_idx, bullet in enumerate(bullets):
-                b_clean = re.sub(r"^[\s•\-\*–—\d\.\)]+", "", remove_emojis(str(bullet))).strip()
-                p = ctf.paragraphs[0] if b_idx == 0 else ctf.add_paragraph()
-                p.text = f"{icon}   {b_clean}"
-                p.font.size = font_sz
-                p.font.color.rgb = theme["text_dark"]
-                p.font.name = "Arial"
-                p.space_after = space_aft
+                _add_styled_bullet(ctf, bullet, theme, font_size=font_sz, space_after=space_aft, is_first=(b_idx == 0))
 
-            c_slide.shapes.add_picture(img_path, Inches(7.85), Inches(1.75), width=Inches(4.7), height=Inches(5.25))
+            try:
+                c_slide.shapes.add_picture(img_path, Inches(8.05), Inches(1.75), width=Inches(4.4), height=Inches(5.25))
+            except Exception:
+                pass
         else:
-            card = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.0), Inches(1.8), Inches(11.333), Inches(5.1))
+            card = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.75), Inches(11.533), Inches(5.25))
             card.fill.solid()
             card.fill.fore_color.rgb = theme["card_bg"]
             card.line.color.rgb = theme["card_border"]
             card.line.width = Pt(1.5)
 
-            content_box = c_slide.shapes.add_textbox(Inches(1.4), Inches(2.0), Inches(10.5), Inches(4.7))
+            content_box = c_slide.shapes.add_textbox(Inches(1.3), Inches(2.0), Inches(10.7), Inches(4.75))
             ctf = content_box.text_frame
             ctf.word_wrap = True
-            
-            font_sz = Pt(18 if len(bullets) >= 5 else 20)
-            space_aft = Pt(12 if len(bullets) >= 5 else 16)
+
+            font_sz = Pt(17 if len(bullets) >= 5 else 19)
+            space_aft = Pt(14 if len(bullets) >= 5 else 18)
 
             for b_idx, bullet in enumerate(bullets):
-                b_clean = re.sub(r"^[\s•\-\*–—\d\.\)]+", "", remove_emojis(str(bullet))).strip()
-                p = ctf.paragraphs[0] if b_idx == 0 else ctf.add_paragraph()
-                p.text = f"{icon}   {b_clean}"
-                p.font.size = font_sz
-                p.font.color.rgb = theme["text_dark"]
-                p.font.name = "Arial"
-                p.space_after = space_aft
+                _add_styled_bullet(ctf, bullet, theme, font_size=font_sz, space_after=space_aft, is_first=(b_idx == 0))
 
         # Speaker notes
         notes = s_data.get("speaker_notes", "")
@@ -1410,28 +1535,21 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         bg_concl.line.fill.background()
 
     concl_num = len(slides_data) + (4 if has_author else 3)
-    _add_header(concl_slide, "Xulosa va Asosiy Natijalar", theme, slide_num=concl_num, total_slides=total_slides)
+    _add_header(concl_slide, "Xulosa va Asosiy Natijalar", theme, slide_num=concl_num, total_slides=total_slides, category="XULOSA")
 
-    concl_card = concl_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.0), Inches(1.8), Inches(11.333), Inches(5.1))
+    concl_card = concl_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.75), Inches(11.533), Inches(5.25))
     concl_card.fill.solid()
     concl_card.fill.fore_color.rgb = theme["card_bg"]
     concl_card.line.color.rgb = theme["card_border"]
     concl_card.line.width = Pt(1.5)
 
-    concl_box = concl_slide.shapes.add_textbox(Inches(1.4), Inches(2.1), Inches(10.5), Inches(4.5))
+    concl_box = concl_slide.shapes.add_textbox(Inches(1.3), Inches(2.1), Inches(10.7), Inches(4.6))
     concl_tf = concl_box.text_frame
     concl_tf.word_wrap = True
 
     if conclusion_points:
         for c_idx, point in enumerate(conclusion_points):
-            c_clean = re.sub(r"^[\s•\-\*–—\d\.\)]+", "", remove_emojis(str(point))).strip()
-            p = concl_tf.paragraphs[0] if c_idx == 0 else concl_tf.add_paragraph()
-            p.text = f"•   {c_clean}"
-            p.font.size = Pt(20)
-            p.font.bold = True
-            p.font.color.rgb = theme["text_dark"]
-            p.font.name = "Arial"
-            p.space_after = Pt(16)
+            _add_styled_bullet(concl_tf, point, theme, font_size=Pt(18), space_after=Pt(16), is_first=(c_idx == 0))
     else:
         p = concl_tf.paragraphs[0]
         p.text = "Taqdimot mavzusi to'liq yoritildi va asosiy masalalar muhokama qilindi."
@@ -1449,15 +1567,15 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         bg_ref.line.fill.background()
 
     ref_num = len(slides_data) + (5 if has_author else 4)
-    _add_header(ref_slide, "Foydalanilgan Adabiyotlar va Manbalar", theme, slide_num=ref_num, total_slides=total_slides)
+    _add_header(ref_slide, "Foydalanilgan Adabiyotlar va Manbalar", theme, slide_num=ref_num, total_slides=total_slides, category="MANBALAR")
 
-    ref_card = ref_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.0), Inches(1.7), Inches(11.333), Inches(5.3))
+    ref_card = ref_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.75), Inches(11.533), Inches(5.25))
     ref_card.fill.solid()
     ref_card.fill.fore_color.rgb = theme["card_bg"]
     ref_card.line.color.rgb = theme["card_border"]
     ref_card.line.width = Pt(1.5)
 
-    ref_box = ref_slide.shapes.add_textbox(Inches(1.4), Inches(1.9), Inches(10.5), Inches(4.8))
+    ref_box = ref_slide.shapes.add_textbox(Inches(1.3), Inches(2.0), Inches(10.7), Inches(4.7))
     ref_tf = ref_box.text_frame
     ref_tf.word_wrap = True
 

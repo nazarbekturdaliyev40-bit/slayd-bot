@@ -15,6 +15,7 @@ import config
 import database
 import keyboards
 import generator
+import gamma_service
 
 logger = logging.getLogger(__name__)
 router = Router()
@@ -1267,6 +1268,102 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
     temp_dir = None
 
     try:
+        if theme_choice == "gamma":
+            if not gamma_service.is_gamma_available():
+                await status_msg.edit_text(
+                    f"⚠️ <b>Gamma API kaliti hali kiritilmagan.</b>\n"
+                    f"Bot sizga yuqori sifatli infografik taqdimot tayyorlamoqda... ⏳",
+                    parse_mode="HTML"
+                )
+                theme_choice = "blue"
+            else:
+                async def update_gamma_status(status_text: str):
+                    try:
+                        await status_msg.edit_text(f"⏳ <b>'{safe_topic}'</b>:\n{status_text}", parse_mode="HTML")
+                    except Exception:
+                        pass
+
+                gamma_res = await gamma_service.generate_gamma_presentation(
+                    topic=topic,
+                    num_cards=slide_count,
+                    author_info=author_info,
+                    status_callback=update_gamma_status
+                )
+                if gamma_res.get("success") and gamma_res.get("file_path"):
+                    pptx_path = gamma_res["file_path"]
+                    gamma_url = gamma_res.get("gamma_url", "")
+
+                    try:
+                        content_mini = await generator.generate_presentation_content(topic, slide_count=min(slide_count, 6), author_info=author_info)
+                        speech_text = generator.generate_speech_script(content_mini, author_info=author_info)
+                    except Exception:
+                        speech_text = f"Taqdimot mavzusi: {topic}\n\nHimoya nutqi:\nHurmatli ustoz va talabalar, ushbu taqdimot '{topic}' mavzusiga bag'ishlangan bo'lib, zamonaviy axborotlar va vizual tuzilma asosida tayyorlandi."
+
+                    user_cache_dir = os.path.join(os.path.dirname(__file__), "user_cache", str(user_id))
+                    os.makedirs(user_cache_dir, exist_ok=True)
+                    cached_pptx = os.path.join(user_cache_dir, "latest.pptx")
+                    cached_speech = os.path.join(user_cache_dir, "latest_speech.txt")
+                    cached_meta = os.path.join(user_cache_dir, "meta.json")
+
+                    safe_name = "".join(c for c in topic[:30] if c.isalnum() or c in (" ", "_", "-")).strip() or "taqdimot"
+                    shutil.copy2(pptx_path, cached_pptx)
+                    with open(cached_speech, "w", encoding="utf-8") as f:
+                        f.write(speech_text)
+                    with open(cached_meta, "w", encoding="utf-8") as f:
+                        json.dump({"topic": topic, "safe_name": safe_name, "gamma_url": gamma_url}, f, ensure_ascii=False)
+
+                    user_info = await database.get_user(user_id) or {}
+                    is_sub = database.is_subscription_active(user_info)
+                    is_unlimited_user = bool(user_info.get("is_unlimited")) or config.is_unlimited(user_id) or is_sub
+
+                    if is_unlimited_user:
+                        limit_caption = "♾ <b>Cheksiz (VIP / Boshqaruvchi)</b>"
+                    elif is_sub:
+                        exp_date = user_info.get("subscription_until", "")
+                        limit_caption = f"⭐️ <b>Oylik obuna faol</b> (<code>{exp_date}</code> gacha)"
+                    else:
+                        cur_free = user_info.get("free_limit", 0)
+                        cur_paid = user_info.get("paid_balance", 0)
+                        rem_free = max(0, cur_free - 1) if cur_free > 0 else 0
+                        rem_paid = (cur_paid - 1) if (cur_free == 0 and cur_paid > 0) else cur_paid
+                        rem_total = rem_free + rem_paid
+                        limit_caption = f"<b>{rem_total} ta</b> ({rem_free} ta bepul, {rem_paid} ta pulli)"
+
+                    bot_user = await chat_message.bot.get_me()
+                    share_url = f"https://t.me/share/url?url=https://t.me/{bot_user.username}?start=ref_{user_id}&text=Sun'iy%20intellekt%20yordamida%20talabalar%20uchun%20professional%20taqdimotlar%20tayyorlang!%20%F0%9F%8E%81%20Bepul%20sinab%20ko'rish:"
+
+                    pptx_document = FSInputFile(pptx_path, filename=f"{safe_name}.pptx")
+                    caption_html = (
+                        f"🎉 <b>Gamma AI taqdimotingiz muvaffaqiyatli tayyorlandi!</b>\n\n"
+                        f"📄 Mavzu: <i>{safe_topic}</i>\n"
+                        f"🪄 AI platforma: <b>Gamma.app (Premium AI)</b>\n"
+                        f"📊 Kartalar soni: <b>{slide_count} ta</b>\n"
+                        f"📁 Format: <b>PowerPoint (.pptx)</b> — to'liq tahrirlanadigan\n"
+                        f"💡 Qolgan limitingiz: {limit_caption}\n\n"
+                        f"👇 <i>Taqdimotni Gamma vebda ko'rish, PDF ga aylantirish yoki nutq matnini olish uchun tugmalardan foydalaning:</i>"
+                    )
+                    await chat_message.reply_document(
+                        document=pptx_document,
+                        caption=caption_html,
+                        reply_markup=keyboards.get_slide_action_keyboard(share_url=share_url, gamma_url=gamma_url),
+                        parse_mode="HTML"
+                    )
+                    await database.use_limit(user_id)
+                    try:
+                        await status_msg.delete()
+                    except Exception:
+                        pass
+                    return
+                else:
+                    err_detail = gamma_res.get("error", "Noma'lum xatolik")
+                    logger.warning(f"Gamma generation failed: {err_detail}, falling back to local Gemini engine...")
+                    await status_msg.edit_text(
+                        f"⚠️ <b>Gamma AI bildirishnomasi:</b> {html.escape(err_detail)}\n"
+                        "🔄 <i>Bot avtomatik ravishda premium dizayn generatoriga o'tmoqda...</i> ⏳",
+                        parse_mode="HTML"
+                    )
+                    theme_choice = "blue"
+
         # Generate with Gemini
         content = await generator.generate_presentation_content(
             topic,
@@ -1654,6 +1751,26 @@ async def admin_remove_vip(message: Message):
     except ValueError:
         await message.answer("Foydalanuvchi ID raqami butun son bo'lishi kerak!")
 
+@router.message(Command("set_gamma"))
+async def admin_set_gamma(message: Message):
+    if not config.is_admin(message.from_user.id):
+        return
+    args = message.text.split(maxsplit=1)
+    if len(args) < 2 or not args[1].strip():
+        curr = "Sozlangan ✅" if gamma_service.is_gamma_available() else "Sozlanmagan ❌"
+        await message.answer(
+            f"ℹ️ <b>Gamma API kaliti holati:</b> {curr}\n\n"
+            "Kalitni sozlash uchun quyidagicha yuboring:\n"
+            "<code>/set_gamma YOUR_GAMMA_API_KEY</code>",
+            parse_mode="HTML"
+        )
+        return
+    new_key = args[1].strip()
+    if gamma_service.save_gamma_key(new_key):
+        await message.answer("✅ <b>Gamma API kaliti muvaffaqiyatli saqlandi!</b>\nEndi bot orqali Gamma AI taqdimotlari yaratish to'liq faol.", parse_mode="HTML")
+    else:
+        await message.answer("❌ API kalitini saqlashda xatolik yuz berdi.")
+
 @router.message(F.text == "⚙️ Admin panel")
 @router.message(Command("stats"))
 async def admin_panel(message: Message):
@@ -1661,12 +1778,15 @@ async def admin_panel(message: Message):
         return
 
     stats = await database.get_stats()
+    gamma_status = "Faol ✅" if gamma_service.is_gamma_available() else "Sozlanmagan ⚠️"
     text = (
         f"⚙️ **Admin paneli va Statistika:**\n\n"
         f"👥 Jami foydalanuvchilar: **{stats['total_users']} nafar**\n"
         f"🎨 Slayd tayyorlaganlar: **{stats.get('active_users', 0)} nafar**\n"
         f"📑 Jami yaratilgan taqdimotlar: **{stats['total_slides']} ta**\n"
-        f"🤝 Jami taklif qilingan do'stlar: **{stats.get('total_referrals', 0)} ta**\n\n"
+        f"🤝 Jami taklif qilingan do'stlar: **{stats.get('total_referrals', 0)} ta**\n"
+        f"🪄 Gamma AI integratsiyasi: **{gamma_status}**\n\n"
+        f"🔑 Gamma kalitini kiritish: `/set_gamma <API_KEY>`\n"
         f"👑 VIP maqom berish: `/set_vip <id>`\n"
         f"🚫 VIP ni bekor qilish: `/remove_vip <id>`\n"
         f"➕ Limit qo'shish: `/add_limit <id> <soni>`\n"

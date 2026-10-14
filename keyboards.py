@@ -119,6 +119,9 @@ def get_skip_author_keyboard() -> InlineKeyboardMarkup:
 def get_theme_selection_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [
+            InlineKeyboardButton(text="🪄 Gamma AI (gamma.app taqdimot)", callback_data="theme_gamma")
+        ],
+        [
             InlineKeyboardButton(text="⚪️ Oq fon (Minimal)", callback_data="theme_white"),
             InlineKeyboardButton(text="⚫️ Qora fon (Premium Dark)", callback_data="theme_dark")
         ],
@@ -155,13 +158,16 @@ def get_custom_bg_keyboard() -> InlineKeyboardMarkup:
         ]
     ])
 
-def get_slide_action_keyboard(share_url: str = "") -> InlineKeyboardMarkup:
-    btns = [
-        [
-            InlineKeyboardButton(text="📄 PDF formatida olish", callback_data="get_latest_pdf"),
-            InlineKeyboardButton(text="🎤 Himoya nutq matni", callback_data="get_latest_speech")
-        ]
-    ]
+def get_slide_action_keyboard(share_url: str = "", gamma_url: str = "") -> InlineKeyboardMarkup:
+    btns = []
+    if gamma_url:
+        btns.append([
+            InlineKeyboardButton(text="🌐 Gamma.app da ochish va tahrirlash", url=gamma_url)
+        ])
+    btns.append([
+        InlineKeyboardButton(text="📄 PDF formatida olish", callback_data="get_latest_pdf"),
+        InlineKeyboardButton(text="🎤 Himoya nutq matni", callback_data="get_latest_speech")
+    ])
     if share_url:
         btns.append([
             InlineKeyboardButton(text="🎁 Bepul limit olish (+1)", url=share_url)

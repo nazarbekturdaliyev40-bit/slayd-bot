@@ -5,6 +5,7 @@ load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN", "")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GAMMA_API_KEY = os.getenv("GAMMA_API_KEY", "").strip()
 ADMIN_ID = int(os.getenv("ADMIN_ID", "8597458619"))
 CARD_NUMBER = os.getenv("CARD_NUMBER", "8600 0000 0000 0000")
 CARD_HOLDER = os.getenv("CARD_HOLDER", "Karta egasi")
