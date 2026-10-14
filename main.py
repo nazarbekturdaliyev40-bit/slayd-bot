@@ -22,7 +22,7 @@ from aiohttp import web
 import os
 
 async def start_web_server():
-    port = int(os.getenv("PORT", "8080"))
+    port = int(os.getenv("PORT", "10000"))
     app = web.Application()
     async def handle_ping(request):
         return web.Response(text="Bot is running 24/7!")
@@ -32,7 +32,7 @@ async def start_web_server():
     await runner.setup()
     site = web.TCPSite(runner, "0.0.0.0", port)
     await site.start()
-    logger.info(f"Healthcheck veb-server {port}-portda ishga tushdi.")
+    logger.info(f"Healthcheck veb-server 0.0.0.0:{port} da ishga tushdi.")
 
 async def setup_bot_commands(bot: Bot):
     commands = [
@@ -50,6 +50,12 @@ async def setup_bot_commands(bot: Bot):
         logger.warning(f"Bot buyruqlarini o'rnatishda xatolik: {e}")
 
 async def main():
+    # 1. Render uchun veb-serverni eng birinchi navbatda ishga tushiramiz
+    try:
+        await start_web_server()
+    except Exception as e:
+        logger.error(f"Veb-serverni ishga tushirishda xatolik: {e}")
+
     if not config.BOT_TOKEN:
         logger.error("BOT_TOKEN aniqlanmadi! .env faylini tekshiring.")
         return
@@ -57,8 +63,11 @@ async def main():
         logger.warning("GEMINI_API_KEY kiritilmagan! Slayd generatsiyasi ishlamasligi mumkin.")
 
     # Init SQLite DB
-    await database.init_db()
-    logger.info("Ma'lumotlar bazasi tayyorlandi.")
+    try:
+        await database.init_db()
+        logger.info("Ma'lumotlar bazasi tayyorlandi.")
+    except Exception as e:
+        logger.error(f"Baza xatoligi: {e}")
 
     # Bot & Dispatcher
     bot = Bot(
@@ -68,8 +77,10 @@ async def main():
     dp = Dispatcher()
     dp.include_router(router)
 
-    await setup_bot_commands(bot)
-    await start_web_server()
+    try:
+        await setup_bot_commands(bot)
+    except Exception as e:
+        logger.warning(f"Menu o'rnatish xatoligi: {e}")
 
     logger.info("Bot muvaffaqiyatli ishga tushdi...")
     await dp.start_polling(bot)
