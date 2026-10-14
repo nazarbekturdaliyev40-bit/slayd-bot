@@ -18,6 +18,22 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+from aiohttp import web
+import os
+
+async def start_web_server():
+    port = int(os.getenv("PORT", "8080"))
+    app = web.Application()
+    async def handle_ping(request):
+        return web.Response(text="Bot is running 24/7!")
+    app.router.add_get("/", handle_ping)
+    app.router.add_get("/health", handle_ping)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    await site.start()
+    logger.info(f"Healthcheck veb-server {port}-portda ishga tushdi.")
+
 async def setup_bot_commands(bot: Bot):
     commands = [
         BotCommand(command="start", description="🚀 Botni ishga tushirish"),
@@ -53,6 +69,7 @@ async def main():
     dp.include_router(router)
 
     await setup_bot_commands(bot)
+    await start_web_server()
 
     logger.info("Bot muvaffaqiyatli ishga tushdi...")
     await dp.start_polling(bot)
