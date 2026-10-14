@@ -18,21 +18,37 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-from aiohttp import web
 import os
+import threading
+from http.server import HTTPServer, BaseHTTPRequestHandler
 
-async def start_web_server():
-    port = int(os.getenv("PORT", "10000"))
-    app = web.Application()
-    async def handle_ping(request):
-        return web.Response(text="Bot is running 24/7!")
-    app.router.add_get("/", handle_ping)
-    app.router.add_get("/health", handle_ping)
-    runner = web.AppRunner(app)
-    await runner.setup()
-    site = web.TCPSite(runner, "0.0.0.0", port)
-    await site.start()
-    logger.info(f"Healthcheck veb-server 0.0.0.0:{port} da ishga tushdi.")
+class HealthHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "text/plain; charset=utf-8")
+        self.end_headers()
+        self.wfile.write(b"Bot is running 24/7!")
+
+    def do_HEAD(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "text/plain; charset=utf-8")
+        self.end_headers()
+
+    def log_message(self, format, *args):
+        # Don't clutter logs with pings
+        pass
+
+def start_health_server():
+    port = int(os.environ.get("PORT", 10000))
+    try:
+        server = HTTPServer(("0.0.0.0", port), HealthHandler)
+        logger.info(f"Healthcheck veb-server 0.0.0.0:{port} da bir zumda ishga tushdi.")
+        server.serve_forever()
+    except Exception as e:
+        logger.error(f"Health server xatosi: {e}")
+
+# Python ishga tushishi bilanoq fonda portni darhol ochamiz
+threading.Thread(target=start_health_server, daemon=True).start()
 
 async def setup_bot_commands(bot: Bot):
     commands = [
@@ -50,12 +66,6 @@ async def setup_bot_commands(bot: Bot):
         logger.warning(f"Bot buyruqlarini o'rnatishda xatolik: {e}")
 
 async def main():
-    # 1. Render uchun veb-serverni eng birinchi navbatda ishga tushiramiz
-    try:
-        await start_web_server()
-    except Exception as e:
-        logger.error(f"Veb-serverni ishga tushirishda xatolik: {e}")
-
     if not config.BOT_TOKEN:
         logger.error("DIQQAT: BOT_TOKEN aniqlanmadi! Render Environment Variables bo'limiga BOT_TOKEN qo'shing.")
         while True:
