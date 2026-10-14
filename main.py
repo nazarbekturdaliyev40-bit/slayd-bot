@@ -57,8 +57,10 @@ async def main():
         logger.error(f"Veb-serverni ishga tushirishda xatolik: {e}")
 
     if not config.BOT_TOKEN:
-        logger.error("BOT_TOKEN aniqlanmadi! .env faylini tekshiring.")
-        return
+        logger.error("DIQQAT: BOT_TOKEN aniqlanmadi! Render Environment Variables bo'limiga BOT_TOKEN qo'shing.")
+        while True:
+            await asyncio.sleep(3600)
+
     if not config.GEMINI_API_KEY:
         logger.warning("GEMINI_API_KEY kiritilmagan! Slayd generatsiyasi ishlamasligi mumkin.")
 
@@ -82,8 +84,13 @@ async def main():
     except Exception as e:
         logger.warning(f"Menu o'rnatish xatoligi: {e}")
 
-    logger.info("Bot muvaffaqiyatli ishga tushdi...")
-    await dp.start_polling(bot)
+    logger.info("Bot polling ishga tushmoqda...")
+    while True:
+        try:
+            await dp.start_polling(bot)
+        except Exception as e:
+            logger.error(f"Telegram polling to'xtadi yoki xatolik: {e}. 5 soniyada qayta ulanadi...")
+            await asyncio.sleep(5)
 
 if __name__ == "__main__":
     try:
