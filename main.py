@@ -52,12 +52,13 @@ threading.Thread(target=start_health_server, daemon=True).start()
 
 async def setup_bot_commands(bot: Bot):
     commands = [
-        BotCommand(command="start", description="🚀 Botni ishga tushirish"),
-        BotCommand(command="yangi_slayd", description="📊 Yangi slayd tayyorlash"),
-        BotCommand(command="profil", description="👤 Mening profilim"),
-        BotCommand(command="limit", description="💳 Limit va Obuna"),
-        BotCommand(command="murojaat", description="👨‍💻 Adminga murojaat"),
-        BotCommand(command="haqida", description="ℹ️ Bot haqida"),
+        BotCommand(command="start", description="🚀 Qayta ishga tushirish / Start"),
+        BotCommand(command="slayd", description="📊 Slayd tayyorlash / Create slides"),
+        BotCommand(command="lang", description="🌐 Tilni o'zgartirish / Language"),
+        BotCommand(command="profil", description="👤 Profil / Profile"),
+        BotCommand(command="tariffs", description="💳 Tariflar / Plans"),
+        BotCommand(command="haqida", description="ℹ️ Bot haqida / About"),
+        BotCommand(command="murojaat", description="👨‍💻 Adminga murojaat / Contact"),
     ]
     try:
         await bot.set_my_commands(commands, scope=BotCommandScopeDefault())

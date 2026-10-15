@@ -146,11 +146,11 @@ async def process_language_choice(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer(
         welcome_text,
         reply_markup=keyboards.get_main_menu(is_admin=is_admin, lang=chosen_lang),
-        parse_mode="Markdown"
+        parse_mode="HTML"
     )
 
 @router.message(Command("lang"))
-@router.message(F.text.in_({"🌐 Tilni o'zgartirish", "🌐 Сменить язык", "🌐 Change language"}))
+@router.message(F.text.in_({"🌐 Tilni o'zgartirish", "🌐 Сменить язык", "🌐 Change Language", "🌐 Change language"}))
 async def prompt_change_language(message: Message):
     lang_prompt = (
         "🌐 <b>Tilni tanlang / Выберите язык / Choose language:</b>\n\n"
@@ -164,7 +164,7 @@ async def prompt_change_language(message: Message):
         parse_mode="HTML"
     )
 
-@router.message(F.text.in_({"🎁 Bepul limit olish", "🎁 Получить бесплатный лимит", "🎁 Get free limits"}))
+@router.message(F.text.in_({"🎁 Bepul limit", "🎁 Bepul limit olish", "🎁 Бесплатные лимиты", "🎁 Получить бесплатный лимит", "🎁 Free Limits", "🎁 Get free limits"}))
 async def show_referral_program(message: Message):
     user_lang = await database.get_user_language(message.from_user.id)
     bot_user = await message.bot.get_me()
@@ -185,7 +185,7 @@ async def show_referral_program(message: Message):
         parse_mode="Markdown"
     )
 
-@router.message(F.text.in_({"👤 Mening profilim", "👤 Мой профиль", "👤 My Profile"}))
+@router.message(F.text.in_({"👤 Mening profilim", "👤 Profilim", "👤 Мой профиль", "👤 My Profile"}))
 @router.message(Command("profil"))
 @router.message(Command("profile"))
 async def show_profile(message: Message):
@@ -209,31 +209,30 @@ async def show_profile(message: Message):
                 f"👤 **Информация профиля:**\n\n"
                 f"🆔 ID: `{user['telegram_id']}`\n"
                 f"👑 **Тариф:** 👑 VIP / Безлимит (Владелец)\n"
-                f"✨ **Доступный лимит:** ♾ **Бессрочно безлимитный**\n"
+                f"✨ **Доступный лимит:** ♾ **Без ограничений**\n"
                 f"📊 **Всего создано слайдов:** **{user['total_generated']} шт.**\n"
                 f"👥 **Приглашено друзей:** **{stats['invited_count']} чел.**\n\n"
-                f"🎉 Все услуги и генерации слайдов для вас 100% БЕСПЛАТНЫ!"
+                f"✅ Для вашего аккаунта активирован постоянный безлимитный доступ."
             )
         elif user_lang == "en":
             text = (
                 f"👤 **User Profile:**\n\n"
                 f"🆔 ID: `{user['telegram_id']}`\n"
                 f"👑 **Plan:** 👑 VIP / Unlimited (Owner)\n"
-                f"✨ **Available limit:** ♾ **Unlimited Forever**\n"
-                f"📊 **Total presentations created:** **{user['total_generated']}**\n"
+                f"✨ **Available limit:** ♾ **Unlimited**\n"
+                f"📊 **Total slides created:** **{user['total_generated']}**\n"
                 f"👥 **Invited friends:** **{stats['invited_count']}**\n\n"
-                f"🎉 All services and slide creations are 100% FREE for your account!"
+                f"✅ Unlimited access is permanently enabled for your account."
             )
         else:
             text = (
                 f"👤 **Foydalanuvchi ma'lumotlari:**\n\n"
                 f"🆔 ID: `{user['telegram_id']}`\n"
-                f"👑 **Tarif:** Mutlaqo Tekin va Cheksiz (Bot Egasi / VIP)\n"
-                f"✨ **Mavjud limit:** ♾ **Cheksiz (Umuman tugamaydi)**\n"
+                f"👑 **Tarif:** 👑 VIP / Cheksiz (Bot Egasi)\n"
+                f"✨ **Mavjud limit:** ♾ **Cheksiz**\n"
                 f"📊 **Jami yaratilgan slaydlar:** **{user['total_generated']} ta**\n"
                 f"👥 **Taklif qilgan do'stlaringiz:** **{stats['invited_count']} nafar**\n\n"
-                f"🎉 **Siz bot egasisiz!** Barcha xizmatlar va slaydlar siz uchun 100% MUTLAQO TEKIN va CHEKSIZ!\n"
-                f"Xohlagancha slayd yaratishingiz mumkin, to'lov qilish shart emas."
+                f"✅ Barcha xizmatlar hisobingiz uchun to'liq bepul va cheksiz sozlangan."
             )
     elif is_sub:
         sub_until = user.get("subscription_until", "")
@@ -241,53 +240,53 @@ async def show_profile(message: Message):
             text = (
                 f"👤 **Информация профиля:**\n\n"
                 f"🆔 ID: `{user['telegram_id']}`\n"
-                f"👑 **Тариф:** ⭐️ **Месячная безлимитная подписка активна!**\n"
+                f"👑 **Тариф:** ⭐️ **Месячная подписка**\n"
                 f"⏳ **Действует до:** `{sub_until}`\n"
-                f"✨ **Доступный лимит:** ♾ **Без ограничений на период подписки!**\n"
+                f"✨ **Доступный лимит:** ♾ **Без ограничений**\n"
                 f"📊 **Всего создано слайдов:** **{user['total_generated']} шт.**\n"
                 f"👥 **Приглашено друзей:** **{stats['invited_count']} чел.**\n\n"
-                f"✅ Вы можете создавать неограниченное количество слайдов! 🚀"
+                f"✅ Вы можете создавать презентации без ограничений."
             )
         elif user_lang == "en":
             text = (
                 f"👤 **User Profile:**\n\n"
                 f"🆔 ID: `{user['telegram_id']}`\n"
-                f"👑 **Plan:** ⭐️ **Monthly Unlimited Subscription Active!**\n"
+                f"👑 **Plan:** ⭐️ **Monthly Unlimited**\n"
                 f"⏳ **Valid until:** `{sub_until}`\n"
-                f"✨ **Available limit:** ♾ **Unlimited during subscription!**\n"
-                f"📊 **Total presentations created:** **{user['total_generated']}**\n"
+                f"✨ **Available limit:** ♾ **Unlimited**\n"
+                f"📊 **Total slides created:** **{user['total_generated']}**\n"
                 f"👥 **Invited friends:** **{stats['invited_count']}**\n\n"
-                f"✅ You can create as many slides as you want! 🚀"
+                f"✅ You can create presentations without restrictions."
             )
         else:
             text = (
                 f"👤 **Foydalanuvchi ma'lumotlari:**\n\n"
                 f"🆔 ID: `{user['telegram_id']}`\n"
-                f"👑 **Tarif:** ⭐️ **Oylik cheksiz obuna faol!**\n"
+                f"👑 **Tarif:** ⭐️ **Oylik cheksiz obuna**\n"
                 f"⏳ **Amal qilish muddati:** `{sub_until}` gacha\n"
-                f"✨ **Mavjud limit:** ♾ **Obuna davrida cheksiz!**\n"
+                f"✨ **Mavjud limit:** ♾ **Obuna davrida cheksiz**\n"
                 f"📊 **Jami yaratilgan slaydlar:** **{user['total_generated']} ta**\n"
                 f"👥 **Taklif qilgan do'stlaringiz:** **{stats['invited_count']} nafar**\n\n"
-                f"✅ Siz ushbu muddat davomida bemalol istalgancha yangi slaydlar yaratishingiz mumkin! 🚀"
+                f"✅ Ushbu muddat davomida bemalol yangi slaydlar yaratishingiz mumkin."
             )
     else:
         if user_lang == "ru":
             text = (
                 f"👤 **Информация профиля:**\n\n"
                 f"🆔 ID: `{user['telegram_id']}`\n"
-                f"🎁 Стартовый бесплатный лимит: **{user['free_limit']} шт.**\n"
+                f"🎁 Стартовый лимит: **{user['free_limit']} шт.**\n"
                 f"💳 Оплаченный баланс: **{user['paid_balance']} шт.**\n"
-                f"✨ Итого доступно: **{total_remaining} шт.**\n"
+                f"✨ Всего доступно: **{total_remaining} шт.**\n"
                 f"📊 Всего создано: **{user['total_generated']} шт.**\n"
                 f"👥 Приглашено друзей: **{stats['invited_count']} чел.** (бонус: {stats['earned_limits']} лимитов)\n\n"
             )
             if total_remaining == 0:
                 text += (
-                    "⚠️ **Ваши лимиты исчерпаны!**\n\n"
-                    "💡 Чтобы создать презентацию, приобретите лимиты (1 шт. — 5 000 сум) или оформите подписку (20 000 сум), либо пригласите друзей и получите бесплатные лимиты."
+                    "⚠️ **Ваши лимиты исчерпаны.**\n\n"
+                    "💡 Чтобы продолжить, выберите подходящий тариф в меню «💳 Тарифы» или пригласите друзей и получите бесплатные лимиты."
                 )
             else:
-                text += "✅ Вы можете создать презентацию прямо сейчас!"
+                text += "✅ Вы можете создать презентацию прямо сейчас."
         elif user_lang == "en":
             text = (
                 f"👤 **User Profile:**\n\n"
@@ -300,32 +299,32 @@ async def show_profile(message: Message):
             )
             if total_remaining == 0:
                 text += (
-                    "⚠️ **You have no remaining limits!**\n\n"
-                    "💡 To create presentations, buy single presentations (5,000 UZS) or monthly unlimited (20,000 UZS), or invite friends for free bonus limits."
+                    "⚠️ **You have no remaining limits.**\n\n"
+                    "💡 To create presentations, select a plan in «💳 Plans & Pricing» or invite friends for free bonus limits."
                 )
             else:
-                text += "✅ You are ready to create a new presentation!"
+                text += "✅ You are ready to create a new presentation."
         else:
             text = (
                 f"👤 **Foydalanuvchi ma'lumotlari:**\n\n"
                 f"🆔 ID: `{user['telegram_id']}`\n"
-                f"🎁 Boshlang'ich bepul limit: **{user['free_limit']} ta**\n"
+                f"🎁 Boshlang'ich limit: **{user['free_limit']} ta**\n"
                 f"💳 Pulli balans: **{user['paid_balance']} ta**\n"
                 f"✨ Jami mavjud limit: **{total_remaining} ta**\n"
                 f"📊 Jami tayyorlangan: **{user['total_generated']} ta**\n"
-                f"👥 Taklif qilgan do'stlaringiz: **{stats['invited_count']} nafar** (sovg'a: {stats['earned_limits']} ta limit)\n\n"
+                f"👥 Taklif qilgan do'stlaringiz: **{stats['invited_count']} nafar** (bonus: {stats['earned_limits']} ta)\n\n"
             )
             if total_remaining == 0:
                 text += (
-                    "⚠️ **Sizning limitingiz tugagan!**\n\n"
-                    "💡 Yangi taqdimot yaratish uchun 1 ta slayd (5 000 so'm) yoki oylik cheksiz obuna (20 000 so'm) xarid qilishingiz, yoki do'stlaringizni taklif qilib bepul limit olishingiz mumkin."
+                    "⚠️ **Sizning limitingiz tugagan.**\n\n"
+                    "💡 Yangi taqdimot yaratish uchun «💳 Tariflar» menyusi orqali limit xarid qilishingiz yoki do'stlaringizni taklif qilib bepul limit olishingiz mumkin."
                 )
             else:
-                text += "✅ Siz bemalol yangi slayd yaratishingiz mumkin!"
+                text += "✅ Siz bemalol yangi slayd yaratishingiz mumkin."
 
     await message.answer(text, parse_mode="Markdown")
 
-@router.message(F.text.in_({"💳 Limit sotib olish", "💳 Limit va Obuna", "💳 Tariflar", "💳 Лимиты и Подписка", "💳 Limits & Subscription"}))
+@router.message(F.text.in_({"💳 Tariflar", "💳 Limit sotib olish", "💳 Limit va Obuna", "💳 Тарифы", "💳 Лимиты и Подписка", "💳 Plans & Pricing", "💳 Limits & Subscription"}))
 @router.message(Command("limit"))
 @router.message(Command("obuna"))
 @router.message(Command("tariffs"))
@@ -690,40 +689,36 @@ async def check_menu_navigation(message: Message, state: FSMContext) -> bool:
     text = message.text.strip()
     menu_items = {
         # Uzbek
-        "📊 Yangi slayd tayyorlash", "📄 PPTX ni PDF ga aylantirish",
-        "🖼 Rasmni PDF ga aylantirish", "👤 Mening profilim",
-        "🎁 Bepul limit olish", "💳 Limit va Obuna", "💳 Limit sotib olish", "💳 Tariflar",
+        "📊 Slayd tayyorlash", "📊 Yangi slayd tayyorlash", "📄 PPTX ni PDF ga aylantirish",
+        "👤 Mening profilim", "🎁 Bepul limit", "🎁 Bepul limit olish", "💳 Tariflar",
+        "💳 Limit va Obuna", "💳 Limit sotib olish",
         "ℹ️ Bot haqida", "👨‍💻 Adminga murojaat", "Adminga murojaat", "⚙️ Admin panel", "🌐 Tilni o'zgartirish",
         # Russian
-        "📊 Создать слайд", "📄 Конвертировать PPTX в PDF",
-        "🖼 Конвертировать фото в PDF", "👤 Мой профиль",
-        "🎁 Получить бесплатный лимит", "💳 Лимиты и Подписка",
+        "📊 Создать слайды", "📊 Создать слайд", "📄 PPTX в PDF", "📄 Конвертировать PPTX в PDF",
+        "👤 Мой профиль", "🎁 Бесплатные лимиты", "🎁 Получить бесплатный лимит", "💳 Тарифы", "💳 Лимиты и Подписка",
         "ℹ️ О боте", "👨‍💻 Связаться с админом", "⚙️ Админ панель", "🌐 Сменить язык",
         # English
-        "📊 Create slide", "📄 Convert PPTX to PDF",
-        "🖼 Convert Image to PDF", "👤 My Profile",
-        "🎁 Get free limits", "💳 Limits & Subscription",
-        "ℹ️ About Bot", "👨‍💻 Contact Admin", "⚙️ Admin Panel", "🌐 Change language"
+        "📊 Create Slides", "📊 Create slide", "📄 PPTX to PDF", "📄 Convert PPTX to PDF",
+        "👤 My Profile", "🎁 Free Limits", "🎁 Get free limits", "💳 Plans & Pricing", "💳 Limits & Subscription",
+        "ℹ️ About Bot", "👨‍💻 Contact Admin", "⚙️ Admin Panel", "🌐 Change Language", "🌐 Change language"
     }
     if text.startswith("/") or text in menu_items:
         await state.clear()
         if text.startswith("/start"):
             await cmd_start(message, state)
-        elif text in ("📊 Yangi slayd tayyorlash", "📊 Создать слайд", "📊 Create slide", "/yangi_slayd", "/new_slide"):
+        elif text in ("📊 Slayd tayyorlash", "📊 Yangi slayd tayyorlash", "📊 Создать слайды", "📊 Создать слайд", "📊 Create Slides", "📊 Create slide", "/yangi_slayd", "/new_slide", "/slayd"):
             await start_new_slide(message, state)
-        elif text in ("📄 PPTX ni PDF ga aylantirish", "📄 Конвертировать PPTX в PDF", "📄 Convert PPTX to PDF"):
+        elif text in ("📄 PPTX ni PDF ga aylantirish", "📄 PPTX в PDF", "📄 Конвертировать PPTX в PDF", "📄 PPTX to PDF", "📄 Convert PPTX to PDF"):
             await prompt_pptx_to_pdf(message, state)
-        elif text in ("🖼 Rasmni PDF ga aylantirish", "🖼 Конвертировать фото в PDF", "🖼 Convert Image to PDF"):
-            await prompt_image_to_pdf(message, state)
         elif text in ("👤 Mening profilim", "👤 Мой профиль", "👤 My Profile", "/profil", "/profile"):
             await show_profile(message)
-        elif text in ("🎁 Bepul limit olish", "🎁 Получить бесплатный лимит", "🎁 Get free limits"):
+        elif text in ("🎁 Bepul limit", "🎁 Bepul limit olish", "🎁 Бесплатные лимиты", "🎁 Получить бесплатный лимит", "🎁 Free Limits", "🎁 Get free limits"):
             await show_referral_program(message)
-        elif text in ("💳 Limit va Obuna", "💳 Лимиты и Подписка", "💳 Limits & Subscription", "💳 Limit sotib olish", "💳 Tariflar", "/limit", "/obuna"):
+        elif text in ("💳 Tariflar", "💳 Limit va Obuna", "💳 Лимиты и Подписка", "💳 Тарифы", "💳 Plans & Pricing", "💳 Limits & Subscription", "💳 Limit sotib olish", "/limit", "/obuna", "/tariffs"):
             await buy_limits(message)
         elif text in ("ℹ️ Bot haqida", "ℹ️ О боте", "ℹ️ About Bot", "/haqida", "/help", "/about"):
             await about_bot(message)
-        elif text in ("🌐 Tilni o'zgartirish", "🌐 Сменить язык", "🌐 Change language", "/lang"):
+        elif text in ("🌐 Tilni o'zgartirish", "🌐 Сменить язык", "🌐 Change Language", "🌐 Change language", "/lang"):
             await prompt_change_language(message)
         elif text in ("⚙️ Admin panel", "⚙️ Админ панель", "⚙️ Admin Panel") and config.is_admin(message.from_user.id):
             await admin_panel(message)
@@ -1195,8 +1190,10 @@ async def handle_document_to_pdf(message: Message, state: FSMContext = None):
     await handle_document_media(message, state)
 
 
-@router.message(F.text.in_({"📊 Yangi slayd tayyorlash", "📊 Создать слайд", "📊 Create slide"}))
+@router.message(F.text.in_({"📊 Slayd tayyorlash", "📊 Yangi slayd tayyorlash", "📊 Создать слайды", "📊 Создать слайд", "📊 Create Slides", "📊 Create slide"}))
+@router.message(Command("slayd"))
 @router.message(Command("yangi_slayd"))
+@router.message(Command("new_slide"))
 async def start_new_slide(message: Message, state: FSMContext):
     # Check limit first
     user = await database.get_or_create_user(
@@ -2166,18 +2163,31 @@ async def handle_voice_presentation(message: Message, state: FSMContext):
 @router.message(F.photo)
 async def handle_photo_media(message: Message, state: FSMContext):
     photo = message.photo[-1]
+    user_lang = await database.get_user_language(message.from_user.id)
     await state.set_state(MediaChoiceState.waiting_for_action)
     await state.update_data(
         media_file_id=photo.file_id,
         media_type="photo",
         media_file_name="photo.jpg"
     )
+    if user_lang == "ru":
+        prompt_text = (
+            "📷 **Фото книги или конспекта получено!**\n\n"
+            "Искусственный интеллект изучит материал и создаст презентацию по содержанию."
+        )
+    elif user_lang == "en":
+        prompt_text = (
+            "📷 **Study material / notes photo received!**\n\n"
+            "AI will analyze the content and compose a structured presentation."
+        )
+    else:
+        prompt_text = (
+            "📷 **Kitob beti yoki konspekt rasmi qabul qilindi!**\n\n"
+            "Sun'iy intellekt rasm ichidagi matn va ma'lumotlarni o'rganib, to'liq taqdimot tayyorlab beradi."
+        )
     await message.reply(
-        "📷 **Rasm (Kitob beti yoki konspekt) qabul qilindi!**\n\n"
-        "Ushbu rasm bilan nima qilmoqchisiz?\n\n"
-        "1️⃣ **Taqdimot tayyorlash:** Rasm ichidagi mavzu va maʼlumotlar asosida toʻliq slayd yaratish;\n"
-        "2️⃣ **PDF ga aylantirish:** Rasmni sifatli PDF hujjatga oʻgirish.",
-        reply_markup=keyboards.get_media_choice_keyboard(is_doc=False),
+        prompt_text,
+        reply_markup=keyboards.get_media_choice_keyboard(is_doc=False, lang=user_lang),
         parse_mode="Markdown"
     )
 
@@ -2185,6 +2195,7 @@ async def handle_photo_media(message: Message, state: FSMContext):
 async def handle_document_media(message: Message, state: FSMContext):
     doc = message.document
     fname = (doc.file_name or "document").lower()
+    user_lang = await database.get_user_language(message.from_user.id)
     
     if (doc.mime_type or "").startswith("image/") or any(fname.endswith(ext) for ext in [".jpg", ".jpeg", ".png", ".webp"]):
         await state.set_state(MediaChoiceState.waiting_for_action)
@@ -2193,10 +2204,15 @@ async def handle_document_media(message: Message, state: FSMContext):
             media_type="photo",
             media_file_name=doc.file_name or "image.jpg"
         )
+        if user_lang == "ru":
+            prompt_text = "🖼 **Изображение получено!**\n\nСоздать презентацию на основе этого материала?"
+        elif user_lang == "en":
+            prompt_text = "🖼 **Image received!**\n\nCreate a presentation based on this material?"
+        else:
+            prompt_text = "🖼 **Rasm hujjati qabul qilindi!**\n\nUshbu material asosida taqdimot tayyorlansinmi?"
         await message.reply(
-            "🖼 **Rasm hujjati qabul qilindi!**\n\n"
-            "Ushbu rasm bilan nima qilmoqchisiz?",
-            reply_markup=keyboards.get_media_choice_keyboard(is_doc=False),
+            prompt_text,
+            reply_markup=keyboards.get_media_choice_keyboard(is_doc=False, lang=user_lang),
             parse_mode="Markdown"
         )
         return
@@ -2207,13 +2223,17 @@ async def handle_document_media(message: Message, state: FSMContext):
         media_type="document",
         media_file_name=doc.file_name or "hujjat"
     )
+    is_pptx = fname.endswith(".pptx") or fname.endswith(".ppt")
+    if user_lang == "ru":
+        prompt_text = f"📄 **'{doc.file_name or 'Документ'}' получен!**\n\nВыберите действие:"
+    elif user_lang == "en":
+        prompt_text = f"📄 **'{doc.file_name or 'Document'}' received!**\n\nChoose an action:"
+    else:
+        prompt_text = f"📄 **'{doc.file_name or 'Hujjat'}' qabul qilindi!**\n\nKerakli amalni tanlang:"
     
     await message.reply(
-        f"📄 **'{doc.file_name or 'Hujjat'}' qabul qilindi!**\n\n"
-        "Ushbu fayl bilan nima qilmoqchisiz?\n\n"
-        "1️⃣ **Taqdimot yasash:** Hujjatdagi asosiy mazmun boʻyicha toʻliq taqdimot yaratish;\n"
-        "2️⃣ **PDF ga aylantirish:** (.pptx boʻlsa sifatli PDF ga oʻgirish).",
-        reply_markup=keyboards.get_media_choice_keyboard(is_doc=True),
+        prompt_text,
+        reply_markup=keyboards.get_media_choice_keyboard(is_doc=is_pptx, lang=user_lang),
         parse_mode="Markdown"
     )
 

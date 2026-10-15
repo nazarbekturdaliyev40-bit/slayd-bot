@@ -40,29 +40,34 @@ def get_slide_language_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
     ])
 
 def get_main_menu(is_admin: bool = False, lang: str = "uz") -> ReplyKeyboardMarkup:
-    """Foydalanuvchi tanlagan tildagi asosiy menyu."""
+    """Foydalanuvchi tanlagan tildagi chiroyli va qulay tartiblangan asosiy menyu."""
     buttons = [
+        # Asosiy katta harakat tugmasi:
         [KeyboardButton(text=locales.get_text("menu_new_slide", lang))],
-        [
-            KeyboardButton(text=locales.get_text("menu_pptx_to_pdf", lang)),
-            KeyboardButton(text=locales.get_text("menu_image_to_pdf", lang))
-        ],
+        # 1-qator: Shaxsiy profil va Tariflar
         [
             KeyboardButton(text=locales.get_text("menu_profile", lang)),
-            KeyboardButton(text=locales.get_text("menu_free_limit", lang))
+            KeyboardButton(text=locales.get_text("menu_tariffs", lang))
         ],
+        # 2-qator: Bepul bonus limit va PPTX -> PDF konverter
         [
-            KeyboardButton(text=locales.get_text("menu_tariffs", lang)),
-            KeyboardButton(text=locales.get_text("menu_change_lang", lang))
+            KeyboardButton(text=locales.get_text("menu_free_limit", lang)),
+            KeyboardButton(text=locales.get_text("menu_pptx_to_pdf", lang))
         ],
+        # 3-qator: Tilni o'zgartirish va Yordam / Bot haqida
         [
-            KeyboardButton(text=locales.get_text("menu_about", lang)),
-            KeyboardButton(text=locales.get_text("menu_contact", lang))
+            KeyboardButton(text=locales.get_text("menu_change_lang", lang)),
+            KeyboardButton(text=locales.get_text("menu_about", lang))
         ]
     ]
     if is_admin:
         buttons.append([KeyboardButton(text=locales.get_text("menu_admin", lang))])
-    return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
+    
+    return ReplyKeyboardMarkup(
+        keyboard=buttons,
+        resize_keyboard=True,
+        input_field_placeholder=locales.get_text("menu_placeholder", lang)
+    )
 
 
 def get_slide_counts_keyboard() -> InlineKeyboardMarkup:
@@ -279,18 +284,21 @@ def get_cancel_image_to_pdf_keyboard() -> InlineKeyboardMarkup:
         ]
     ])
 
-def get_media_choice_keyboard(is_doc: bool = False) -> InlineKeyboardMarkup:
+def get_media_choice_keyboard(is_doc: bool = False, lang: str = "uz") -> InlineKeyboardMarkup:
+    cancel_text = locales.get_text("cancel_btn", lang)
     if is_doc:
-        first_btn = InlineKeyboardButton(text="📊 Ushbu hujjatdan taqdimot yasash", callback_data="media_to_slides")
-        second_btn = InlineKeyboardButton(text="📄 PPTX boʻlsa PDF ga aylantirish", callback_data="media_to_pdf")
+        first_btn = InlineKeyboardButton(text=locales.get_text("doc_to_slides_btn", lang), callback_data="media_to_slides")
+        second_btn = InlineKeyboardButton(text=locales.get_text("doc_to_pdf_btn", lang), callback_data="media_to_pdf")
+        return InlineKeyboardMarkup(inline_keyboard=[
+            [first_btn],
+            [second_btn],
+            [InlineKeyboardButton(text=cancel_text, callback_data="cancel_generation")]
+        ])
     else:
-        first_btn = InlineKeyboardButton(text="📊 Shu rasmdan taqdimot yasash", callback_data="media_to_slides")
-        second_btn = InlineKeyboardButton(text="🖼 Rasmni PDF ga aylantirish", callback_data="media_to_pdf")
-        
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [first_btn],
-        [second_btn],
-        [InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_generation")]
-    ])
+        first_btn = InlineKeyboardButton(text=locales.get_text("photo_to_slides_btn", lang), callback_data="media_to_slides")
+        return InlineKeyboardMarkup(inline_keyboard=[
+            [first_btn],
+            [InlineKeyboardButton(text=cancel_text, callback_data="cancel_generation")]
+        ])
 
 

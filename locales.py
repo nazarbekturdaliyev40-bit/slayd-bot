@@ -120,27 +120,30 @@ TEXTS = {
     "uz": {
         "choose_lang_title": "🌐 <b>Tilni tanlang / Выберите язык / Choose language:</b>",
         "lang_changed": "✅ <b>Interfeys tili O'zbekchaga o'zgartirildi!</b>",
-        "menu_new_slide": "📊 Yangi slayd tayyorlash",
+        "menu_new_slide": "📊 Slayd tayyorlash",
         "menu_pptx_to_pdf": "📄 PPTX ni PDF ga aylantirish",
-        "menu_image_to_pdf": "🖼 Rasmni PDF ga aylantirish",
         "menu_profile": "👤 Mening profilim",
-        "menu_free_limit": "🎁 Bepul limit olish",
-        "menu_tariffs": "💳 Limit va Obuna",
+        "menu_free_limit": "🎁 Bepul limit",
+        "menu_tariffs": "💳 Tariflar",
         "menu_about": "ℹ️ Bot haqida",
         "menu_contact": "👨‍💻 Adminga murojaat",
         "menu_change_lang": "🌐 Tilni o'zgartirish",
         "menu_admin": "⚙️ Admin panel",
+        "menu_placeholder": "Mavzu yozing yoki menyudan tanlang...",
+        "photo_to_slides_btn": "📊 Shu rasmdan taqdimot yasash",
+        "doc_to_slides_btn": "📊 Hujjatdan taqdimot yasash",
+        "doc_to_pdf_btn": "📄 PPTX boʻlsa PDF ga aylantirish",
         "welcome": (
-            "Assalomu alaykum, {name}! 👋\n\n"
-            "🤖 Ushbu bot sun'iy intellekt (Google Gemini) yordamida rasmlar, infografikalar va ma'lumotlar bilan boyitilgan professional **PowerPoint (.pptx)** hamda **PDF (.pdf)** taqdimotlarini tayyorlab beradi.\n\n"
-            "⚡️ **Imkoniyatlar:**\n"
-            "🌍 **Ko'p tilli slaydlar:** O'zbek, Rus, Ingliz, Turk, Qozoq, Qirg'iz, Tojik va boshqa tillarda professional taqdimotlar!\n"
-            "🎙 **Ovozli xabar:** Istalgan vaqtda mavzuni audio tarzda ayting, bot oʻzi tushunib slayd yasaydi!\n"
-            "📚 **Kitob / Konspekt / Hujjat:** Kitob beti rasmini yoki PDF/Word fayl tashlang, bot undan slayd chiqarib beradi!\n"
-            "📊 **Standart slayd:** Quyidagi **'📊 Yangi slayd tayyorlash'** tugmasi orqali mavzu kiritish.\n\n"
-            "🎁 Sizda **{free_limit} ta bepul taqdimot** limiti mavjud!\n"
-            "👥 Do'stlaringizni taklif qilib (har 2 ta do'st uchun **+1 ta limit**) bepul limitlar olishingiz mumkin!\n\n"
-            "Quyidagi menyudan foydalaning yoki toʻgʻridan-toʻgʻri **ovoz/fayl** yuboring:"
+            "Assalomu alaykum, <b>{name}</b>! 👋\n\n"
+            "🤖 <b>Slide AI</b> — sun'iy intellekt (Google Gemini) yordamida professional taqdimotlar (<b>PowerPoint .pptx</b>) tayyorlovchi bot.\n\n"
+            "✨ <b>Imkoniyatlar:</b>\n"
+            "• 🌐 <b>Ko'p tilli slaydlar:</b> O'zbek, Rus, Ingliz va boshqa 9+ tillarda\n"
+            "• 🎙 <b>Ovozli xabar:</b> Mavzuni audio tarzda aytsangiz, bot o'zi tushunib slayd tuzadi\n"
+            "• 📚 <b>Konspekt va kitob:</b> Kitob beti yoki konspekt rasmini yuboring, bot slayd chiqarib beradi\n"
+            "• 📄 <b>PPTX ➡️ PDF:</b> Taqdimot faylini sifatli PDF ga o'girish\n\n"
+            "🎁 Sizda <b>{free_limit} ta bepul taqdimot</b> limiti mavjud!\n"
+            "👥 Do'stlaringizni taklif qilib (har 2 ta do'st uchun <b>+1 ta limit</b>) bepul limit olishingiz mumkin.\n\n"
+            "👇 Boshlash uchun <b>«📊 Slayd tayyorlash»</b> tugmasini bosing yoki toʻgʻridan-toʻgʻri ovoz/fayl yuboring:"
         ),
         "choose_slide_lang": "🌐 <b>Taqdimot qaysi tilda tayyorlansin?</b>\n\nQuyidagi kerakli tillardan birini tanlang: 👇",
         "prompt_topic": "✍️ <b>Taqdimot mavzusini yozib yuboring:</b>\n\n<i>Masalan: Sun'iy intellektning tibbiyotdagi o'rni va kelajagi</i>",
@@ -207,10 +210,10 @@ TEXTS = {
             "👇 *Quyidagi tugmani bosing va havolani do'stlaringizga yoki guruhlarga yuboring:*"
         ),
         "tariffs_vip": (
-            "👑 **Siz VIP / Cheksiz ta'rifdasiz!**\n\n"
-            "Sizga hech qanday to'lov qilish yoki limit sotib olish kerak emas. "
-            "Sizning hisobingizda **♾ CHEKSIZ va 100% MUTLAQO TEKIN** taqdimot yaratish imkoniyati yoqilgan!\n\n"
-            "Marhamat, bemalol yangi slaydlar yaratavering! 🚀"
+            "👑 **Sizning hisobingizda VIP (Cheksiz) ta'rif faol!**\n\n"
+            "Sizga to'lov qilish yoki limit sotib olish talab etilmaydi. "
+            "Hisobingizda doimiy **cheksiz taqdimotlar yaratish** imkoniyati yoqilgan.\n\n"
+            "Marhamat, istalgancha slayd tayyorlashingiz mumkin."
         ),
         "tariffs_text": (
             "💳 **Tariflar va To'lov:**\n\n"
@@ -249,27 +252,30 @@ TEXTS = {
     "ru": {
         "choose_lang_title": "🌐 <b>Выберите язык / Tilni tanlang / Choose language:</b>",
         "lang_changed": "✅ <b>Язык интерфейса изменен на Русский!</b>",
-        "menu_new_slide": "📊 Создать слайд",
-        "menu_pptx_to_pdf": "📄 Конвертировать PPTX в PDF",
-        "menu_image_to_pdf": "🖼 Конвертировать фото в PDF",
+        "menu_new_slide": "📊 Создать слайды",
+        "menu_pptx_to_pdf": "📄 PPTX в PDF",
         "menu_profile": "👤 Мой профиль",
-        "menu_free_limit": "🎁 Получить бесплатный лимит",
-        "menu_tariffs": "💳 Лимиты и Подписка",
+        "menu_free_limit": "🎁 Бесплатные лимиты",
+        "menu_tariffs": "💳 Тарифы",
         "menu_about": "ℹ️ О боте",
         "menu_contact": "👨‍💻 Связаться с админом",
         "menu_change_lang": "🌐 Сменить язык",
         "menu_admin": "⚙️ Админ панель",
+        "menu_placeholder": "Введите тему или выберите действие...",
+        "photo_to_slides_btn": "📊 Создать презентацию по фото",
+        "doc_to_slides_btn": "📊 Создать презентацию из документа",
+        "doc_to_pdf_btn": "📄 Конвертировать PPTX в PDF",
         "welcome": (
-            "Здравствуйте, {name}! 👋\n\n"
-            "🤖 Этот бот создает профессиональные презентации **PowerPoint (.pptx)** и **PDF (.pdf)** с помощью искусственного интеллекта (Google Gemini).\n\n"
-            "⚡️ **Возможности:**\n"
-            "🌍 **Многоязычность:** Презентации на русском, узбекском, английском, турецком, казахском, кыргызском, таджикском и других языках!\n"
-            "🎙 **Голосовые сообщения:** Просто назовите тему голосом, и бот составит презентацию!\n"
-            "📚 **Книги / Конспекты / Документы:** Отправьте фото страницы книги или файл PDF/Word — бот создаст слайды на основе материала!\n"
-            "📊 **Стандартный режим:** Нажмите кнопку **'📊 Создать слайд'** ниже.\n\n"
-            "🎁 У вас есть **{free_limit} бесплатных презентаций**!\n"
-            "👥 Приглашайте друзей (за каждые 2 друга — **+1 бесплатный лимит**).\n\n"
-            "Используйте меню ниже или просто отправьте голос/файл:"
+            "Здравствуйте, <b>{name}</b>! 👋\n\n"
+            "🤖 <b>Slide AI</b> — создание профессиональных презентаций (<b>PowerPoint .pptx</b>) на базе искусственного интеллекта (Google Gemini).\n\n"
+            "✨ <b>Возможности:</b>\n"
+            "• 🌐 <b>Многоязычность:</b> Презентации на русском, узбекском, английском и еще 9+ языках\n"
+            "• 🎙 <b>Голосовые сообщения:</b> Назовите тему голосом, и бот составит презентацию\n"
+            "• 📚 <b>По фото книги / конспекта:</b> Отправьте фото материала, и бот структурирует слайды\n"
+            "• 📄 <b>PPTX в PDF:</b> Быстрая конвертация презентаций в формат PDF\n\n"
+            "🎁 У вас есть <b>{free_limit} бесплатных презентаций</b>!\n"
+            "👥 Приглашайте друзей (за каждые 2 друга — <b>+1 бесплатный лимит</b>).\n\n"
+            "👇 Нажмите <b>«📊 Создать слайды»</b> ниже или отправьте голосовое сообщение:"
         ),
         "choose_slide_lang": "🌐 <b>На каком языке подготовить презентацию?</b>\n\nВыберите нужный язык из списка ниже: 👇",
         "prompt_topic": "✍️ <b>Отправьте тему презентации:</b>\n\n<i>Например: Роль искусственного интеллекта в современной медицине</i>",
@@ -335,10 +341,10 @@ TEXTS = {
             "👇 *Нажмите кнопку ниже, чтобы переслать ссылку друзьям или в группы:*"
         ),
         "tariffs_vip": (
-            "👑 **Вы на тарифе VIP / Безлимит!**\n\n"
-            "Вам не нужно ничего оплачивать. "
-            "На вашем аккаунте активирован **♾ БЕЗЛИМИТНЫЙ и 100% БЕСПЛАТНЫЙ** доступ ко всем функциям!\n\n"
-            "Создавайте презентации в любое время без ограничений! 🚀"
+            "👑 **Для вашего аккаунта активен тариф VIP (Безлимит)!**\n\n"
+            "Вам не требуется покупать лимиты или подписку. "
+            "На вашем аккаунте включен постоянный **безлимитный доступ** к созданию презентаций.\n\n"
+            "Вы можете создавать неограниченное количество слайдов."
         ),
         "tariffs_text": (
             "💳 **Тарифы и Оплата:**\n\n"
@@ -377,27 +383,30 @@ TEXTS = {
     "en": {
         "choose_lang_title": "🌐 <b>Choose language / Tilni tanlang / Выберите язык:</b>",
         "lang_changed": "✅ <b>Interface language changed to English!</b>",
-        "menu_new_slide": "📊 Create slide",
-        "menu_pptx_to_pdf": "📄 Convert PPTX to PDF",
-        "menu_image_to_pdf": "🖼 Convert Image to PDF",
+        "menu_new_slide": "📊 Create Slides",
+        "menu_pptx_to_pdf": "📄 PPTX to PDF",
         "menu_profile": "👤 My Profile",
-        "menu_free_limit": "🎁 Get free limits",
-        "menu_tariffs": "💳 Limits & Subscription",
+        "menu_free_limit": "🎁 Free Limits",
+        "menu_tariffs": "💳 Plans & Pricing",
         "menu_about": "ℹ️ About Bot",
         "menu_contact": "👨‍💻 Contact Admin",
-        "menu_change_lang": "🌐 Change language",
+        "menu_change_lang": "🌐 Change Language",
         "menu_admin": "⚙️ Admin Panel",
+        "menu_placeholder": "Type topic or choose from menu...",
+        "photo_to_slides_btn": "📊 Create Presentation from Photo",
+        "doc_to_slides_btn": "📊 Create Presentation from Document",
+        "doc_to_pdf_btn": "📄 Convert PPTX to PDF",
         "welcome": (
-            "Hello, {name}! 👋\n\n"
-            "🤖 This bot creates professional **PowerPoint (.pptx)** and **PDF (.pdf)** presentations powered by AI (Google Gemini).\n\n"
-            "⚡️ **Key Features:**\n"
-            "🌍 **Multi-language:** Generate slides in English, Russian, Uzbek, Turkish, Kazakh, Kyrgyz, Tajik and more!\n"
-            "🎙 **Voice Messages:** Simply speak your topic in an audio note, and the bot creates the slides!\n"
-            "📚 **Books / Notes / Documents:** Send photos of book pages or PDF/Word documents to extract slides directly!\n"
-            "📊 **Standard Mode:** Tap **'📊 Create slide'** below to type your topic.\n\n"
-            "🎁 You have **{free_limit} free presentations**!\n"
-            "👥 Invite friends (for every 2 friends — **+1 free presentation**).\n\n"
-            "Use the menu below or send an audio/document directly:"
+            "Hello, <b>{name}</b>! 👋\n\n"
+            "🤖 <b>Slide AI</b> — professional presentation (<b>PowerPoint .pptx</b>) generator powered by Artificial Intelligence (Google Gemini).\n\n"
+            "✨ <b>Features:</b>\n"
+            "• 🌐 <b>Multi-language:</b> Generate slides in English, Russian, Uzbek and 9+ languages\n"
+            "• 🎙 <b>Voice Input:</b> Speak your topic in an audio note, and AI creates the slides\n"
+            "• 📚 <b>From Notes & Books:</b> Send photos of study materials to extract presentations\n"
+            "• 📄 <b>PPTX to PDF:</b> Instant high-quality presentation converter\n\n"
+            "🎁 You have <b>{free_limit} free presentations</b>!\n"
+            "👥 Invite friends (get <b>+1 free presentation</b> for every 2 friends).\n\n"
+            "👇 Tap <b>«📊 Create Slides»</b> below or send an audio note to get started:"
         ),
         "choose_slide_lang": "🌐 <b>What language should the presentation be in?</b>\n\nPlease select the desired language below: 👇",
         "prompt_topic": "✍️ <b>Send your presentation topic:</b>\n\n<i>Example: The Role and Future of Artificial Intelligence in Medicine</i>",
@@ -461,10 +470,10 @@ TEXTS = {
             "👇 *Click the button below to share your link with friends or group chats:*"
         ),
         "tariffs_vip": (
-            "👑 **You have VIP / Unlimited Access!**\n\n"
-            "You do not need to make any payment or purchase limits. "
-            "Your account has **♾ UNLIMITED and 100% FREE** access enabled!\n\n"
-            "Feel free to create as many presentations as you need! 🚀"
+            "👑 **VIP (Unlimited) Plan is active on your account!**\n\n"
+            "No payments or limit purchases are required. "
+            "Permanent **unlimited presentation creation** is enabled for you.\n\n"
+            "Feel free to create as many presentations as you need."
         ),
         "tariffs_text": (
             "💳 **Plans & Payment:**\n\n"
