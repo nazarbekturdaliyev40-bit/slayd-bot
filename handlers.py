@@ -5,6 +5,7 @@ import logging
 import shutil
 import asyncio
 import html
+import re
 from aiogram import Router, F
 from aiogram.filters import CommandStart, Command, CommandObject
 from aiogram.types import Message, CallbackQuery, FSInputFile, InlineKeyboardMarkup, InlineKeyboardButton
@@ -16,11 +17,13 @@ import database
 import keyboards
 import generator
 import gamma_service
+import locales
 
 logger = logging.getLogger(__name__)
 router = Router()
 
 class SlideCreation(StatesGroup):
+    waiting_for_slide_language = State()
     waiting_for_topic = State()
     waiting_for_count = State()
     waiting_for_author = State()
@@ -50,9 +53,8 @@ class MediaChoiceState(StatesGroup):
 async def cmd_start(message: Message, state: FSMContext, command: CommandObject = None):
     await state.clear()
     
-    # Check if user can be counted as a referral
     existing_user = await database.get_user(message.from_user.id)
-    can_be_referred = (existing_user is None) or (existing_user.get("referrer_id") is None)
+    can_be_referred = (existing_user is None)
 
     # Extract referrer if provided
     referrer_id = None
@@ -110,48 +112,82 @@ async def cmd_start(message: Message, state: FSMContext, command: CommandObject 
                 except Exception as e:
                     logger.warning(f"Referrerga xabar yuborishda xatolik: {e}")
 
-    welcome_text = (
-        f"Assalomu alaykum, {message.from_user.first_name}! 👋\n\n"
-        f"🤖 Ushbu bot sun'iy intellekt (Google Gemini) yordamida rasmlar, infografikalar va ma'lumotlar bilan boyitilgan professional **PowerPoint (.pptx)** hamda **PDF (.pdf)** taqdimotlarini tayyorlab beradi.\n\n"
-        f"⚡️ **Yangi imkoniyatlar (boshqa botlarda yo'q):**\n"
-        f"🎙 **Ovozli xabar:** Istalgan vaqtda mavzuni audio tarzda ayting, bot oʻzi tushunib slayd yasaydi!\n"
-        f"📚 **Kitob / Konspekt / Hujjat:** Kitob beti rasmini yoki PDF/Word fayl tashlang, bot undan slayd chiqarib beradi!\n"
-        f"📊 **Standart slayd:** Quyidagi **'📊 Yangi slayd tayyorlash'** tugmasi orqali mavzu kiritish.\n\n"
-        f"🎁 Sizda **{user['free_limit']} ta bepul taqdimot** limiti mavjud!\n"
-        f"👥 Do'stlaringizni taklif qilib (har 2 ta do'st uchun **+1 ta limit**) bepul limitlar olishingiz mumkin!\n\n"
-        f"Quyidagi menyudan foydalaning yoki toʻgʻridan-toʻgʻri **ovoz/fayl** yuboring:"
+    # Prompt language selection on /start
+    lang_prompt = (
+        "🌐 <b>Tilni tanlang / Выберите язык / Choose language:</b>\n\n"
+        "Iltimos, botdan foydalanish uchun qulay tilni tanlang:\n"
+        "Пожалуйста, выберите удобный язык интерфейса:\n"
+        "Please select your preferred interface language:"
     )
     await message.answer(
+        lang_prompt,
+        reply_markup=keyboards.get_language_selection_keyboard(),
+        parse_mode="HTML"
+    )
+
+@router.callback_query(F.data.startswith("setlang_"))
+async def process_language_choice(callback: CallbackQuery, state: FSMContext):
+    await callback.answer()
+    chosen_lang = callback.data.split("_")[1]
+    user_id = callback.from_user.id
+    await database.set_user_language(user_id, chosen_lang)
+    user = await database.get_user(user_id) or {}
+    is_admin = config.is_admin(user_id)
+
+    name = html.escape(callback.from_user.first_name or "Foydalanuvchi")
+    free_limit = user.get("free_limit", 2)
+    welcome_text = locales.get_text("welcome", chosen_lang, name=name, free_limit=free_limit)
+
+    try:
+        await callback.message.delete()
+    except Exception:
+        pass
+
+    await callback.message.answer(
         welcome_text,
-        reply_markup=keyboards.get_main_menu(is_admin=is_admin),
+        reply_markup=keyboards.get_main_menu(is_admin=is_admin, lang=chosen_lang),
         parse_mode="Markdown"
     )
 
-@router.message(F.text == "🎁 Bepul limit olish")
+@router.message(Command("lang"))
+@router.message(F.text.in_({"🌐 Tilni o'zgartirish", "🌐 Сменить язык", "🌐 Change language"}))
+async def prompt_change_language(message: Message):
+    lang_prompt = (
+        "🌐 <b>Tilni tanlang / Выберите язык / Choose language:</b>\n\n"
+        "Iltimos, botdan foydalanish uchun qulay tilni tanlang:\n"
+        "Пожалуйста, выберите удобный язык интерфейса:\n"
+        "Please select your preferred interface language:"
+    )
+    await message.answer(
+        lang_prompt,
+        reply_markup=keyboards.get_language_selection_keyboard(),
+        parse_mode="HTML"
+    )
+
+@router.message(F.text.in_({"🎁 Bepul limit olish", "🎁 Получить бесплатный лимит", "🎁 Get free limits"}))
 async def show_referral_program(message: Message):
+    user_lang = await database.get_user_language(message.from_user.id)
     bot_user = await message.bot.get_me()
     stats = await database.get_referral_stats(message.from_user.id)
     ref_link = f"https://t.me/{bot_user.username}?start=ref_{message.from_user.id}"
     
-    text = (
-        f"🎁 **Do'stlarni taklif qiling va bepul limit oling!**\n\n"
-        f"Har **2 ta do'stingiz** ushbu havola orqali botga kirsa, sizga **+1 ta yangi taqdimot yaratish limiti** sovg'a qilinadi!\n\n"
-        f"📊 **Sizning referal statistikangiz:**\n"
-        f"👥 Taklif qilingan do'stlar: **{stats['invited_count']} nafar**\n"
-        f"🎁 Olingan bonus limitlar: **{stats['earned_limits']} ta**\n"
-        f"⏳ Keyingi limit uchun kerak: **{stats['needed_for_next']} ta do'st**\n\n"
-        f"🔗 **Sizning shaxsiy referal havolangiz:**\n"
-        f"`{ref_link}`\n\n"
-        f"👇 *Quyidagi tugmani bosing va havolani do'stlaringizga yoki guruhlarga yuboring:*"
+    text = locales.get_text(
+        "referral_text",
+        user_lang,
+        invited_count=stats['invited_count'],
+        earned_limits=stats['earned_limits'],
+        needed_for_next=stats['needed_for_next'],
+        ref_link=ref_link
     )
     await message.answer(
         text,
-        reply_markup=keyboards.get_referral_keyboard(bot_user.username, message.from_user.id),
+        reply_markup=keyboards.get_referral_keyboard(bot_user.username, message.from_user.id, lang=user_lang),
         parse_mode="Markdown"
     )
 
-@router.message(F.text == "👤 Mening profilim")
+@router.message(F.text.in_({"👤 Mening profilim", "👤 Мой профиль", "👤 My Profile"}))
 @router.message(Command("profil"))
+@router.message(Command("profile"))
 async def show_profile(message: Message):
     user = await database.get_user(message.from_user.id)
     if not user:
@@ -161,85 +197,156 @@ async def show_profile(message: Message):
             full_name=message.from_user.full_name or ""
         )
     
+    user_lang = user.get("language") or "uz"
     stats = await database.get_referral_stats(message.from_user.id)
     is_unlimited = bool(user.get("is_unlimited")) or config.is_unlimited(message.from_user.id)
     is_sub = database.is_subscription_active(user)
     total_remaining = user["free_limit"] + user["paid_balance"]
     
     if is_unlimited:
-        text = (
-            f"👤 **Foydalanuvchi ma'lumotlari:**\n\n"
-            f"🆔 ID: `{user['telegram_id']}`\n"
-            f"👑 **Tarif:** Mutlaqo Tekin va Cheksiz (Bot Egasi / VIP)\n"
-            f"✨ **Mavjud limit:** ♾ **Cheksiz (Umuman tugamaydi)**\n"
-            f"📊 **Jami yaratilgan slaydlar:** **{user['total_generated']} ta**\n"
-            f"👥 **Taklif qilgan do'stlaringiz:** **{stats['invited_count']} nafar**\n\n"
-            f"🎉 **Siz bot egasisiz!** Barcha xizmatlar va slaydlar siz uchun 100% MUTLAQO TEKIN va CHEKSIZ!\n"
-            f"Xohlagancha slayd yaratishingiz mumkin, to'lov qilish shart emas."
-        )
-    elif is_sub:
-        sub_until = user.get("subscription_until", "")
-        text = (
-            f"👤 **Foydalanuvchi ma'lumotlari:**\n\n"
-            f"🆔 ID: `{user['telegram_id']}`\n"
-            f"👑 **Tarif:** ⭐️ **Oylik cheksiz obuna faol!**\n"
-            f"⏳ **Amal qilish muddati:** `{sub_until}` gacha\n"
-            f"✨ **Mavjud limit:** ♾ **Obuna davrida cheksiz!**\n"
-            f"📊 **Jami yaratilgan slaydlar:** **{user['total_generated']} ta**\n"
-            f"👥 **Taklif qilgan do'stlaringiz:** **{stats['invited_count']} nafar**\n\n"
-            f"✅ Siz ushbu muddat davomida bemalol istalgancha yangi slaydlar yaratishingiz mumkin! 🚀"
-        )
-    else:
-        text = (
-            f"👤 **Foydalanuvchi ma'lumotlari:**\n\n"
-            f"🆔 ID: `{user['telegram_id']}`\n"
-            f"🎁 Boshlang'ich bepul limit: **{user['free_limit']} ta**\n"
-            f"💳 Pulli balans: **{user['paid_balance']} ta**\n"
-            f"✨ Jami mavjud limit: **{total_remaining} ta**\n"
-            f"📊 Jami tayyorlangan: **{user['total_generated']} ta**\n"
-            f"👥 Taklif qilgan do'stlaringiz: **{stats['invited_count']} nafar** (sovg'a: {stats['earned_limits']} ta limit)\n\n"
-        )
-        if total_remaining == 0:
-            text += (
-                "⚠️ **Sizning limitingiz tugagan!**\n\n"
-                "💡 Yangi taqdimot yaratish uchun 1 ta slayd (5 000 so'm) yoki oylik cheksiz obuna (20 000 so'm) xarid qilishingiz, yoki do'stlaringizni taklif qilib bepul limit olishingiz mumkin."
+        if user_lang == "ru":
+            text = (
+                f"👤 **Информация профиля:**\n\n"
+                f"🆔 ID: `{user['telegram_id']}`\n"
+                f"👑 **Тариф:** 👑 VIP / Безлимит (Владелец)\n"
+                f"✨ **Доступный лимит:** ♾ **Бессрочно безлимитный**\n"
+                f"📊 **Всего создано слайдов:** **{user['total_generated']} шт.**\n"
+                f"👥 **Приглашено друзей:** **{stats['invited_count']} чел.**\n\n"
+                f"🎉 Все услуги и генерации слайдов для вас 100% БЕСПЛАТНЫ!"
+            )
+        elif user_lang == "en":
+            text = (
+                f"👤 **User Profile:**\n\n"
+                f"🆔 ID: `{user['telegram_id']}`\n"
+                f"👑 **Plan:** 👑 VIP / Unlimited (Owner)\n"
+                f"✨ **Available limit:** ♾ **Unlimited Forever**\n"
+                f"📊 **Total presentations created:** **{user['total_generated']}**\n"
+                f"👥 **Invited friends:** **{stats['invited_count']}**\n\n"
+                f"🎉 All services and slide creations are 100% FREE for your account!"
             )
         else:
-            text += "✅ Siz bemalol yangi slayd yaratishingiz mumkin!"
+            text = (
+                f"👤 **Foydalanuvchi ma'lumotlari:**\n\n"
+                f"🆔 ID: `{user['telegram_id']}`\n"
+                f"👑 **Tarif:** Mutlaqo Tekin va Cheksiz (Bot Egasi / VIP)\n"
+                f"✨ **Mavjud limit:** ♾ **Cheksiz (Umuman tugamaydi)**\n"
+                f"📊 **Jami yaratilgan slaydlar:** **{user['total_generated']} ta**\n"
+                f"👥 **Taklif qilgan do'stlaringiz:** **{stats['invited_count']} nafar**\n\n"
+                f"🎉 **Siz bot egasisiz!** Barcha xizmatlar va slaydlar siz uchun 100% MUTLAQO TEKIN va CHEKSIZ!\n"
+                f"Xohlagancha slayd yaratishingiz mumkin, to'lov qilish shart emas."
+            )
+    elif is_sub:
+        sub_until = user.get("subscription_until", "")
+        if user_lang == "ru":
+            text = (
+                f"👤 **Информация профиля:**\n\n"
+                f"🆔 ID: `{user['telegram_id']}`\n"
+                f"👑 **Тариф:** ⭐️ **Месячная безлимитная подписка активна!**\n"
+                f"⏳ **Действует до:** `{sub_until}`\n"
+                f"✨ **Доступный лимит:** ♾ **Без ограничений на период подписки!**\n"
+                f"📊 **Всего создано слайдов:** **{user['total_generated']} шт.**\n"
+                f"👥 **Приглашено друзей:** **{stats['invited_count']} чел.**\n\n"
+                f"✅ Вы можете создавать неограниченное количество слайдов! 🚀"
+            )
+        elif user_lang == "en":
+            text = (
+                f"👤 **User Profile:**\n\n"
+                f"🆔 ID: `{user['telegram_id']}`\n"
+                f"👑 **Plan:** ⭐️ **Monthly Unlimited Subscription Active!**\n"
+                f"⏳ **Valid until:** `{sub_until}`\n"
+                f"✨ **Available limit:** ♾ **Unlimited during subscription!**\n"
+                f"📊 **Total presentations created:** **{user['total_generated']}**\n"
+                f"👥 **Invited friends:** **{stats['invited_count']}**\n\n"
+                f"✅ You can create as many slides as you want! 🚀"
+            )
+        else:
+            text = (
+                f"👤 **Foydalanuvchi ma'lumotlari:**\n\n"
+                f"🆔 ID: `{user['telegram_id']}`\n"
+                f"👑 **Tarif:** ⭐️ **Oylik cheksiz obuna faol!**\n"
+                f"⏳ **Amal qilish muddati:** `{sub_until}` gacha\n"
+                f"✨ **Mavjud limit:** ♾ **Obuna davrida cheksiz!**\n"
+                f"📊 **Jami yaratilgan slaydlar:** **{user['total_generated']} ta**\n"
+                f"👥 **Taklif qilgan do'stlaringiz:** **{stats['invited_count']} nafar**\n\n"
+                f"✅ Siz ushbu muddat davomida bemalol istalgancha yangi slaydlar yaratishingiz mumkin! 🚀"
+            )
+    else:
+        if user_lang == "ru":
+            text = (
+                f"👤 **Информация профиля:**\n\n"
+                f"🆔 ID: `{user['telegram_id']}`\n"
+                f"🎁 Стартовый бесплатный лимит: **{user['free_limit']} шт.**\n"
+                f"💳 Оплаченный баланс: **{user['paid_balance']} шт.**\n"
+                f"✨ Итого доступно: **{total_remaining} шт.**\n"
+                f"📊 Всего создано: **{user['total_generated']} шт.**\n"
+                f"👥 Приглашено друзей: **{stats['invited_count']} чел.** (бонус: {stats['earned_limits']} лимитов)\n\n"
+            )
+            if total_remaining == 0:
+                text += (
+                    "⚠️ **Ваши лимиты исчерпаны!**\n\n"
+                    "💡 Чтобы создать презентацию, приобретите лимиты (1 шт. — 5 000 сум) или оформите подписку (20 000 сум), либо пригласите друзей и получите бесплатные лимиты."
+                )
+            else:
+                text += "✅ Вы можете создать презентацию прямо сейчас!"
+        elif user_lang == "en":
+            text = (
+                f"👤 **User Profile:**\n\n"
+                f"🆔 ID: `{user['telegram_id']}`\n"
+                f"🎁 Initial free limit: **{user['free_limit']}**\n"
+                f"💳 Paid balance: **{user['paid_balance']}**\n"
+                f"✨ Total available: **{total_remaining}**\n"
+                f"📊 Total created: **{user['total_generated']}**\n"
+                f"👥 Friends invited: **{stats['invited_count']}** (bonus: {stats['earned_limits']} limits)\n\n"
+            )
+            if total_remaining == 0:
+                text += (
+                    "⚠️ **You have no remaining limits!**\n\n"
+                    "💡 To create presentations, buy single presentations (5,000 UZS) or monthly unlimited (20,000 UZS), or invite friends for free bonus limits."
+                )
+            else:
+                text += "✅ You are ready to create a new presentation!"
+        else:
+            text = (
+                f"👤 **Foydalanuvchi ma'lumotlari:**\n\n"
+                f"🆔 ID: `{user['telegram_id']}`\n"
+                f"🎁 Boshlang'ich bepul limit: **{user['free_limit']} ta**\n"
+                f"💳 Pulli balans: **{user['paid_balance']} ta**\n"
+                f"✨ Jami mavjud limit: **{total_remaining} ta**\n"
+                f"📊 Jami tayyorlangan: **{user['total_generated']} ta**\n"
+                f"👥 Taklif qilgan do'stlaringiz: **{stats['invited_count']} nafar** (sovg'a: {stats['earned_limits']} ta limit)\n\n"
+            )
+            if total_remaining == 0:
+                text += (
+                    "⚠️ **Sizning limitingiz tugagan!**\n\n"
+                    "💡 Yangi taqdimot yaratish uchun 1 ta slayd (5 000 so'm) yoki oylik cheksiz obuna (20 000 so'm) xarid qilishingiz, yoki do'stlaringizni taklif qilib bepul limit olishingiz mumkin."
+                )
+            else:
+                text += "✅ Siz bemalol yangi slayd yaratishingiz mumkin!"
 
     await message.answer(text, parse_mode="Markdown")
 
-@router.message(F.text.in_({"💳 Limit sotib olish", "💳 Limit va Obuna", "💳 Tariflar"}))
+@router.message(F.text.in_({"💳 Limit sotib olish", "💳 Limit va Obuna", "💳 Tariflar", "💳 Лимиты и Подписка", "💳 Limits & Subscription"}))
 @router.message(Command("limit"))
 @router.message(Command("obuna"))
+@router.message(Command("tariffs"))
 async def buy_limits(message: Message):
     user = await database.get_user(message.from_user.id)
+    user_lang = (user.get("language") if user else "uz") or "uz"
     is_unlimited = (user and bool(user.get("is_unlimited"))) or config.is_unlimited(message.from_user.id)
     if is_unlimited:
         await message.answer(
-            "👑 **Siz VIP / Cheksiz ta'rifdasiz!**\n\n"
-            "Sizga hech qanday to'lov qilish yoki limit sotib olish kerak emas. "
-            "Sizning hisobingizda **♾ CHEKSIZ va 100% MUTLAQO TEKIN** taqdimot yaratish imkoniyati yoqilgan!\n\n"
-            "Marhamat, bemalol yangi slaydlar yaratavering! 🚀",
+            locales.get_text("tariffs_vip", user_lang),
             parse_mode="Markdown"
         )
         return
 
-    text = (
-        f"💳 **Tariflar va To'lov:**\n\n"
-        f"🎁 **2 ta bepul taqdimot** — har bir yangi foydalanuvchiga taqdim etiladi!\n\n"
-        f"2 ta bepul limitdan so'ng:\n"
-        f"1️⃣ **1 ta taqdimot** — **5 000 so'm**\n"
-        f"2️⃣ **3 ta taqdimot** — **12 000 so'm** (chegirma bilan)\n"
-        f"👑 **Oylik obuna (1 oy)** — **20 000 so'm** (1 oy davomida mutlaqo CHEKSIZ taqdimotlar yaratish! 🚀)\n\n"
-        f"📌 **To'lov qilish tartibi:**\n"
-        f"1. Quyidagi kartaga kerakli summani o'tkazing:\n"
-        f"💳 Karta raqami: `{config.CARD_NUMBER}`\n"
-        f"👤 Egasi: **{config.CARD_HOLDER}**\n\n"
-        f"2. Pul o'tkazgach, pastdagi **'🧾 To'lov chekini yuborish'** tugmasini bosing va to'lov chekining rasmini (skrinshotini) botga yuboring.\n"
-        f"3. 5 daqiqa ichida admin chekni tasdiqlaydi va limitingiz avtomatik qo'shiladi!"
+    text = locales.get_text(
+        "tariffs_text",
+        user_lang,
+        card_number=config.CARD_NUMBER,
+        card_holder=config.CARD_HOLDER
     )
-    await message.answer(text, reply_markup=keyboards.get_payment_keyboard(config.ADMIN_USERNAME), parse_mode="Markdown")
+    await message.answer(text, reply_markup=keyboards.get_payment_keyboard(config.ADMIN_USERNAME, lang=user_lang), parse_mode="Markdown")
 
 @router.callback_query(F.data == "pay_card")
 async def pay_card_callback(callback: CallbackQuery):
@@ -301,7 +408,7 @@ async def process_receipt_photo(message: Message, state: FSMContext):
     )
     admin_kb = keyboards.get_admin_receipt_keyboard(user_id)
 
-    admin_targets = set([config.ADMIN_ID] + config.UNLIMITED_USERS)
+    admin_targets = set(getattr(config, "ADMIN_USERS", [config.ADMIN_ID]))
     for adm_id in admin_targets:
         try:
             await message.bot.send_photo(
@@ -349,7 +456,7 @@ async def process_receipt_document(message: Message, state: FSMContext):
     )
     admin_kb = keyboards.get_admin_receipt_keyboard(user_id)
 
-    admin_targets = set([config.ADMIN_ID] + config.UNLIMITED_USERS)
+    admin_targets = set(getattr(config, "ADMIN_USERS", [config.ADMIN_ID]))
     for adm_id in admin_targets:
         try:
             await message.bot.send_document(
@@ -373,7 +480,9 @@ async def process_receipt_document(message: Message, state: FSMContext):
                 logger.error(f"Fallback plain doc send failed for admin {adm_id}: {e2}")
 
 @router.message(PaymentReceiptState.waiting_for_receipt, F.text)
-async def process_receipt_text_invalid(message: Message):
+async def process_receipt_text_invalid(message: Message, state: FSMContext):
+    if await check_menu_navigation(message, state):
+        return
     await message.answer(
         "⚠️ Iltimos, to'lov chekining <b>rasmini (skrinshotini)</b> yuboring.\n"
         "Agar bekor qilmoqchi bo'lsangiz, '❌ Bekor qilish' tugmasini bosing.",
@@ -500,7 +609,7 @@ async def adm_reject_payment(callback: CallbackQuery):
             await callback.message.edit_reply_markup(reply_markup=None)
 
 # ----------------- ADMINGA MUROJAAT QILISH -----------------
-@router.message(F.text.in_({"👨‍💻 Adminga murojaat", "Adminga murojaat", "Admin bilan bog'lanish", "Murojaat", "Admin"}))
+@router.message(F.text.in_({"👨‍💻 Adminga murojaat", "Adminga murojaat", "Admin bilan bog'lanish", "Murojaat", "Admin", "👨‍💻 Связаться с админом", "👨‍💻 Contact Admin"}))
 @router.message(Command("murojaat"))
 @router.message(Command("admin"))
 @router.message(Command("boglanish"))
@@ -508,21 +617,40 @@ async def adm_reject_payment(callback: CallbackQuery):
 @router.message(Command("support"))
 async def contact_admin_menu(message: Message, state: FSMContext):
     await state.clear()
+    user_lang = await database.get_user_language(message.from_user.id)
     buttons = []
     if config.ADMIN_USERNAME:
         buttons.append([
             InlineKeyboardButton(text=f"✈️ Admin profili (@{config.ADMIN_USERNAME.lstrip('@')})", url=f"https://t.me/{config.ADMIN_USERNAME.lstrip('@')}")
         ])
     buttons.append([
-        InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_contact")
+        InlineKeyboardButton(text=locales.get_text("cancel_btn", user_lang), callback_data="cancel_contact")
     ])
 
     await state.set_state(AdminContactState.waiting_for_message)
+    if user_lang == "ru":
+        contact_text = (
+            "👨‍💻 <b>Связаться с администратором:</b>\n\n"
+            "Напишите ваш вопрос, предложение или сообщение о проблеме.\n"
+            "<i>(Также вы можете прикрепить скриншот, фото или голосовое сообщение)</i>\n\n"
+            "Администратор рассмотрит ваше сообщение и ответит в ближайшее время."
+        )
+    elif user_lang == "en":
+        contact_text = (
+            "👨‍💻 <b>Contact Administrator:</b>\n\n"
+            "Please send your question, feedback, or describe any issue you encountered.\n"
+            "<i>(You can also attach a screenshot, photo, document or voice message)</i>\n\n"
+            "The administrator will review your message and reply promptly."
+        )
+    else:
+        contact_text = (
+            "👨‍💻 <b>Adminga murojaat qilish:</b>\n\n"
+            "Savollaringiz, takliflaringiz yoki biron-bir muammo bo'lsa, xabaringizni yozib yuboring.\n"
+            "<i>(Xabar bilan birga skrinshot / rasm, fayl yoki ovozli xabar ham yuborishingiz mumkin)</i>\n\n"
+            "Admin xabaringizni ko'rib chiqib, tez orada sizga javob qaytaradi."
+        )
     await message.answer(
-        "👨‍💻 <b>Adminga murojaat qilish:</b>\n\n"
-        "Savollaringiz, takliflaringiz yoki biron-bir muammo bo'lsa, xabaringizni yozib yuboring.\n"
-        "<i>(Xabar bilan birga skrinshot / rasm, fayl yoki ovozli xabar ham yuborishingiz mumkin)</i>\n\n"
-        "Admin xabaringizni ko'rib chiqib, tez orada sizga javob qaytaradi.",
+        contact_text,
         reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons),
         parse_mode="HTML"
     )
@@ -555,39 +683,59 @@ async def cancel_contact_callback(callback: CallbackQuery, state: FSMContext):
     await callback.answer("Murojaat bekor qilindi.")
     await callback.message.answer("❌ Adminga murojaat bekor qilindi.", reply_markup=keyboards.get_main_menu(is_admin=config.is_admin(callback.from_user.id)))
 
+async def check_menu_navigation(message: Message, state: FSMContext) -> bool:
+    """Agar foydalanuvchi menyu tugmasini bosgan yoki buyruq bergan bo'lsa, holatdan chiqib menyuni ochadi."""
+    if not message.text:
+        return False
+    text = message.text.strip()
+    menu_items = {
+        # Uzbek
+        "📊 Yangi slayd tayyorlash", "📄 PPTX ni PDF ga aylantirish",
+        "🖼 Rasmni PDF ga aylantirish", "👤 Mening profilim",
+        "🎁 Bepul limit olish", "💳 Limit va Obuna", "💳 Limit sotib olish", "💳 Tariflar",
+        "ℹ️ Bot haqida", "👨‍💻 Adminga murojaat", "Adminga murojaat", "⚙️ Admin panel", "🌐 Tilni o'zgartirish",
+        # Russian
+        "📊 Создать слайд", "📄 Конвертировать PPTX в PDF",
+        "🖼 Конвертировать фото в PDF", "👤 Мой профиль",
+        "🎁 Получить бесплатный лимит", "💳 Лимиты и Подписка",
+        "ℹ️ О боте", "👨‍💻 Связаться с админом", "⚙️ Админ панель", "🌐 Сменить язык",
+        # English
+        "📊 Create slide", "📄 Convert PPTX to PDF",
+        "🖼 Convert Image to PDF", "👤 My Profile",
+        "🎁 Get free limits", "💳 Limits & Subscription",
+        "ℹ️ About Bot", "👨‍💻 Contact Admin", "⚙️ Admin Panel", "🌐 Change language"
+    }
+    if text.startswith("/") or text in menu_items:
+        await state.clear()
+        if text.startswith("/start"):
+            await cmd_start(message, state)
+        elif text in ("📊 Yangi slayd tayyorlash", "📊 Создать слайд", "📊 Create slide", "/yangi_slayd", "/new_slide"):
+            await start_new_slide(message, state)
+        elif text in ("📄 PPTX ni PDF ga aylantirish", "📄 Конвертировать PPTX в PDF", "📄 Convert PPTX to PDF"):
+            await prompt_pptx_to_pdf(message, state)
+        elif text in ("🖼 Rasmni PDF ga aylantirish", "🖼 Конвертировать фото в PDF", "🖼 Convert Image to PDF"):
+            await prompt_image_to_pdf(message, state)
+        elif text in ("👤 Mening profilim", "👤 Мой профиль", "👤 My Profile", "/profil", "/profile"):
+            await show_profile(message)
+        elif text in ("🎁 Bepul limit olish", "🎁 Получить бесплатный лимит", "🎁 Get free limits"):
+            await show_referral_program(message)
+        elif text in ("💳 Limit va Obuna", "💳 Лимиты и Подписка", "💳 Limits & Subscription", "💳 Limit sotib olish", "💳 Tariflar", "/limit", "/obuna"):
+            await buy_limits(message)
+        elif text in ("ℹ️ Bot haqida", "ℹ️ О боте", "ℹ️ About Bot", "/haqida", "/help", "/about"):
+            await about_bot(message)
+        elif text in ("🌐 Tilni o'zgartirish", "🌐 Сменить язык", "🌐 Change language", "/lang"):
+            await prompt_change_language(message)
+        elif text in ("⚙️ Admin panel", "⚙️ Админ панель", "⚙️ Admin Panel") and config.is_admin(message.from_user.id):
+            await admin_panel(message)
+        elif text in ("👨‍💻 Adminga murojaat", "👨‍💻 Связаться с админом", "👨‍💻 Contact Admin", "Adminga murojaat", "/murojaat", "/admin"):
+            await contact_admin_menu(message, state)
+        return True
+    return False
+
 @router.message(AdminContactState.waiting_for_message)
 async def process_admin_contact(message: Message, state: FSMContext):
-    # Agar foydalanuvchi menyu tugmasini bosgan yoki buyruq bergan bo'lsa
-    if message.text:
-        menu_items = {
-            "📊 Yangi slayd tayyorlash", "📄 PPTX ni PDF ga aylantirish",
-            "🖼 Rasmni PDF ga aylantirish", "👤 Mening profilim",
-            "🎁 Bepul limit olish", "💳 Limit va Obuna", "💳 Limit sotib olish", "💳 Tariflar",
-            "ℹ️ Bot haqida", "👨‍💻 Adminga murojaat", "Adminga murojaat", "⚙️ Admin panel"
-        }
-        if message.text.startswith("/") or message.text in menu_items:
-            await state.clear()
-            if message.text.startswith("/start"):
-                await cmd_start(message, state)
-            elif message.text in ("📊 Yangi slayd tayyorlash", "/yangi_slayd"):
-                await start_new_slide(message, state)
-            elif message.text == "📄 PPTX ni PDF ga aylantirish":
-                await prompt_pptx_to_pdf(message, state)
-            elif message.text == "🖼 Rasmni PDF ga aylantirish":
-                await prompt_image_to_pdf(message, state)
-            elif message.text in ("👤 Mening profilim", "/profil"):
-                await show_profile(message)
-            elif message.text == "🎁 Bepul limit olish":
-                await show_referral_program(message)
-            elif message.text in ("💳 Limit va Obuna", "💳 Limit sotib olish", "💳 Tariflar", "/limit", "/obuna"):
-                await buy_limits(message)
-            elif message.text in ("ℹ️ Bot haqida", "/haqida", "/help"):
-                await about_bot(message)
-            elif message.text == "⚙️ Admin panel" and config.is_admin(message.from_user.id):
-                await admin_panel(message)
-            elif message.text in ("👨‍💻 Adminga murojaat", "Adminga murojaat", "/murojaat", "/admin"):
-                await contact_admin_menu(message, state)
-            return
+    if await check_menu_navigation(message, state):
+        return
 
     await state.clear()
     user_id = message.from_user.id
@@ -602,7 +750,7 @@ async def process_admin_contact(message: Message, state: FSMContext):
 
     safe_name = html.escape(user_name)
     safe_username = html.escape(username)
-    admin_targets = set([config.ADMIN_ID] + config.UNLIMITED_USERS)
+    admin_targets = set(getattr(config, "ADMIN_USERS", [config.ADMIN_ID]))
 
     reply_kb = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="✉️ Javob yozish", callback_data=f"admin_reply_btn_{user_id}")]
@@ -810,32 +958,21 @@ async def admin_direct_reply(message: Message):
     except Exception as e:
         await message.answer(f"❌ Javob yuborishda xatolik: {e}")
 
-@router.message(F.text == "ℹ️ Bot haqida")
+@router.message(F.text.in_({"ℹ️ Bot haqida", "ℹ️ О боте", "ℹ️ About Bot"}))
 @router.message(Command("haqida"))
 @router.message(Command("help"))
+@router.message(Command("about"))
 @router.message(Command("yordam"))
 async def about_bot(message: Message):
-    text = (
-        f"ℹ️ **Talabalar uchun Slayd & PDF Generator Bot haqida:**\n\n"
-        f"🎓 **OTM talablari boʻyicha taqdimotlar:**\n"
-        f"• Titul varaqasi (Universitet, fakultet, talaba va oʻqituvchi maʼlumotlari)\n"
-        f"• Taqdimot rejasi (Mundarija) va mazmuniy slaydlar\n"
-        f"• Xulosa va **Foydalanilgan adabiyotlar (manbalar)**\n"
-        f"• **Himoya nutq matni (doklad / shpargalka)** — darsda nima deb gapirishni toʻliq koʻrsatadi!\n\n"
-        f"🔹 **Formatlar:** Tahrirlash mumkin boʻlgan zamonaviy **PowerPoint (.pptx)**.\n"
-        f"🔹 **Alohida PDF qilish:** Xohlagan vaqtda bir tugma bilan PDF olish yoki istalgan .pptx faylni botga tashlab PDF ga aylantirish mumkin.\n"
-        f"🔹 **Rasmni PDF ga aylantirish:** Istalgan rasm(lar)ni bir zumda PDF qilib beradi.\n"
-        f"🔹 **Tariflar:** 2 ta bepul taqdimot, so'ngra 1 ta taqdimot — 5 000 so'm, oylik cheksiz — 20 000 so'm.\n"
-        f"🔹 **Referal:** Har 2 ta do'st taklif qilsangiz, +1 ta bepul limit beriladi!\n\n"
-        f"Savol va takliflar uchun quyidagi tugma orqali adminga murojaat qilishingiz mumkin."
-    )
-    await message.answer(text, reply_markup=keyboards.get_about_keyboard(), parse_mode="Markdown")
+    user_lang = await database.get_user_language(message.from_user.id)
+    text = locales.get_text("about_text", user_lang)
+    await message.answer(text, reply_markup=keyboards.get_about_keyboard(lang=user_lang), parse_mode="Markdown")
 
 
 # ================= RASMNI PDF GA AYLANTIRISH =================
 MEDIA_GROUP_CACHE = {}
 
-async def _process_media_group(group_id: str, bot):
+async def _process_media_group(group_id: str, bot, state: FSMContext = None):
     await asyncio.sleep(1.5)
     data = MEDIA_GROUP_CACHE.pop(group_id, None)
     if not data:
@@ -875,6 +1012,8 @@ async def _process_media_group(group_id: str, bot):
             parse_mode="Markdown"
         )
         await status_msg.delete()
+        if state:
+            await state.clear()
     except Exception as e:
         logger.error(f"Album PDF error: {e}")
         await status_msg.edit_text(f"❌ Xatolik yuz berdi: {e}")
@@ -882,35 +1021,34 @@ async def _process_media_group(group_id: str, bot):
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
 # ================= PPTX NI PDF GA AYLANTIRISH =================
-@router.message(F.text == "📄 PPTX ni PDF ga aylantirish")
+@router.message(F.text.in_({"📄 PPTX ni PDF ga aylantirish", "📄 Конвертировать PPTX в PDF", "📄 Convert PPTX to PDF"}))
 async def prompt_pptx_to_pdf(message: Message, state: FSMContext):
+    user_lang = await database.get_user_language(message.from_user.id)
     await state.set_state(PptxToPdfState.waiting_for_pptx)
     await message.answer(
-        "📄 **PowerPoint (.pptx yoki .ppt) taqdimotingizni yuboring:**\n\n"
-        "Bot uni bir necha soniyada sifatli **PDF** hujjatga aylantirib beradi! ⚡️\n\n"
-        "*(Istalgan vaqtda botga to'g'ridan-to'g'ri taqdimot faylini tashlasangiz ham, avtomatik PDF qilib beradi)*",
+        locales.get_text("pptx_to_pdf_prompt", user_lang),
         reply_markup=keyboards.get_cancel_pptx_to_pdf_keyboard(),
-        parse_mode="Markdown"
+        parse_mode="HTML"
     )
 
 @router.callback_query(F.data == "cancel_pptx_to_pdf")
 async def cancel_pptx_to_pdf_callback(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     await callback.answer("Bekor qilindi")
+    user_lang = await database.get_user_language(callback.from_user.id)
     await callback.message.answer(
         "Asosiy menyu:",
-        reply_markup=keyboards.get_main_menu(is_admin=config.is_admin(callback.from_user.id))
+        reply_markup=keyboards.get_main_menu(is_admin=config.is_admin(callback.from_user.id), lang=user_lang)
     )
 
-@router.message(F.text == "🖼 Rasmni PDF ga aylantirish")
+@router.message(F.text.in_({"🖼 Rasmni PDF ga aylantirish", "🖼 Конвертировать фото в PDF", "🖼 Convert Image to PDF"}))
 async def prompt_image_to_pdf(message: Message, state: FSMContext):
+    user_lang = await database.get_user_language(message.from_user.id)
     await state.set_state(ImageToPdfState.waiting_for_image)
     await message.answer(
-        "📷 **Rasmni PDF ga aylantirish:**\n\n"
-        "Menga bir yoki bir nechta rasm yuboring (alohida yoki birgalikda albom qilib).\n"
-        "Men ularni bir zumda yuqori sifatli **PDF** hujjatga aylantirib beraman! 🚀",
+        locales.get_text("image_to_pdf_prompt", user_lang),
         reply_markup=keyboards.get_cancel_image_to_pdf_keyboard(),
-        parse_mode="Markdown"
+        parse_mode="HTML"
     )
 
 @router.callback_query(F.data == "cancel_image_to_pdf")
@@ -929,7 +1067,7 @@ async def handle_photo_to_pdf(message: Message, state: FSMContext):
         if group_id not in MEDIA_GROUP_CACHE:
             MEDIA_GROUP_CACHE[group_id] = {
                 "messages": [message],
-                "task": asyncio.create_task(_process_media_group(group_id, message.bot))
+                "task": asyncio.create_task(_process_media_group(group_id, message.bot, state))
             }
         else:
             MEDIA_GROUP_CACHE[group_id]["messages"].append(message)
@@ -958,6 +1096,24 @@ async def handle_photo_to_pdf(message: Message, state: FSMContext):
         await status_msg.edit_text(f"❌ Xatolik yuz berdi: {e}")
     finally:
         shutil.rmtree(tmp_dir, ignore_errors=True)
+
+@router.message(ImageToPdfState.waiting_for_image, F.text)
+async def handle_image_to_pdf_text(message: Message, state: FSMContext):
+    if await check_menu_navigation(message, state):
+        return
+    await message.answer(
+        "⚠️ Iltimos, PDF ga aylantirish uchun rasm yuboring yoki '❌ Bekor qilish' tugmasini bosing:",
+        reply_markup=keyboards.get_cancel_image_to_pdf_keyboard()
+    )
+
+@router.message(PptxToPdfState.waiting_for_pptx, F.text)
+async def handle_pptx_to_pdf_text(message: Message, state: FSMContext):
+    if await check_menu_navigation(message, state):
+        return
+    await message.answer(
+        "⚠️ Iltimos, PowerPoint (.pptx) taqdimot faylini yuboring yoki '❌ Bekor qilish' tugmasini bosing:",
+        reply_markup=keyboards.get_cancel_pptx_to_pdf_keyboard()
+    )
 
 @router.message(F.document)
 async def handle_document_to_pdf(message: Message, state: FSMContext = None):
@@ -1000,40 +1156,46 @@ async def handle_document_to_pdf(message: Message, state: FSMContext = None):
             shutil.rmtree(tmp_dir, ignore_errors=True)
         return
 
-    if not is_image:
-        return
-
-    # Image document is only converted to PDF if user is in ImageToPdfState
-    if cur_state != ImageToPdfState.waiting_for_image:
-        return
-
-    status_msg = await message.answer("⏳ Hujjatdagi rasm PDF ga aylantirilmoqda...")
-    tmp_dir = tempfile.mkdtemp(prefix="doc2pdf_")
-    try:
-        f_name = doc.file_name or "image.jpg"
-        img_path = os.path.join(tmp_dir, f_name)
-        await message.bot.download(doc.file_id, destination=img_path)
-        base_name = os.path.splitext(f_name)[0] or "rasm"
-        pdf_path = os.path.join(tmp_dir, f"{base_name}.pdf")
-        await asyncio.to_thread(generator.convert_images_to_pdf, [img_path], pdf_path)
-
-        pdf_doc = FSInputFile(pdf_path, filename=f"{base_name}.pdf")
-        await message.reply_document(
-            document=pdf_doc,
-            caption="✅ **Rasmingiz sifatli PDF hujjatga aylantirildi!** 📄",
-            parse_mode="Markdown"
+    if cur_state == PptxToPdfState.waiting_for_pptx and not is_presentation:
+        await message.answer(
+            "⚠️ Ushbu fayl PowerPoint (.pptx yoki .ppt) formati emas.\n"
+            "Iltimos, .pptx taqdimot faylini yuboring yoki bekor qilish uchun '❌ Bekor qilish' tugmasini bosing:",
+            reply_markup=keyboards.get_cancel_pptx_to_pdf_keyboard()
         )
-        await status_msg.delete()
-        if state:
-            await state.clear()
-    except Exception as e:
-        logger.error(f"Doc image PDF error: {e}")
-        await status_msg.edit_text(f"❌ Xatolik yuz berdi: {e}")
-    finally:
-        shutil.rmtree(tmp_dir, ignore_errors=True)
+        return
+
+    if is_image and cur_state == ImageToPdfState.waiting_for_image:
+        status_msg = await message.answer("⏳ Hujjatdagi rasm PDF ga aylantirilmoqda...")
+        tmp_dir = tempfile.mkdtemp(prefix="doc2pdf_")
+        try:
+            f_name = doc.file_name or "image.jpg"
+            img_path = os.path.join(tmp_dir, f_name)
+            await message.bot.download(doc.file_id, destination=img_path)
+            base_name = os.path.splitext(f_name)[0] or "rasm"
+            pdf_path = os.path.join(tmp_dir, f"{base_name}.pdf")
+            await asyncio.to_thread(generator.convert_images_to_pdf, [img_path], pdf_path)
+
+            pdf_doc = FSInputFile(pdf_path, filename=f"{base_name}.pdf")
+            await message.reply_document(
+                document=pdf_doc,
+                caption="✅ **Rasmingiz sifatli PDF hujjatga aylantirildi!** 📄",
+                parse_mode="Markdown"
+            )
+            await status_msg.delete()
+            if state:
+                await state.clear()
+        except Exception as e:
+            logger.error(f"Doc image PDF error: {e}")
+            await status_msg.edit_text(f"❌ Xatolik yuz berdi: {e}")
+        finally:
+            shutil.rmtree(tmp_dir, ignore_errors=True)
+        return
+
+    # Boshqa barcha hujjatlar (PDF, Word, TXT, konspektlar) slayd yaratish yoki tahlil qilish uchun yuboriladi
+    await handle_document_media(message, state)
 
 
-@router.message(F.text == "📊 Yangi slayd tayyorlash")
+@router.message(F.text.in_({"📊 Yangi slayd tayyorlash", "📊 Создать слайд", "📊 Create slide"}))
 @router.message(Command("yangi_slayd"))
 async def start_new_slide(message: Message, state: FSMContext):
     # Check limit first
@@ -1042,6 +1204,7 @@ async def start_new_slide(message: Message, state: FSMContext):
         username=message.from_user.username or "",
         full_name=message.from_user.full_name or ""
     )
+    user_lang = user.get("language") or "uz"
     
     is_sub = database.is_subscription_active(user)
     is_unlimited = bool(user.get("is_unlimited")) or config.is_unlimited(message.from_user.id) or is_sub
@@ -1050,36 +1213,80 @@ async def start_new_slide(message: Message, state: FSMContext):
     if not is_unlimited and total_remaining <= 0:
         bot_user = await message.bot.get_me()
         await message.answer(
-            "⚠️ **Kechirasiz, sizda limitlar tugagan!**\n\n"
-            "Siz yangi taqdimot yaratish uchun:\n"
-            "1️⃣ **Limit yoki Oylik obuna xarid qilishingiz mumkin** (1 ta taqdimot — 5 000 so'm, oylik cheksiz — 20 000 so'm);\n"
-            "2️⃣ **Do'stlaringizni taklif qiling** — har 2 ta yangi do'st uchun **+1 ta bepul limit** oling!",
+            locales.get_text("no_limit", user_lang),
             reply_markup=keyboards.get_no_limit_keyboard(bot_user.username, message.from_user.id),
-            parse_mode="Markdown"
+            parse_mode="HTML"
         )
         return
 
-    await state.set_state(SlideCreation.waiting_for_topic)
+    await state.set_state(SlideCreation.waiting_for_slide_language)
     await message.answer(
-        "✍️ **Taqdimot mavzusini yozib yuboring:**\n\n"
-        "Masalan: *Sun'iy intellektning tibbiyotdagi o'rni va kelajagi*",
-        parse_mode="Markdown"
+        locales.get_text("choose_slide_lang", user_lang),
+        reply_markup=keyboards.get_slide_language_keyboard(user_lang),
+        parse_mode="HTML"
+    )
+
+@router.callback_query(F.data.startswith("slidelang_"), SlideCreation.waiting_for_slide_language)
+async def process_slide_language(callback: CallbackQuery, state: FSMContext):
+    await callback.answer()
+    slide_lang = callback.data.split("_")[1]
+    await state.update_data(slide_language=slide_lang)
+
+    user = await database.get_user(callback.from_user.id) or {}
+    user_lang = user.get("language") or "uz"
+    lang_info = locales.get_slide_lang_info(slide_lang)
+
+    await state.set_state(SlideCreation.waiting_for_topic)
+    topic_prompt = locales.get_text("prompt_topic", user_lang)
+    await callback.message.answer(
+        f"🌐 <b>Tanlangan til / Выбранный язык / Language:</b> {lang_info['name']}\n\n{topic_prompt}",
+        parse_mode="HTML"
     )
 
 @router.message(SlideCreation.waiting_for_topic)
 async def process_topic(message: Message, state: FSMContext):
-    topic = message.text.strip()
+    if await check_menu_navigation(message, state):
+        return
+    topic = (message.text or "").strip()
+    user = await database.get_user(message.from_user.id) or {}
+    user_lang = user.get("language") or "uz"
+
     if len(topic) < 3:
-        await message.answer("Iltimos, mavzuni to'liqroq yozing:")
+        await message.answer(locales.get_text("prompt_topic", user_lang), parse_mode="HTML")
         return
 
     await state.update_data(topic=topic)
     await state.set_state(SlideCreation.waiting_for_count)
+    
+    data = await state.get_data()
+    slide_lang = data.get("slide_language", "uz")
+    lang_info = locales.get_slide_lang_info(slide_lang)
+
     safe_topic = html.escape(topic)
+    count_prompt = locales.get_text(
+        "prompt_count",
+        user_lang,
+        topic=safe_topic,
+        slide_lang=lang_info["name"]
+    )
     await message.answer(
-        f"Mavzu: <b>{safe_topic}</b>\n\n"
-        f"Nechta slayd bo'lsin? Tanlang:",
+        count_prompt,
         reply_markup=keyboards.get_slide_counts_keyboard(),
+        parse_mode="HTML"
+    )
+
+async def proceed_to_author_step(target_message: Message, state: FSMContext, slide_count: int):
+    await state.update_data(slide_count=slide_count)
+    await state.set_state(SlideCreation.waiting_for_author)
+
+    user_id = target_message.chat.id
+    user = await database.get_user(user_id) or {}
+    user_lang = user.get("language") or "uz"
+
+    author_prompt = locales.get_text("prompt_author", user_lang, count=slide_count)
+    await target_message.answer(
+        author_prompt,
+        reply_markup=keyboards.get_skip_author_keyboard(),
         parse_mode="HTML"
     )
 
@@ -1088,31 +1295,54 @@ async def process_slide_count(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
     count_str = callback.data.split("_")[1]
     slide_count = int(count_str)
-    
-    await state.update_data(slide_count=slide_count)
-    await state.set_state(SlideCreation.waiting_for_author)
+    await proceed_to_author_step(callback.message, state, slide_count)
 
-    await callback.message.answer(
-        "🎓 **1-slayd: Titul varaqasi uchun ma'lumotlar**\n"
-        "*(OTM, fakultet, yoʻnalish, guruh, talaba va ilmiy rahbar)*\n\n"
-        "Maʼlumotlarni tagma-tag yoki bir qatorda yozib yuborishingiz mumkin (hammasi 1-slaydda chiroyli chiqadi):\n"
-        "💡 *Masalan:*\n"
-        "OTM: TATU\n"
-        "Fakultet: Dasturiy injiniring\n"
-        "Yo'nalish: DI\n"
-        "Guruh: 210-21\n"
-        "Talaba: Nazarbek Turdaliyev\n"
-        "O'qituvchi: Eshpolatov Ozodbek\n\n"
-        "⏩ Agar maʼlumot kiritishni xohlamasangiz, **«O'tkazib yuborish»** tugmasini bosing:\n"
-        "*(Keyingi bosqichda slaydning orqa fonini tanlaysiz 🎨)*",
-        reply_markup=keyboards.get_skip_author_keyboard(),
-        parse_mode="Markdown"
+@router.message(SlideCreation.waiting_for_count, F.text)
+async def process_slide_count_text(message: Message, state: FSMContext):
+    if await check_menu_navigation(message, state):
+        return
+    text = (message.text or "").strip()
+    match = re.search(r"\d+", text)
+    if not match:
+        await message.answer(
+            "⚠️ Iltimos, slaydlar sonini raqamda yozing (masalan: <b>7</b>, <b>12</b>, <b>15</b>) yoki quyidagi tugmalardan birini tanlang:",
+            reply_markup=keyboards.get_slide_counts_keyboard(),
+            parse_mode="HTML"
+        )
+        return
+
+    slide_count = int(match.group())
+    if slide_count < 3:
+        await message.answer(
+            "⚠️ Slaydlar soni kamida <b>3 ta</b> boʻlishi kerak.\nIltimos, 3 dan 30 gacha boʻlgan son kiriting:",
+            parse_mode="HTML"
+        )
+        return
+    if slide_count > 30:
+        await message.answer(
+            "⚠️ Slaydlar soni koʻpi bilan <b>30 ta</b> boʻlishi mumkin.\nIltimos, 3 dan 30 gacha boʻlgan son kiriting:",
+            parse_mode="HTML"
+        )
+        return
+
+    await proceed_to_author_step(message, state, slide_count)
+
+@router.message(SlideCreation.waiting_for_count)
+async def process_slide_count_invalid(message: Message, state: FSMContext):
+    if await check_menu_navigation(message, state):
+        return
+    await message.answer(
+        "⚠️ Iltimos, slaydlar sonini raqamda yozib yuboring (masalan: <b>8</b> yoki <b>12</b>) yoki quyidagi tugmalardan birini tanlang:",
+        reply_markup=keyboards.get_slide_counts_keyboard(),
+        parse_mode="HTML"
     )
 
 
 @router.message(SlideCreation.waiting_for_author, F.text)
 async def process_author_info_message(message: Message, state: FSMContext):
-    author_info = message.text.strip()
+    if await check_menu_navigation(message, state):
+        return
+    author_info = (message.text or "").strip()
     await state.update_data(author_info=author_info)
     await state.set_state(SlideCreation.waiting_for_theme)
     await message.answer(
@@ -1174,6 +1404,7 @@ async def process_custom_bg_photo(message: Message, state: FSMContext):
     slide_count = data.get("slide_count", 8)
     author_info = data.get("author_info", "")
     context_doc = data.get("context_document", "")
+    slide_lang = data.get("slide_language", "uz")
     await state.clear()
     
     await generate_and_send_presentation(
@@ -1184,7 +1415,8 @@ async def process_custom_bg_photo(message: Message, state: FSMContext):
         author_info=author_info,
         theme_choice="auto",
         custom_bg=tmp_path,
-        context_document=context_doc
+        context_document=context_doc,
+        slide_language=slide_lang
     )
 
 @router.message(SlideCreation.waiting_for_custom_bg, F.document)
@@ -1203,6 +1435,7 @@ async def process_custom_bg_document(message: Message, state: FSMContext):
         slide_count = data.get("slide_count", 8)
         author_info = data.get("author_info", "")
         context_doc = data.get("context_document", "")
+        slide_lang = data.get("slide_language", "uz")
         await state.clear()
         
         await generate_and_send_presentation(
@@ -1213,7 +1446,8 @@ async def process_custom_bg_document(message: Message, state: FSMContext):
             author_info=author_info,
             theme_choice="auto",
             custom_bg=tmp_path,
-            context_document=context_doc
+            context_document=context_doc,
+            slide_language=slide_lang
         )
     else:
         await message.answer(
@@ -1223,7 +1457,9 @@ async def process_custom_bg_document(message: Message, state: FSMContext):
         )
 
 @router.message(SlideCreation.waiting_for_custom_bg, F.text)
-async def invalid_custom_bg_text(message: Message):
+async def invalid_custom_bg_text(message: Message, state: FSMContext):
+    if await check_menu_navigation(message, state):
+        return
     await message.answer(
         "⚠️ Iltimos, fon uchun **rasm (foto yoki skrinshot)** yuboring yoki rang tanlashga qayting:",
         reply_markup=keyboards.get_custom_bg_keyboard(),
@@ -1239,9 +1475,18 @@ async def process_theme_choice(callback: CallbackQuery, state: FSMContext):
     theme_key = callback.data.replace("theme_", "")
     data = await state.get_data()
     topic = data.get("topic", "")
+    if not topic:
+        await callback.message.answer(
+            "⚠️ Taqdimot mavzusi topilmadi yoki sessiya muddati o'tgan.\n"
+            "Iltimos, '📊 Yangi slayd tayyorlash' tugmasini bosib qaytadan boshlang.",
+            reply_markup=keyboards.get_main_menu(is_admin=config.is_admin(callback.from_user.id))
+        )
+        await state.clear()
+        return
     slide_count = data.get("slide_count", 8)
     author_info = data.get("author_info", "")
     context_doc = data.get("context_document", "")
+    slide_lang = data.get("slide_language", "uz")
     await state.clear()
     await generate_and_send_presentation(
         chat_message=callback.message,
@@ -1250,10 +1495,11 @@ async def process_theme_choice(callback: CallbackQuery, state: FSMContext):
         slide_count=slide_count,
         author_info=author_info,
         theme_choice=theme_key,
-        context_document=context_doc
+        context_document=context_doc,
+        slide_language=slide_lang
     )
 
-async def generate_and_send_presentation(chat_message: Message, user_id: int, topic: str, slide_count: int, author_info: str = "", theme_choice: str = "auto", custom_bg: str = None, context_document: str = ""):
+async def generate_and_send_presentation(chat_message: Message, user_id: int, topic: str, slide_count: int, author_info: str = "", theme_choice: str = "auto", custom_bg: str = None, context_document: str = "", slide_language: str = "uz"):
     time_estimate = "15-25 soniya" if slide_count >= 15 else "10-18 soniya"
     safe_topic = html.escape(topic)
     status_msg = await chat_message.answer(
@@ -1287,14 +1533,15 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
                     topic=topic,
                     num_cards=slide_count,
                     author_info=author_info,
-                    status_callback=update_gamma_status
+                    status_callback=update_gamma_status,
+                    language=slide_language
                 )
                 if gamma_res.get("success") and gamma_res.get("file_path"):
                     pptx_path = gamma_res["file_path"]
                     gamma_url = gamma_res.get("gamma_url", "")
 
                     try:
-                        content_mini = await generator.generate_presentation_content(topic, slide_count=min(slide_count, 6), author_info=author_info)
+                        content_mini = await generator.generate_presentation_content(topic, slide_count=min(slide_count, 6), language=slide_language, author_info=author_info)
                         speech_text = generator.generate_speech_script(content_mini, author_info=author_info)
                     except Exception:
                         speech_text = f"Taqdimot mavzusi: {topic}\n\nHimoya nutqi:\nHurmatli ustoz va talabalar, ushbu taqdimot '{topic}' mavzusiga bag'ishlangan bo'lib, zamonaviy axborotlar va vizual tuzilma asosida tayyorlandi."
@@ -1313,6 +1560,7 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
                         json.dump({"topic": topic, "safe_name": safe_name, "gamma_url": gamma_url}, f, ensure_ascii=False)
 
                     user_info = await database.get_user(user_id) or {}
+                    user_lang = user_info.get("language") or "uz"
                     is_sub = database.is_subscription_active(user_info)
                     is_unlimited_user = bool(user_info.get("is_unlimited")) or config.is_unlimited(user_id) or is_sub
 
@@ -1345,10 +1593,10 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
                     await chat_message.reply_document(
                         document=pptx_document,
                         caption=caption_html,
-                        reply_markup=keyboards.get_slide_action_keyboard(share_url=share_url, gamma_url=gamma_url),
+                        reply_markup=keyboards.get_slide_action_keyboard(share_url=share_url, gamma_url=gamma_url, lang=user_lang),
                         parse_mode="HTML"
                     )
-                    await database.use_limit(user_id)
+                    await database.consume_limit(user_id)
                     try:
                         await status_msg.delete()
                     except Exception:
@@ -1368,6 +1616,7 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
         content = await generator.generate_presentation_content(
             topic,
             slide_count=slide_count,
+            language=slide_language,
             author_info=author_info,
             theme_choice=theme_choice,
             context_document=context_document
@@ -1386,7 +1635,13 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
         safe_name = "".join(c for c in topic[:30] if c.isalnum() or c in (" ", "_", "-")).strip() or "taqdimot"
         pptx_path = os.path.join(temp_dir, f"{safe_name}.pptx")
 
-        user_full_name = chat_message.from_user.full_name if (chat_message and chat_message.from_user) else ""
+        user_full_name = ""
+        if chat_message and chat_message.from_user and not chat_message.from_user.is_bot:
+            user_full_name = chat_message.from_user.full_name
+        if not user_full_name:
+            db_u = await database.get_user(user_id)
+            if db_u and db_u.get("full_name"):
+                user_full_name = db_u["full_name"]
         has_author = bool(author_info and author_info.strip())
         await asyncio.to_thread(
             generator.create_pptx_file,
@@ -1396,7 +1651,8 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
             images_map=images_map,
             author_info=author_info,
             default_student_name=user_full_name if has_author else "",
-            custom_bg=custom_bg
+            custom_bg=custom_bg,
+            language=slide_language
         )
 
         # Generate defense speech text
@@ -1442,7 +1698,7 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
             theme_info = generator.THEMES.get(chosen_theme, generator.THEMES["blue"])
             theme_name = theme_info.get("name", "Zamonaviy")
         total_slides_count = len(content.get('slides', [])) + (6 if has_author else 5)
-        slides_breakdown = "(1-Titul, 2-Mavzu, 3-Reja, Asosiy qismlar, Xulosa, Foydalanilgan adabiyotlar, Yakun)" if has_author else "(1-Mavzu, 2-Reja, Asosiy qismlar, Xulosa, Foydalanilgan adabiyotlar, Yakun)"
+        slides_breakdown = "(1-Titul, 2-Mavzu, 3-Reja, Asosiy qismlar, Xulosa, Adabiyotlar, E'tiboringiz uchun rahmat!)" if has_author else "(1-Mavzu, 2-Reja, Asosiy qismlar, Xulosa, Adabiyotlar, E'tiboringiz uchun rahmat!)"
 
         bot_user = await chat_message.bot.get_me()
         share_url = f"https://t.me/share/url?url=https://t.me/{bot_user.username}?start=ref_{user_id}&text=Sun'iy%20intellekt%20(Google%20Gemini)%20yordamida%20talabalar%20uchun%20professional%20taqdimotlar%20tayyorlang!%20%F0%9F%8E%81%20Bepul%20sinab%20ko'rish:"
@@ -1592,9 +1848,10 @@ async def get_latest_speech_handler(callback: CallbackQuery):
 async def cancel_handler(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     await callback.answer("Bekor qilindi")
+    user_lang = await database.get_user_language(callback.from_user.id)
     await callback.message.answer(
-        "Asosiy menyu:",
-        reply_markup=keyboards.get_main_menu(is_admin=config.is_admin(callback.from_user.id))
+        locales.get_text("cancelled", user_lang),
+        reply_markup=keyboards.get_main_menu(is_admin=config.is_admin(callback.from_user.id), lang=user_lang)
     )
 
 
@@ -1771,7 +2028,7 @@ async def admin_set_gamma(message: Message):
     else:
         await message.answer("❌ API kalitini saqlashda xatolik yuz berdi.")
 
-@router.message(F.text == "⚙️ Admin panel")
+@router.message(F.text.in_({"⚙️ Admin panel", "⚙️ Админ панель", "⚙️ Admin Panel"}))
 @router.message(Command("stats"))
 async def admin_panel(message: Message):
     if not config.is_admin(message.from_user.id):
@@ -1820,6 +2077,7 @@ async def handle_voice_presentation(message: Message, state: FSMContext):
         username=message.from_user.username or "",
         full_name=message.from_user.full_name or ""
     )
+    user_lang = user.get("language") or "uz"
     is_sub = database.is_subscription_active(user)
     is_unlimited = bool(user.get("is_unlimited")) or config.is_unlimited(message.from_user.id) or is_sub
     total_remaining = user["free_limit"] + user["paid_balance"]
@@ -1827,12 +2085,9 @@ async def handle_voice_presentation(message: Message, state: FSMContext):
     if not is_unlimited and total_remaining <= 0:
         bot_user = await message.bot.get_me()
         await message.answer(
-            "⚠️ **Kechirasiz, sizda limitlar tugagan!**\n\n"
-            "Siz yangi taqdimot yaratish uchun:\n"
-            "1️⃣ **Limit yoki Oylik obuna xarid qilishingiz mumkin** (1 ta taqdimot — 5 000 so'm, oylik cheksiz — 20 000 so'm);\n"
-            "2️⃣ **Do'stlaringizni taklif qiling** — har 2 ta yangi do'st uchun **+1 ta bepul limit** oling!",
-            reply_markup=keyboards.get_no_limit_keyboard(bot_user.username, message.from_user.id),
-            parse_mode="Markdown"
+            locales.get_text("no_limit", user_lang),
+            reply_markup=keyboards.get_no_limit_keyboard(bot_user.username, message.from_user.id, lang=user_lang),
+            parse_mode="HTML"
         )
         return
 
@@ -1857,18 +2112,41 @@ async def handle_voice_presentation(message: Message, state: FSMContext):
             )
             return
 
+        raw_lang = (parsed.get("language") or "").lower()
+        if "ru" in raw_lang or "rus" in raw_lang:
+            slide_lang = "ru"
+        elif "en" in raw_lang or "eng" in raw_lang:
+            slide_lang = "en"
+        elif "tr" in raw_lang or "turk" in raw_lang:
+            slide_lang = "tr"
+        elif "kk" in raw_lang or "kaz" in raw_lang:
+            slide_lang = "kk"
+        elif "ky" in raw_lang or "kyr" in raw_lang:
+            slide_lang = "ky"
+        elif "tg" in raw_lang or "taj" in raw_lang:
+            slide_lang = "tg"
+        elif "ar" in raw_lang or "arab" in raw_lang:
+            slide_lang = "ar"
+        elif "de" in raw_lang or "ger" in raw_lang or "nem" in raw_lang:
+            slide_lang = "de"
+        else:
+            slide_lang = user_lang
+
         await state.update_data(
             topic=topic,
             slide_count=slide_count,
-            author_info=author_info
+            author_info=author_info,
+            slide_language=slide_lang
         )
         await state.set_state(SlideCreation.waiting_for_theme)
 
+        lang_info = locales.get_slide_lang_info(slide_lang)
         author_display = f"\n👤 **Muallif:** {author_info}" if author_info else ""
         await status_msg.delete()
         await message.answer(
             f"🎙 **Ovozli xabaringiz muvaffaqiyatli tushunildi!** 🚀\n\n"
             f"📌 **Aniqlangan mavzu:** *{topic}*\n"
+            f"🌐 **Slayd tili:** *{lang_info['name']}*\n"
             f"📊 **Slaydlar soni:** *{slide_count} ta*{author_display}\n\n"
             f"🎨 **Slaydning orqa fonini (dizaynini) tanlang:**\n"
             f"Quyidagi ranglardan birini tanlang yoki oʻz fon rasmingizni yuboring: 👇",
@@ -1980,11 +2258,13 @@ async def media_to_slides_callback(callback: CallbackQuery, state: FSMContext):
         summary = extracted.get("summary", "").strip()
         suggested_slides = extracted.get("suggested_slides", 8)
 
+        user_lang = user.get("language") or "uz"
         await state.update_data(
             topic=topic,
             slide_count=suggested_slides,
             author_info="",
-            context_document=summary
+            context_document=summary,
+            slide_language=user_lang
         )
         await state.set_state(SlideCreation.waiting_for_theme)
 

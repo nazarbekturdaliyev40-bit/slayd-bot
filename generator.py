@@ -21,6 +21,7 @@ import tempfile
 import pypdf
 import docx
 import config
+import locales
 
 logger = logging.getLogger(__name__)
 
@@ -235,6 +236,34 @@ def clean_prefix(val: str, prefixes: list) -> str:
             v = v[len(p):].strip(" :-\t")
     return v
 
+def safe_json_loads(raw_text: str) -> dict:
+    """Tozalaydi, markdown teglarni olib tashlaydi va xatolarga chidamli JSON yuklaydi."""
+    text = (raw_text or "").strip()
+    if text.startswith("```"):
+        text = re.sub(r"^```(?:json)?\s*", "", text, flags=re.IGNORECASE)
+        text = re.sub(r"\s*```$", "", text)
+        text = text.strip()
+
+    try:
+        return json.loads(text)
+    except Exception:
+        pass
+
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end != -1 and end > start:
+        snippet = text[start:end+1]
+        try:
+            return json.loads(snippet)
+        except Exception:
+            cleaned_snippet = re.sub(r",\s*([}\]])", r"\1", snippet)
+            try:
+                return json.loads(cleaned_snippet)
+            except Exception:
+                pass
+
+    return json.loads(text)
+
 def smart_parse_student_details(raw: str) -> dict:
     """Foydalanuvchi yozgan xom matndan OTM, fakultet, yo'nalish, guruh, talaba va o'qituvchini aniq ajratib beradi."""
     if not raw or not raw.strip():
@@ -322,9 +351,12 @@ def smart_parse_student_details(raw: str) -> dict:
 
     return details
 
-async def generate_presentation_content(topic: str, slide_count: int = 8, language: str = "uzbek", author_info: str = "", theme_choice: str = "auto", context_document: str = "") -> dict:
+async def generate_presentation_content(topic: str, slide_count: int = 8, language: str = "uz", author_info: str = "", theme_choice: str = "auto", context_document: str = "") -> dict:
     """Uses Google Gemini to generate structured slide content in JSON with academic references, infographic layouts, and structured student details."""
     client = genai.Client(api_key=config.GEMINI_API_KEY)
+    
+    lang_info = locales.get_slide_lang_info(language)
+    prompt_lang = lang_info["prompt"]
     
     author_clause = f"\nTaqdimot muallifi va OTM ma'lumotlari: {author_info}" if author_info else ""
     theme_clause = f"\nFoydalanuvchi tanlagan dizayn mavzusi: '{theme_choice}'." if theme_choice and theme_choice != "auto" else ""
@@ -333,7 +365,8 @@ async def generate_presentation_content(topic: str, slide_count: int = 8, langua
 Siz universitet va oliy ta'lim talabalari uchun akademik va professional taqdimotlar tayyorlovchi yetuk AI mutaxassisiz.
 Mavzu: "{topic}"{author_clause}{theme_clause}{context_clause}
 Talab qilingan mazmuniy slaydlar soni: {slide_count} ta
-Til: {language} (lotin alifbosidagi toza, imlo xatolarisiz akademik va tushunarli o'zbek tili).
+Qat'iy talab qilingan til: {prompt_lang}.
+DIQQAT: Taqdimotning barcha slaydlari, sarlavhalari, rejalari, matnlari, taqqoslashlari, xulosalari, manbalari va spiker nutqi (speaker_notes) 100% FAQAT va FAQAT {prompt_lang} tilida bo'lishi SHART! Barcha matnlar tanlangan tilning imlo, orfografik va grammatik qoidalariga to'liq mos kelishi, tushunarli, akademik va professional bo'lishi kerak.
 
 Mavzuning sohasini aniqlang va quyidagi rang temalaridan birini tanlang:
 - "tech" (agar dasturlash, kompyuter, axborot texnologiyalari, IT, sun'iy intellekt, robototexnika, kiberxavfsizlik bo'lsa)
@@ -434,9 +467,9 @@ Talablar:
     models_to_try = [
         "gemini-3.5-flash-lite",
         "gemini-3.1-flash-lite",
+        "gemini-3.1-flash-lite-preview",
         "gemini-flash-lite-latest",
-        "gemini-3.8-flash",
-        "gemini-3.5-flash"
+        "gemini-3-flash-preview"
     ]
     last_error = None
 
@@ -450,12 +483,13 @@ Talablar:
                     config=types.GenerateContentConfig(
                         response_mime_type="application/json",
                         temperature=0.7,
+                        max_output_tokens=8192,
                         automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True)
                     )
                 ),
-                timeout=40.0
+                timeout=50.0
             )
-            data = json.loads(response.text)
+            data = safe_json_loads(response.text)
             
             # Mavzuga mos theme ni aniqlash
             if theme_choice and theme_choice != "auto" and theme_choice in THEMES:
@@ -524,6 +558,7 @@ Talablar:
             # Barcha matnlarni stiker va emojilardan tozalash
             data = clean_data_structure(data)
 
+            data["language"] = language
             logger.info(f"{model_name} orqali slayd ma'lumotlari muvaffaqiyatli olindi!")
             return data
         except asyncio.TimeoutError:
@@ -610,7 +645,7 @@ async def fetch_image_single(session: aiohttp.ClientSession, query: str, fallbac
                                 async with session.get(thumb_url, headers=headers, timeout=aiohttp.ClientTimeout(total=7)) as img_r:
                                     if img_r.status == 200:
                                         raw = await img_r.read()
-                                        return process_image(raw, dst_path)
+                                        return await asyncio.to_thread(process_image, raw, dst_path)
         except Exception:
             pass
 
@@ -628,7 +663,7 @@ async def fetch_image_single(session: aiohttp.ClientSession, query: str, fallbac
                                 async with session.get(img_url, headers=headers, timeout=aiohttp.ClientTimeout(total=7)) as img_r:
                                     if img_r.status == 200:
                                         raw = await img_r.read()
-                                        return process_image(raw, dst_path)
+                                        return await asyncio.to_thread(process_image, raw, dst_path)
         except Exception:
             pass
 
@@ -839,9 +874,11 @@ def _add_header(slide, title_text: str, theme: dict, slide_num: int = None, tota
         bp.font.color.rgb = RGBColor(255, 255, 255)
         bp.alignment = PP_ALIGN.CENTER
 
-def create_pptx_file(content: dict, output_path: str, theme_name: str = "", images_map: dict = None, author_info: str = "", default_student_name: str = "", custom_bg: str = None) -> str:
+def create_pptx_file(content: dict, output_path: str, theme_name: str = "", images_map: dict = None, author_info: str = "", default_student_name: str = "", custom_bg: str = None, language: str = "") -> str:
     """Creates a beautiful 16:9 PowerPoint file with student academic structure, author info, references, and closing slides."""
     content = clean_data_structure(content)
+    lang_code = language or content.get("language", "uz")
+    lang_info = locales.get_slide_lang_info(lang_code)
     if not theme_name or theme_name not in THEMES:
         theme_name = content.get("theme", "blue")
     theme = THEMES.get(theme_name, THEMES["blue"])
@@ -1194,7 +1231,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         bg_reja.line.fill.background()
 
     reja_slide_num = 3 if has_author else 2
-    _add_header(reja_slide, "Mundarija va Taqdimot Rejasi", theme, slide_num=reja_slide_num, total_slides=total_slides, category="TAQDIMOT TUZILISHI")
+    _add_header(reja_slide, lang_info["agenda"], theme, slide_num=reja_slide_num, total_slides=total_slides, category=lang_info["agenda"].upper())
 
     # Reja / Agenda: qat'iy eng ko'pi 5 ta band
     raw_agenda = content.get("agenda")
@@ -1535,7 +1572,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         bg_concl.line.fill.background()
 
     concl_num = len(slides_data) + (4 if has_author else 3)
-    _add_header(concl_slide, "Xulosa va Asosiy Natijalar", theme, slide_num=concl_num, total_slides=total_slides, category="XULOSA")
+    _add_header(concl_slide, lang_info["conclusion"], theme, slide_num=concl_num, total_slides=total_slides, category=lang_info["conclusion"].upper())
 
     concl_card = concl_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.75), Inches(11.533), Inches(5.25))
     concl_card.fill.solid()
@@ -1567,7 +1604,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         bg_ref.line.fill.background()
 
     ref_num = len(slides_data) + (5 if has_author else 4)
-    _add_header(ref_slide, "Foydalanilgan Adabiyotlar va Manbalar", theme, slide_num=ref_num, total_slides=total_slides, category="MANBALAR")
+    _add_header(ref_slide, lang_info["references"], theme, slide_num=ref_num, total_slides=total_slides, category=lang_info["references"].upper())
 
     ref_card = ref_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.75), Inches(11.533), Inches(5.25))
     ref_card.fill.solid()
@@ -1632,54 +1669,78 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
     end_bar.fill.fore_color.rgb = theme["accent"]
     end_bar.line.fill.background()
 
-    # Center card for Thank you
-    end_card = end_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(2.2), Inches(1.8), Inches(8.933), Inches(4.0))
+    # Center card background
+    card_w = Inches(10.5)
+    card_h = Inches(5.2)
+    card_l = Inches(1.416)
+    card_t = Inches(1.3)
+
+    end_card = end_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, card_l, card_t, card_w, card_h)
     end_card.fill.solid()
     end_card.fill.fore_color.rgb = theme["card_bg"]
     end_card.line.color.rgb = theme["accent"]
-    end_card.line.width = Pt(2.0)
+    end_card.line.width = Pt(2.5)
 
-    end_tf = end_card.text_frame
+    # Text box inside card (guarantees universal rendering across all Office viewers)
+    end_box = end_slide.shapes.add_textbox(card_l + Inches(0.4), card_t + Inches(0.35), card_w - Inches(0.8), card_h - Inches(0.7))
+    end_tf = end_box.text_frame
     end_tf.word_wrap = True
-    
-    ep1 = end_tf.paragraphs[0]
-    ep1.text = "E'TIBORINGIZ UCHUN RAHMAT!"
-    ep1.font.size = Pt(32)
+    end_tf.margin_top = Inches(0.15)
+    end_tf.margin_bottom = Inches(0.15)
+    end_tf.margin_left = Inches(0.15)
+    end_tf.margin_right = Inches(0.15)
+
+    # 1. Top badge/indicator
+    p_badge = end_tf.paragraphs[0]
+    p_badge.text = "✦  YAKUNIY MINNATDORCHILIK  ✦"
+    p_badge.font.size = Pt(13)
+    p_badge.font.bold = True
+    p_badge.font.color.rgb = theme["accent"]
+    p_badge.font.name = "Arial"
+    p_badge.alignment = PP_ALIGN.CENTER
+    p_badge.space_after = Pt(14)
+
+    # 2. Main "E'TIBORINGIZ UCHUN RAHMAT!" Title
+    ep1 = end_tf.add_paragraph()
+    ep1.text = lang_info["thanks"].upper()
+    ep1.font.size = Pt(38)
     ep1.font.bold = True
     ep1.font.color.rgb = theme["accent"] if is_dark else theme["primary"]
+    ep1.font.name = "Arial"
     ep1.alignment = PP_ALIGN.CENTER
-    ep1.space_before = Pt(30)
-    ep1.space_after = Pt(14)
+    ep1.space_after = Pt(12)
 
+    # 3. Subtitle
     ep2 = end_tf.add_paragraph()
-    ep2.text = "Savollar va muhokamalar uchun tayyorman"
+    ep2.text = "Savollar, fikr-mulohazalar va muhokama uchun tayyorman"
     ep2.font.size = Pt(18)
     ep2.font.bold = False
-    ep2.font.color.rgb = theme["accent"]
+    ep2.font.color.rgb = theme["accent"] if is_dark else theme.get("accent_secondary", theme["accent"])
+    ep2.font.name = "Arial"
     ep2.alignment = PP_ALIGN.CENTER
+    ep2.space_after = Pt(16)
 
-    if has_author and student_name:
-        ep3 = end_tf.add_paragraph()
-        ep3.text = f"Taqdimotchi: {student_name}"
-        ep3.font.size = Pt(14)
-        ep3.font.color.rgb = theme["text_muted"]
-        ep3.alignment = PP_ALIGN.CENTER
-        ep3.space_before = Pt(18)
-    elif has_author and uni_name:
-        ep3 = end_tf.add_paragraph()
-        ep3.text = f"{uni_name}"
-        ep3.font.size = Pt(14)
-        ep3.font.color.rgb = theme["text_muted"]
-        ep3.alignment = PP_ALIGN.CENTER
-        ep3.space_before = Pt(18)
-    elif has_author and author_info:
-        ep3 = end_tf.add_paragraph()
-        first_line = author_info.splitlines()[0].strip()
-        ep3.text = f"Taqdimotchi: {first_line}"
-        ep3.font.size = Pt(14)
-        ep3.font.color.rgb = theme["text_muted"]
-        ep3.alignment = PP_ALIGN.CENTER
-        ep3.space_before = Pt(18)
+    # 4. Presenter / University info (if present)
+    if has_author:
+        presenter_parts = []
+        if student_name:
+            presenter_parts.append(f"Taqdimotchi: {student_name}")
+        elif author_info:
+            first_line = author_info.splitlines()[0].strip()
+            presenter_parts.append(f"Taqdimotchi: {first_line}")
+        if teacher_name:
+            presenter_parts.append(f"Ilmiy rahbar: {teacher_name}")
+        if uni_name:
+            presenter_parts.append(uni_name)
+
+        if presenter_parts:
+            ep3 = end_tf.add_paragraph()
+            ep3.text = "  |  ".join(presenter_parts)
+            ep3.font.size = Pt(14)
+            ep3.font.bold = True
+            ep3.font.color.rgb = theme["text_dark"] if not is_dark else theme["white"]
+            ep3.font.name = "Arial"
+            ep3.alignment = PP_ALIGN.CENTER
 
     # Save to disk
     if os.path.dirname(output_path):
@@ -1859,7 +1920,7 @@ Qat'iy quyidagi JSON formatida javob bering:
   "language": "uzbek"
 }
 """
-        models_to_try = ["gemini-3.5-flash-lite", "gemini-3.5-flash"]
+        models_to_try = ["gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-flash-lite-latest"]
         for m in models_to_try:
             try:
                 res = await client.aio.models.generate_content(
@@ -1872,7 +1933,7 @@ Qat'iy quyidagi JSON formatida javob bering:
                     )
                 )
                 text = res.text.strip()
-                data = json.loads(text)
+                data = safe_json_loads(text)
                 return {
                     "topic": str(data.get("topic", "")).strip(),
                     "slide_count": int(data.get("slide_count", 8) or 8),
@@ -1954,7 +2015,7 @@ Qat'iy JSON formatida javob bering:
     else:
         return {"topic": "", "summary": "", "suggested_slides": 8}
 
-    models_to_try = ["gemini-3.5-flash-lite", "gemini-3.5-flash"]
+    models_to_try = ["gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-flash-lite-latest"]
     for m in models_to_try:
         try:
             res = await client.aio.models.generate_content(
@@ -1966,7 +2027,7 @@ Qat'iy JSON formatida javob bering:
                     automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True)
                 )
             )
-            data = json.loads(res.text.strip())
+            data = safe_json_loads(res.text.strip())
             return {
                 "topic": str(data.get("topic", "")).strip(),
                 "summary": str(data.get("summary", "")).strip(),

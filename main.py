@@ -95,12 +95,10 @@ async def main():
         logger.warning(f"Menu o'rnatish xatoligi: {e}")
 
     logger.info("Bot polling ishga tushmoqda...")
-    while True:
-        try:
-            await dp.start_polling(bot)
-        except Exception as e:
-            logger.error(f"Telegram polling to'xtadi yoki xatolik: {e}. 5 soniyada qayta ulanadi...")
-            await asyncio.sleep(5)
+    try:
+        await dp.start_polling(bot)
+    finally:
+        await bot.session.close()
 
 if __name__ == "__main__":
     try:

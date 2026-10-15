@@ -1,8 +1,9 @@
 FROM python:3.11-slim
 
-# LibreOffice va shriftlar (PDF konvertatsiyasi uchun zarur)
+# LibreOffice, ffmpeg va shriftlar (PDF va audio konvertatsiyasi uchun zarur)
 RUN apt-get update && apt-get install -y \
     libreoffice \
+    ffmpeg \
     fonts-dejavu-core \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*

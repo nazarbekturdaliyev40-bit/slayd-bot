@@ -45,7 +45,8 @@ async def generate_gamma_presentation(
     num_cards: int = 8,
     export_as: str = "pptx",
     author_info: str = "",
-    status_callback = None
+    status_callback = None,
+    language: str = "uz"
 ) -> dict:
     """
     Gamma.app API (v1.0) orqali professional taqdimot yaratadi.
@@ -63,9 +64,12 @@ async def generate_gamma_presentation(
         "Content-Type": "application/json"
     }
 
+    import locales
+    lang_info = locales.get_slide_lang_info(language)
+
     full_prompt = (
         f"Mavzu: {topic}\n"
-        f"Til: O'zbek tili (lotin alifbosi).\n"
+        f"Til: {lang_info['prompt']}\n"
         f"Uslub: OTM talabalari uchun akademik, professional, boy ilmiy ma'lumotlar va jozibador vizual infografikalar bilan.\n"
     )
     if author_info:

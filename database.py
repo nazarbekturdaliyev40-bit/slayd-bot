@@ -53,10 +53,27 @@ async def init_db():
             await db.execute("ALTER TABLE users ADD COLUMN subscription_until TIMESTAMP DEFAULT NULL")
             await db.commit()
 
+        if "language" not in columns:
+            await db.execute("ALTER TABLE users ADD COLUMN language TEXT DEFAULT 'uz'")
+            await db.commit()
+
         # Nazarbek akkauntlarini doimiy cheksiz (bez limit) qilib sozlash
         for uid in config.UNLIMITED_USERS:
             await db.execute("UPDATE users SET is_unlimited = 1 WHERE telegram_id = ?", (uid,))
         await db.commit()
+
+async def set_user_language(telegram_id: int, lang: str):
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute("UPDATE users SET language = ? WHERE telegram_id = ?", (lang, telegram_id))
+        await db.commit()
+
+async def get_user_language(telegram_id: int) -> str:
+    async with aiosqlite.connect(DB_PATH) as db:
+        async with db.execute("SELECT language FROM users WHERE telegram_id = ?", (telegram_id,)) as cursor:
+            row = await cursor.fetchone()
+            if row and row[0]:
+                return row[0]
+            return "uz"
 
 def is_subscription_active(user: dict) -> bool:
     if not user:
@@ -171,6 +188,7 @@ async def consume_limit(telegram_id: int) -> dict:
                 "is_unlimited": False,
                 "is_subscribed": False
             }
+use_limit = consume_limit
 
 async def activate_subscription(telegram_id: int, days: int = 30) -> dict:
     from datetime import datetime, timedelta
