@@ -10,8 +10,8 @@ ADMIN_ID = int(os.getenv("ADMIN_ID", "8597458619"))
 CARD_NUMBER = os.getenv("CARD_NUMBER", "8600 0000 0000 0000")
 CARD_HOLDER = os.getenv("CARD_HOLDER", "Karta egasi")
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "").strip().lstrip("@")
-PRICE_PER_SLIDE = os.getenv("PRICE_PER_SLIDE", "5 000 so'm")
-PRICE_MONTHLY_SUBSCRIPTION = os.getenv("PRICE_MONTHLY_SUBSCRIPTION", "20 000 so'm")
+PRICE_PER_SLIDE = os.getenv("PRICE_PER_SLIDE", "3 000 so'm")
+PRICE_MONTHLY_SUBSCRIPTION = os.getenv("PRICE_MONTHLY_SUBSCRIPTION", "40 000 so'm")
 
 # Cheksiz (Unlimited / VIP) huquqiga ega bo'lgan foydalanuvchilar
 UNLIMITED_USERS = [8597458619, 6792644733, 8774376812]

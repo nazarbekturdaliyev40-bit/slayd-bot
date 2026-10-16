@@ -37,27 +37,26 @@ def get_slide_language_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
     ])
 
 def get_main_menu(is_admin: bool = False, lang: str = "uz") -> ReplyKeyboardMarkup:
-    """Foydalanuvchi tanlagan tildagi chiroyli va qulay yonma-yon tartiblangan asosiy menyu."""
+    """Foydalanuvchi tanlagan tildagi chiroyli va qulay tartiblangan asosiy menyu."""
     buttons = [
-        # 1-qator: Ikkita asosiy xizmat yonma-yon
+        # 1-qator: Slayd tayyorlash va Shaxsiy profil yonma-yon
         [
             KeyboardButton(text=locales.get_text("menu_new_slide", lang)),
-            KeyboardButton(text=locales.get_text("menu_pptx_to_pdf", lang))
+            KeyboardButton(text=locales.get_text("menu_profile", lang))
         ],
-        # 2-qator: Shaxsiy profil va Tariflar
+        # 2-qator: Tariflar va Bepul bonus limit
         [
-            KeyboardButton(text=locales.get_text("menu_profile", lang)),
-            KeyboardButton(text=locales.get_text("menu_tariffs", lang))
+            KeyboardButton(text=locales.get_text("menu_tariffs", lang)),
+            KeyboardButton(text=locales.get_text("menu_free_limit", lang))
         ],
-        # 3-qator: Bepul bonus limit va Tilni o'zgartirish
-        [
-            KeyboardButton(text=locales.get_text("menu_free_limit", lang)),
-            KeyboardButton(text=locales.get_text("menu_change_lang", lang))
-        ],
-        # 4-qator: Bot haqida va Adminga murojaat
+        # 3-qator: Bot haqida va Adminga murojaat
         [
             KeyboardButton(text=locales.get_text("menu_about", lang)),
             KeyboardButton(text=locales.get_text("menu_contact", lang))
+        ],
+        # 4-qator: Tilni o'zgartirish
+        [
+            KeyboardButton(text=locales.get_text("menu_change_lang", lang))
         ]
     ]
     if is_admin:
@@ -158,11 +157,11 @@ def get_receipt_cancel_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
 def get_admin_receipt_keyboard(user_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="➕ 1 ta limit (5 000)", callback_data=f"adm_pay_limit_1_{user_id}"),
-            InlineKeyboardButton(text="➕ 3 ta limit (12 000)", callback_data=f"adm_pay_limit_3_{user_id}")
+            InlineKeyboardButton(text="➕ 1 ta limit (3 000)", callback_data=f"adm_pay_limit_1_{user_id}"),
+            InlineKeyboardButton(text="➕ 3 ta limit (8 000)", callback_data=f"adm_pay_limit_3_{user_id}")
         ],
         [
-            InlineKeyboardButton(text="👑 1 oylik obuna (20 000)", callback_data=f"adm_pay_sub_{user_id}")
+            InlineKeyboardButton(text="👑 1 oylik obuna (40 000)", callback_data=f"adm_pay_sub_{user_id}")
         ],
         [
             InlineKeyboardButton(text="❌ Rad etish", callback_data=f"adm_pay_reject_{user_id}")
