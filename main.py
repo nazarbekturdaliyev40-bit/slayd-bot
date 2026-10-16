@@ -56,6 +56,7 @@ async def setup_bot_commands(bot: Bot):
         BotCommand(command="slayd", description="📊 Slayd tayyorlash / Create slides"),
         BotCommand(command="lang", description="🌐 Tilni o'zgartirish / Language"),
         BotCommand(command="profil", description="👤 Profil / Profile"),
+        BotCommand(command="fayllarim", description="📁 Mening fayllarim / My files"),
         BotCommand(command="tariffs", description="💳 Tariflar / Plans"),
         BotCommand(command="haqida", description="ℹ️ Bot haqida / About"),
         BotCommand(command="murojaat", description="👨‍💻 Adminga murojaat / Contact"),

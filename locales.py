@@ -112,6 +112,7 @@ TEXTS = {
         "menu_new_slide": "📊 Slayd tayyorlash",
         "menu_pptx_to_pdf": "📄 PPTX ➡️ PDF",
         "menu_profile": "👤 Mening profilim",
+        "menu_my_files": "📁 Mening fayllarim",
         "menu_free_limit": "🎁 Bepul limit",
         "menu_tariffs": "💳 Tariflar",
         "menu_about": "ℹ️ Bot haqida",
@@ -235,7 +236,10 @@ TEXTS = {
         "status_plan": "🧠 1/4: Sun'iy intellekt akademik rejani tuzmoqda...",
         "status_images": "🖼 2/4: Mavzuga mos sifatli rasmlar tanlanmoqda...",
         "status_layout": "🎨 3/4: Slaydlar dizayni va infografikalar chizilmoqda...",
-        "status_save": "💾 4/4: PowerPoint (.pptx) fayli saqlanmoqda..."
+        "status_save": "💾 4/4: PowerPoint (.pptx) fayli saqlanmoqda...",
+        "no_files_found": "📂 <b>Sizda hali saqlangan slaydlar mavjud emas.</b>\n\nYangi slayd yaratish uchun <b>«📊 Slayd tayyorlash»</b> tugmasini bosing yoki mavzuni toʻgʻridan-toʻgʻri chatga yozib yuboring!",
+        "my_files_title": "📁 <b>Siz yaratgan slaydlar to'plami ({count} ta):</b>\n\nFayllar yuborilmoqda, bir oz kuting... ⏳",
+        "my_files_done": "✅ <b>Barcha fayllaringiz muvaffaqiyatli yuborildi!</b>"
     },
     "ru": {
         "choose_lang_title": "🌐 <b>Выберите язык / Tilni tanlang / Choose language:</b>",
@@ -243,6 +247,7 @@ TEXTS = {
         "menu_new_slide": "📊 Создать слайды",
         "menu_pptx_to_pdf": "📄 PPTX ➡️ PDF",
         "menu_profile": "👤 Мой профиль",
+        "menu_my_files": "📁 Мои файлы",
         "menu_free_limit": "🎁 Бесплатные лимиты",
         "menu_tariffs": "💳 Тарифы",
         "menu_about": "ℹ️ О боте",
@@ -365,7 +370,10 @@ TEXTS = {
         "status_plan": "🧠 1/4: ИИ составляет академический план и структуру...",
         "status_images": "🖼 2/4: Подбираются качественные тематические изображения...",
         "status_layout": "🎨 3/4: Оформляется дизайн, инфографика и карточки...",
-        "status_save": "💾 4/4: Сохраняется файл PowerPoint (.pptx)..."
+        "status_save": "💾 4/4: Сохраняется файл PowerPoint (.pptx)...",
+        "no_files_found": "📂 <b>У вас пока нет сохраненных презентаций.</b>\n\nЧтобы создать слайды, нажмите <b>«📊 Создать слайды»</b> или отправьте тему напрямую в чат!",
+        "my_files_title": "📁 <b>Ваши созданные презентации ({count} шт.):</b>\n\nОтправляем файлы, подождите немного... ⏳",
+        "my_files_done": "✅ <b>Все ваши файлы успешно отправлены!</b>"
     },
     "en": {
         "choose_lang_title": "🌐 <b>Choose language / Tilni tanlang / Выберите язык:</b>",
@@ -373,6 +381,7 @@ TEXTS = {
         "menu_new_slide": "📊 Create Slides",
         "menu_pptx_to_pdf": "📄 PPTX ➡️ PDF",
         "menu_profile": "👤 My Profile",
+        "menu_my_files": "📁 My Files",
         "menu_free_limit": "🎁 Free Limits",
         "menu_tariffs": "💳 Plans & Pricing",
         "menu_about": "ℹ️ About Bot",
@@ -494,7 +503,10 @@ TEXTS = {
         "status_plan": "🧠 1/4: AI is composing academic structure and agenda...",
         "status_images": "🖼 2/4: Selecting matching high-resolution imagery...",
         "status_layout": "🎨 3/4: Rendering infographic cards and layout...",
-        "status_save": "💾 4/4: Saving PowerPoint (.pptx) presentation..."
+        "status_save": "💾 4/4: Saving PowerPoint (.pptx) presentation...",
+        "no_files_found": "📂 <b>You don't have any saved presentations yet.</b>\n\nTo create slides, click <b>«📊 Create Slides»</b> or send your topic directly in chat!",
+        "my_files_title": "📁 <b>Your generated presentations ({count}):</b>\n\nSending files, please wait... ⏳",
+        "my_files_done": "✅ <b>All your files have been successfully sent!</b>"
     }
 }
 

@@ -31,6 +31,19 @@ async def init_db():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS user_files (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                telegram_id INTEGER,
+                topic TEXT,
+                file_name TEXT,
+                file_id TEXT DEFAULT '',
+                file_path TEXT DEFAULT '',
+                file_type TEXT DEFAULT 'pptx',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        await db.execute("CREATE INDEX IF NOT EXISTS idx_user_files_tid ON user_files (telegram_id)")
         await db.commit()
 
         # Migrations for existing tables
@@ -329,3 +342,27 @@ async def get_stats():
             "total_slides": total_slides,
             "total_referrals": total_referrals
         }
+
+async def save_user_file(telegram_id: int, topic: str, file_name: str, file_id: str = "", file_path: str = "", file_type: str = "pptx") -> int:
+    """Foydalanuvchi yaratgan slayd faylini ma'lumotlar bazasiga saqlash."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        cursor = await db.execute("""
+            INSERT INTO user_files (telegram_id, topic, file_name, file_id, file_path, file_type)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (telegram_id, topic, file_name, file_id or "", file_path or "", file_type))
+        await db.commit()
+        return cursor.lastrowid
+
+async def get_user_files(telegram_id: int, limit: int = 50) -> list:
+    """Foydalanuvchining barcha saqlangan slayd fayllari ro'yxatini olish."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        async with db.execute("""
+            SELECT * FROM user_files 
+            WHERE telegram_id = ? 
+            ORDER BY id ASC 
+            LIMIT ?
+        """, (telegram_id, limit)) as cursor:
+            rows = await cursor.fetchall()
+            return [dict(r) for r in rows]
+

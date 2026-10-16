@@ -6,6 +6,7 @@ import shutil
 import asyncio
 import html
 import re
+import time
 from aiogram import Router, F
 from aiogram.filters import CommandStart, Command, CommandObject
 from aiogram.types import Message, CallbackQuery, FSInputFile, InlineKeyboardMarkup, InlineKeyboardButton
@@ -323,6 +324,108 @@ async def show_profile(message: Message):
                 text += "✅ Siz bemalol yangi slayd yaratishingiz mumkin."
 
     await message.answer(text, parse_mode="Markdown")
+
+@router.message(F.text.in_({"📁 Mening fayllarim", "📁 Fayllarim", "📁 Мои файлы", "📁 My Files"}))
+@router.message(Command("fayllarim"))
+@router.message(Command("myfiles"))
+@router.message(Command("files"))
+async def show_my_files(message: Message):
+    user_id = message.from_user.id
+    user = await database.get_or_create_user(
+        telegram_id=user_id,
+        username=message.from_user.username or "",
+        full_name=message.from_user.full_name or ""
+    )
+    user_lang = user.get("language") or "uz"
+
+    files = await database.get_user_files(user_id)
+
+    # Agar bazada hali yozuv bo'lmasa, user_cache papkasini skaner qilib topilgan fayllarni qo'shamiz (avval tayyorlangan slaydlar uchun)
+    user_cache_dir = os.path.join(os.path.dirname(__file__), "user_cache", str(user_id))
+    if not files and os.path.exists(user_cache_dir):
+        cached_meta = os.path.join(user_cache_dir, "meta.json")
+        default_topic = "Taqdimot"
+        if os.path.exists(cached_meta):
+            try:
+                with open(cached_meta, "r", encoding="utf-8") as f:
+                    meta_data = json.load(f)
+                    default_topic = meta_data.get("topic") or default_topic
+            except Exception:
+                pass
+
+        for fname in sorted(os.listdir(user_cache_dir)):
+            if fname.endswith(".pptx") or fname.endswith(".pdf"):
+                fpath = os.path.join(user_cache_dir, fname)
+                if os.path.isfile(fpath):
+                    ftype = "pptx" if fname.endswith(".pptx") else "pdf"
+                    topic_name = default_topic if fname.startswith("latest") else os.path.splitext(fname)[0]
+                    await database.save_user_file(
+                        telegram_id=user_id,
+                        topic=topic_name,
+                        file_name=fname,
+                        file_id="",
+                        file_path=fpath,
+                        file_type=ftype
+                    )
+        files = await database.get_user_files(user_id)
+
+    if not files:
+        await message.answer(
+            locales.get_text("no_files_found", user_lang),
+            parse_mode="HTML"
+        )
+        return
+
+    await message.answer(
+        locales.get_text("my_files_title", user_lang, count=len(files)),
+        parse_mode="HTML"
+    )
+
+    sent_count = 0
+    for item in files:
+        topic = item.get("topic") or "Taqdimot"
+        file_name = item.get("file_name") or f"{topic}.pptx"
+        file_id = item.get("file_id")
+        file_path = item.get("file_path")
+        created_at = item.get("created_at") or ""
+
+        caption = f"📄 <b>{html.escape(topic)}</b>"
+        if created_at:
+            caption += f"\n📅 <i>{created_at[:16]}</i>"
+
+        sent = False
+        # 1. file_id orqali yuborish
+        if file_id:
+            try:
+                await message.answer_document(document=file_id, caption=caption, parse_mode="HTML")
+                sent = True
+            except Exception as e:
+                logger.warning(f"file_id orqali yuborishda xatolik ({file_id}): {e}")
+
+        # 2. Fayl yo'li orqali yuborish
+        if not sent and file_path and os.path.exists(file_path):
+            try:
+                doc = FSInputFile(file_path, filename=file_name)
+                await message.answer_document(document=doc, caption=caption, parse_mode="HTML")
+                sent = True
+            except Exception as e:
+                logger.error(f"Fayl yo'li orqali yuborishda xatolik ({file_path}): {e}")
+
+        if sent:
+            sent_count += 1
+            await asyncio.sleep(0.3)
+
+    if sent_count > 0:
+        await message.answer(
+            locales.get_text("my_files_done", user_lang),
+            parse_mode="HTML"
+        )
+    else:
+        await message.answer(
+            locales.get_text("no_files_found", user_lang),
+            parse_mode="HTML"
+        )
+
 
 @router.message(F.text.in_({"💳 Tariflar", "💳 Limit sotib olish", "💳 Limit va Obuna", "💳 Тарифы", "💳 Лимиты и Подписка", "💳 Plans & Pricing", "💳 Limits & Subscription"}))
 @router.message(Command("limit"))
@@ -690,16 +793,16 @@ async def check_menu_navigation(message: Message, state: FSMContext) -> bool:
     menu_items = {
         # Uzbek
         "📊 Slayd tayyorlash", "📊 Yangi slayd tayyorlash", "📄 PPTX ➡️ PDF", "📄 PPTX ni PDF ga aylantirish", "📄 PPTX ni PDF ga",
-        "👤 Mening profilim", "👤 Profilim", "🎁 Bepul limit", "🎁 Bepul limit olish", "💳 Tariflar",
+        "👤 Mening profilim", "👤 Profilim", "📁 Mening fayllarim", "📁 Fayllarim", "🎁 Bepul limit", "🎁 Bepul limit olish", "💳 Tariflar",
         "💳 Limit va Obuna", "💳 Limit sotib olish",
         "ℹ️ Bot haqida", "👨‍💻 Adminga murojaat", "Adminga murojaat", "⚙️ Admin panel", "📈 Statistika", "🌐 Tilni o'zgartirish",
         # Russian
         "📊 Создать слайды", "📊 Создать слайд", "📄 PPTX ➡️ PDF", "📄 PPTX в PDF", "📄 Конвертировать PPTX в PDF",
-        "👤 Мой профиль", "🎁 Бесплатные лимиты", "🎁 Получить бесплатный лимит", "💳 Тарифы", "💳 Лимиты и Подписка",
+        "👤 Мой профиль", "📁 Мои файлы", "🎁 Бесплатные лимиты", "🎁 Получить бесплатный лимит", "💳 Тарифы", "💳 Лимиты и Подписка",
         "ℹ️ О боте", "👨‍💻 Связаться с админом", "⚙️ Админ панель", "📈 Статистика", "🌐 Сменить язык",
         # English
         "📊 Create Slides", "📊 Create slide", "📄 PPTX ➡️ PDF", "📄 PPTX to PDF", "📄 Convert PPTX to PDF",
-        "👤 My Profile", "🎁 Free Limits", "🎁 Get free limits", "💳 Plans & Pricing", "💳 Limits & Subscription",
+        "👤 My Profile", "📁 My Files", "🎁 Free Limits", "🎁 Get free limits", "💳 Plans & Pricing", "💳 Limits & Subscription",
         "ℹ️ About Bot", "👨‍💻 Contact Admin", "⚙️ Admin Panel", "📈 Statistics", "🌐 Change Language", "🌐 Change language"
     }
     if text.startswith("/") or text in menu_items:
@@ -712,6 +815,8 @@ async def check_menu_navigation(message: Message, state: FSMContext) -> bool:
             await prompt_pptx_to_pdf(message, state)
         elif text in ("👤 Mening profilim", "👤 Profilim", "👤 Мой профиль", "👤 My Profile", "/profil", "/profile"):
             await show_profile(message)
+        elif text in ("📁 Mening fayllarim", "📁 Fayllarim", "📁 Мои файлы", "📁 My Files", "/fayllarim", "/myfiles", "/files"):
+            await show_my_files(message)
         elif text in ("🎁 Bepul limit", "🎁 Bepul limit olish", "🎁 Бесплатные лимиты", "🎁 Получить бесплатный лимит", "🎁 Free Limits", "🎁 Get free limits"):
             await show_referral_program(message)
         elif text in ("💳 Tariflar", "💳 Limit va Obuna", "💳 Лимиты и Подписка", "💳 Тарифы", "💳 Plans & Pricing", "💳 Limits & Subscription", "💳 Limit sotib olish", "/limit", "/obuna", "/tariffs"):
@@ -1590,11 +1695,27 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
                         f"💡 Qolgan limitingiz: {limit_caption}\n\n"
                         f"👇 <i>Taqdimotni Gamma vebda ko'rish, PDF ga aylantirish yoki nutq matnini olish uchun tugmalardan foydalaning:</i>"
                     )
-                    await chat_message.reply_document(
+                    sent_doc = await chat_message.reply_document(
                         document=pptx_document,
                         caption=caption_html,
                         reply_markup=keyboards.get_slide_action_keyboard(share_url=share_url, gamma_url=gamma_url, lang=user_lang),
                         parse_mode="HTML"
+                    )
+                    doc_file_id = sent_doc.document.file_id if sent_doc and sent_doc.document else ""
+                    perm_name = f"{int(time.time())}_{safe_name}.pptx"
+                    perm_path = os.path.join(user_cache_dir, perm_name)
+                    try:
+                        shutil.copy2(pptx_path, perm_path)
+                    except Exception:
+                        perm_path = cached_pptx
+
+                    await database.save_user_file(
+                        telegram_id=user_id,
+                        topic=topic,
+                        file_name=f"{safe_name}.pptx",
+                        file_id=doc_file_id,
+                        file_path=perm_path,
+                        file_type="pptx"
                     )
                     await database.consume_limit(user_id)
                     try:
@@ -1714,8 +1835,9 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
             f"💡 Qolgan limitingiz: {limit_caption}\n\n"
             f"👇 <i>Taqdimotni PDF ga aylantirish yoki himoya nutq matnini (shpargalka) olish uchun quyidagi tugmalardan foydalaning:</i>"
         )
+        sent_doc = None
         try:
-            await chat_message.reply_document(
+            sent_doc = await chat_message.reply_document(
                 document=pptx_document,
                 caption=caption_html,
                 reply_markup=keyboards.get_slide_action_keyboard(share_url=share_url),
@@ -1731,11 +1853,28 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
                 f"📁 Format: PowerPoint (.pptx) — tahrirlash uchun\n\n"
                 f"Taqdimotni PDF ga aylantirish yoki nutq matnini olish uchun tugmalardan foydalaning:"
             )
-            await chat_message.reply_document(
+            sent_doc = await chat_message.reply_document(
                 document=pptx_document,
                 caption=plain_caption,
                 reply_markup=keyboards.get_slide_action_keyboard(share_url=share_url)
             )
+
+        doc_file_id = sent_doc.document.file_id if sent_doc and sent_doc.document else ""
+        perm_name = f"{int(time.time())}_{safe_name}.pptx"
+        perm_path = os.path.join(user_cache_dir, perm_name)
+        try:
+            shutil.copy2(pptx_path, perm_path)
+        except Exception:
+            perm_path = cached_pptx
+
+        await database.save_user_file(
+            telegram_id=user_id,
+            topic=topic,
+            file_name=f"{safe_name}.pptx",
+            file_id=doc_file_id,
+            file_path=perm_path,
+            file_type="pptx"
+        )
 
         # Decrement limit only after file is successfully delivered
         await database.consume_limit(user_id)
@@ -1802,7 +1941,7 @@ async def get_latest_pdf_handler(callback: CallbackQuery):
         await asyncio.to_thread(generator.convert_pptx_to_pdf, cached_pptx, pdf_path)
 
         pdf_doc = FSInputFile(pdf_path, filename=f"{safe_name}.pdf")
-        await callback.message.reply_document(
+        sent_pdf = await callback.message.reply_document(
             document=pdf_doc,
             caption=(
                 f"📑 **Taqdimotning PDF nusxasi**\n\n"
@@ -1811,6 +1950,23 @@ async def get_latest_pdf_handler(callback: CallbackQuery):
             ),
             parse_mode="Markdown"
         )
+        if sent_pdf and sent_pdf.document:
+            topic_title = safe_name
+            if os.path.exists(meta_path):
+                try:
+                    with open(meta_path, "r", encoding="utf-8") as f:
+                        meta_j = json.load(f)
+                        topic_title = meta_j.get("topic") or safe_name
+                except Exception:
+                    pass
+            await database.save_user_file(
+                telegram_id=user_id,
+                topic=f"{topic_title} (PDF)",
+                file_name=f"{safe_name}.pdf",
+                file_id=sent_pdf.document.file_id,
+                file_path=pdf_path,
+                file_type="pdf"
+            )
         await status_msg.delete()
     except Exception as e:
         logger.error(f"Latest PDF error: {e}")

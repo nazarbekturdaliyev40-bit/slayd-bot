@@ -44,19 +44,20 @@ def get_main_menu(is_admin: bool = False, lang: str = "uz") -> ReplyKeyboardMark
             KeyboardButton(text=locales.get_text("menu_new_slide", lang)),
             KeyboardButton(text=locales.get_text("menu_profile", lang))
         ],
-        # 2-qator: Tariflar va Bepul bonus limit
+        # 2-qator: Mening fayllarim va Tariflar
         [
-            KeyboardButton(text=locales.get_text("menu_tariffs", lang)),
-            KeyboardButton(text=locales.get_text("menu_free_limit", lang))
+            KeyboardButton(text=locales.get_text("menu_my_files", lang)),
+            KeyboardButton(text=locales.get_text("menu_tariffs", lang))
         ],
-        # 3-qator: Bot haqida va Adminga murojaat
+        # 3-qator: Bepul bonus limit va Tilni o'zgartirish
+        [
+            KeyboardButton(text=locales.get_text("menu_free_limit", lang)),
+            KeyboardButton(text=locales.get_text("menu_change_lang", lang))
+        ],
+        # 4-qator: Bot haqida va Adminga murojaat
         [
             KeyboardButton(text=locales.get_text("menu_about", lang)),
             KeyboardButton(text=locales.get_text("menu_contact", lang))
-        ],
-        # 4-qator: Tilni o'zgartirish
-        [
-            KeyboardButton(text=locales.get_text("menu_change_lang", lang))
         ]
     ]
     if is_admin:
