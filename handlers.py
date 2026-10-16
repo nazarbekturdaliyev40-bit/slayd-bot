@@ -720,14 +720,11 @@ async def adm_reject_payment(callback: CallbackQuery):
 async def contact_admin_menu(message: Message, state: FSMContext):
     await state.clear()
     user_lang = await database.get_user_language(message.from_user.id)
-    buttons = []
-    if config.ADMIN_USERNAME:
-        buttons.append([
-            InlineKeyboardButton(text=f"✈️ Admin profili (@{config.ADMIN_USERNAME.lstrip('@')})", url=f"https://t.me/{config.ADMIN_USERNAME.lstrip('@')}")
-        ])
-    buttons.append([
-        InlineKeyboardButton(text=locales.get_text("cancel_btn", user_lang), callback_data="cancel_contact")
-    ])
+    keyboard = keyboards.get_contact_admin_keyboard(
+        admin_username=config.ADMIN_USERNAME,
+        admin_id=config.ADMIN_ID,
+        lang=user_lang
+    )
 
     await state.set_state(AdminContactState.waiting_for_message)
     if user_lang == "ru":
@@ -735,55 +732,82 @@ async def contact_admin_menu(message: Message, state: FSMContext):
             "👨‍💻 <b>Связаться с администратором:</b>\n\n"
             "Напишите ваш вопрос, предложение или сообщение о проблеме.\n"
             "<i>(Также вы можете прикрепить скриншот, фото или голосовое сообщение)</i>\n\n"
-            "Администратор рассмотрит ваше сообщение и ответит в ближайшее время."
+            "Администратор рассмотрит ваше сообщение и ответит в ближайшее время.\n\n"
+            "👉 <i>Или напишите напрямую в ЛС администратору через кнопку ниже:</i>"
         )
     elif user_lang == "en":
         contact_text = (
             "👨‍💻 <b>Contact Administrator:</b>\n\n"
             "Please send your question, feedback, or describe any issue you encountered.\n"
             "<i>(You can also attach a screenshot, photo, document or voice message)</i>\n\n"
-            "The administrator will review your message and reply promptly."
+            "The administrator will review your message and reply promptly.\n\n"
+            "👉 <i>Or you can message the administrator directly via the button below:</i>"
         )
     else:
         contact_text = (
             "👨‍💻 <b>Adminga murojaat qilish:</b>\n\n"
             "Savollaringiz, takliflaringiz yoki biron-bir muammo bo'lsa, xabaringizni yozib yuboring.\n"
             "<i>(Xabar bilan birga skrinshot / rasm, fayl yoki ovozli xabar ham yuborishingiz mumkin)</i>\n\n"
-            "Admin xabaringizni ko'rib chiqib, tez orada sizga javob qaytaradi."
+            "Admin xabaringizni ko'rib chiqib, tez orada sizga javob qaytaradi.\n\n"
+            "👉 <i>Yoki pastdagi tugma orqali to'g'ridan-to'g'ri admin lichkasiga yozishingiz mumkin:</i>"
         )
     await message.answer(
         contact_text,
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons),
+        reply_markup=keyboard,
         parse_mode="HTML"
     )
 
 @router.callback_query(F.data == "contact_admin")
 async def contact_admin_callback(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
-    buttons = []
-    if config.ADMIN_USERNAME:
-        buttons.append([
-            InlineKeyboardButton(text=f"✈️ Admin profili (@{config.ADMIN_USERNAME.lstrip('@')})", url=f"https://t.me/{config.ADMIN_USERNAME.lstrip('@')}")
-        ])
-    buttons.append([
-        InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_contact")
-    ])
+    user_lang = await database.get_user_language(callback.from_user.id)
+    keyboard = keyboards.get_contact_admin_keyboard(
+        admin_username=config.ADMIN_USERNAME,
+        admin_id=config.ADMIN_ID,
+        lang=user_lang
+    )
 
     await state.set_state(AdminContactState.waiting_for_message)
+    if user_lang == "ru":
+        contact_text = (
+            "👨‍💻 <b>Связаться с администратором:</b>\n\n"
+            "Напишите ваш вопрос, предложение или сообщение о проблеме.\n"
+            "<i>(Также вы можете прикрепить скриншот, фото или голосовое сообщение)</i>\n\n"
+            "Администратор рассмотрит ваше сообщение и ответит в ближайшее время.\n\n"
+            "👉 <i>Или напишите напрямую в ЛС администратору через кнопку ниже:</i>"
+        )
+    elif user_lang == "en":
+        contact_text = (
+            "👨‍💻 <b>Contact Administrator:</b>\n\n"
+            "Please send your question, feedback, or describe any issue you encountered.\n"
+            "<i>(You can also attach a screenshot, photo, document or voice message)</i>\n\n"
+            "The administrator will review your message and reply promptly.\n\n"
+            "👉 <i>Or you can message the administrator directly via the button below:</i>"
+        )
+    else:
+        contact_text = (
+            "👨‍💻 <b>Adminga murojaat qilish:</b>\n\n"
+            "Savollaringiz, takliflaringiz yoki biron-bir muammo bo'lsa, xabaringizni yozib yuboring.\n"
+            "<i>(Xabar bilan birga skrinshot / rasm, fayl yoki ovozli xabar ham yuborishingiz mumkin)</i>\n\n"
+            "Admin xabaringizni ko'rib chiqib, tez orada sizga javob qaytaradi.\n\n"
+            "👉 <i>Yoki pastdagi tugma orqali to'g'ridan-to'g'ri admin lichkasiga yozishingiz mumkin:</i>"
+        )
     await callback.message.answer(
-        "👨‍💻 <b>Adminga murojaat qilish:</b>\n\n"
-        "Savollaringiz, takliflaringiz yoki biron-bir muammo bo'lsa, xabaringizni yozib yuboring.\n"
-        "<i>(Xabar bilan birga skrinshot / rasm, fayl yoki ovozli xabar ham yuborishingiz mumkin)</i>\n\n"
-        "Admin xabaringizni ko'rib chiqib, tez orada sizga javob qaytaradi.",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons),
+        contact_text,
+        reply_markup=keyboard,
         parse_mode="HTML"
     )
 
 @router.callback_query(F.data == "cancel_contact")
 async def cancel_contact_callback(callback: CallbackQuery, state: FSMContext):
     await state.clear()
-    await callback.answer("Murojaat bekor qilindi.")
-    await callback.message.answer("❌ Adminga murojaat bekor qilindi.", reply_markup=keyboards.get_main_menu(is_admin=config.is_admin(callback.from_user.id)))
+    user_lang = await database.get_user_language(callback.from_user.id)
+    cancel_text = locales.get_text("contact_cancelled", user_lang)
+    await callback.answer(locales.get_text("cancel_btn", user_lang))
+    await callback.message.answer(
+        cancel_text,
+        reply_markup=keyboards.get_main_menu(is_admin=config.is_admin(callback.from_user.id), lang=user_lang)
+    )
 
 async def check_menu_navigation(message: Message, state: FSMContext) -> bool:
     """Agar foydalanuvchi menyu tugmasini bosgan yoki buyruq bergan bo'lsa, holatdan chiqib menyuni ochadi."""

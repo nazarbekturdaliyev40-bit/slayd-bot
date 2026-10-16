@@ -186,6 +186,8 @@ TEXTS = {
         "pay_card_btn": "💳 Karta raqami",
         "send_receipt_btn": "🧾 To'lov chekini yuborish",
         "contact_admin_btn": "👨‍💻 Adminga murojaat",
+        "write_to_pm_btn": "✈️ Lichkaga yozish",
+        "contact_cancelled": "❌ Adminga murojaat bekor qilindi.",
         "referral_text": (
             "🎁 **Do'stlarni taklif qiling va bepul limit oling!**\n\n"
             "Har **2 ta do'stingiz** ushbu havola orqali botga kirsa, sizga **+1 ta yangi taqdimot yaratish limiti** sovg'a qilinadi!\n\n"
@@ -318,6 +320,8 @@ TEXTS = {
         "pay_card_btn": "💳 Номер карты",
         "send_receipt_btn": "🧾 Отправить чек оплаты",
         "contact_admin_btn": "👨‍💻 Связаться с админом",
+        "write_to_pm_btn": "✈️ Написать в ЛС",
+        "contact_cancelled": "❌ Обращение к администратору отменено.",
         "referral_text": (
             "🎁 **Приглашайте друзей и получайте бесплатные лимиты!**\n\n"
             "Каждые **2 друга**, которые перейдут по вашей ссылке и запустят бота, принесут вам **+1 бесплатный лимит на создание презентации**!\n\n"
@@ -449,6 +453,8 @@ TEXTS = {
         "pay_card_btn": "💳 Card Number",
         "send_receipt_btn": "🧾 Submit Receipt",
         "contact_admin_btn": "👨‍💻 Contact Admin",
+        "write_to_pm_btn": "✈️ Message Directly",
+        "contact_cancelled": "❌ Contacting administrator cancelled.",
         "referral_text": (
             "🎁 **Invite friends and get free presentations!**\n\n"
             "Every **2 friends** who start the bot via your referral link will reward you with **+1 free presentation limit**!\n\n"

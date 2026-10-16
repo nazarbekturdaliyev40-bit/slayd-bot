@@ -183,6 +183,27 @@ def get_about_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
         ]
     ])
 
+def get_contact_admin_keyboard(admin_username: str = "", admin_id: int = 0, lang: str = "uz") -> InlineKeyboardMarkup:
+    target_id = admin_id or 8597458619
+    admin_url = (
+        f"https://t.me/{admin_username.lstrip('@')}"
+        if admin_username
+        else f"tg://user?id={target_id}"
+    )
+    if admin_username:
+        pm_title = f"{locales.get_text('write_to_pm_btn', lang)} (@{admin_username.lstrip('@')})"
+    else:
+        pm_title = locales.get_text("write_to_pm_btn", lang)
+
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text=pm_title, url=admin_url)
+        ],
+        [
+            InlineKeyboardButton(text=locales.get_text("cancel_btn", lang), callback_data="cancel_contact")
+        ]
+    ])
+
 def get_skip_author_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [
