@@ -689,18 +689,18 @@ async def check_menu_navigation(message: Message, state: FSMContext) -> bool:
     text = message.text.strip()
     menu_items = {
         # Uzbek
-        "📊 Slayd tayyorlash", "📊 Yangi slayd tayyorlash", "📄 PPTX ni PDF ga aylantirish",
-        "👤 Mening profilim", "🎁 Bepul limit", "🎁 Bepul limit olish", "💳 Tariflar",
+        "📊 Slayd tayyorlash", "📊 Yangi slayd tayyorlash", "📄 PPTX ➡️ PDF", "📄 PPTX ni PDF ga aylantirish", "📄 PPTX ni PDF ga",
+        "👤 Mening profilim", "👤 Profilim", "🎁 Bepul limit", "🎁 Bepul limit olish", "💳 Tariflar",
         "💳 Limit va Obuna", "💳 Limit sotib olish",
-        "ℹ️ Bot haqida", "👨‍💻 Adminga murojaat", "Adminga murojaat", "⚙️ Admin panel", "🌐 Tilni o'zgartirish",
+        "ℹ️ Bot haqida", "👨‍💻 Adminga murojaat", "Adminga murojaat", "⚙️ Admin panel", "📈 Statistika", "🌐 Tilni o'zgartirish",
         # Russian
-        "📊 Создать слайды", "📊 Создать слайд", "📄 PPTX в PDF", "📄 Конвертировать PPTX в PDF",
+        "📊 Создать слайды", "📊 Создать слайд", "📄 PPTX ➡️ PDF", "📄 PPTX в PDF", "📄 Конвертировать PPTX в PDF",
         "👤 Мой профиль", "🎁 Бесплатные лимиты", "🎁 Получить бесплатный лимит", "💳 Тарифы", "💳 Лимиты и Подписка",
-        "ℹ️ О боте", "👨‍💻 Связаться с админом", "⚙️ Админ панель", "🌐 Сменить язык",
+        "ℹ️ О боте", "👨‍💻 Связаться с админом", "⚙️ Админ панель", "📈 Статистика", "🌐 Сменить язык",
         # English
-        "📊 Create Slides", "📊 Create slide", "📄 PPTX to PDF", "📄 Convert PPTX to PDF",
+        "📊 Create Slides", "📊 Create slide", "📄 PPTX ➡️ PDF", "📄 PPTX to PDF", "📄 Convert PPTX to PDF",
         "👤 My Profile", "🎁 Free Limits", "🎁 Get free limits", "💳 Plans & Pricing", "💳 Limits & Subscription",
-        "ℹ️ About Bot", "👨‍💻 Contact Admin", "⚙️ Admin Panel", "🌐 Change Language", "🌐 Change language"
+        "ℹ️ About Bot", "👨‍💻 Contact Admin", "⚙️ Admin Panel", "📈 Statistics", "🌐 Change Language", "🌐 Change language"
     }
     if text.startswith("/") or text in menu_items:
         await state.clear()
@@ -708,9 +708,9 @@ async def check_menu_navigation(message: Message, state: FSMContext) -> bool:
             await cmd_start(message, state)
         elif text in ("📊 Slayd tayyorlash", "📊 Yangi slayd tayyorlash", "📊 Создать слайды", "📊 Создать слайд", "📊 Create Slides", "📊 Create slide", "/yangi_slayd", "/new_slide", "/slayd"):
             await start_new_slide(message, state)
-        elif text in ("📄 PPTX ni PDF ga aylantirish", "📄 PPTX в PDF", "📄 Конвертировать PPTX в PDF", "📄 PPTX to PDF", "📄 Convert PPTX to PDF"):
+        elif text in ("📄 PPTX ➡️ PDF", "📄 PPTX ni PDF ga aylantirish", "📄 PPTX ni PDF ga", "📄 PPTX в PDF", "📄 Конвертировать PPTX в PDF", "📄 PPTX to PDF", "📄 Convert PPTX to PDF"):
             await prompt_pptx_to_pdf(message, state)
-        elif text in ("👤 Mening profilim", "👤 Мой профиль", "👤 My Profile", "/profil", "/profile"):
+        elif text in ("👤 Mening profilim", "👤 Profilim", "👤 Мой профиль", "👤 My Profile", "/profil", "/profile"):
             await show_profile(message)
         elif text in ("🎁 Bepul limit", "🎁 Bepul limit olish", "🎁 Бесплатные лимиты", "🎁 Получить бесплатный лимит", "🎁 Free Limits", "🎁 Get free limits"):
             await show_referral_program(message)
@@ -720,7 +720,7 @@ async def check_menu_navigation(message: Message, state: FSMContext) -> bool:
             await about_bot(message)
         elif text in ("🌐 Tilni o'zgartirish", "🌐 Сменить язык", "🌐 Change Language", "🌐 Change language", "/lang"):
             await prompt_change_language(message)
-        elif text in ("⚙️ Admin panel", "⚙️ Админ панель", "⚙️ Admin Panel") and config.is_admin(message.from_user.id):
+        elif text in ("⚙️ Admin panel", "⚙️ Админ панель", "⚙️ Admin Panel", "📈 Statistika", "📈 Статистика", "📈 Statistics") and config.is_admin(message.from_user.id):
             await admin_panel(message)
         elif text in ("👨‍💻 Adminga murojaat", "👨‍💻 Связаться с админом", "👨‍💻 Contact Admin", "Adminga murojaat", "/murojaat", "/admin"):
             await contact_admin_menu(message, state)
@@ -1015,8 +1015,11 @@ async def _process_media_group(group_id: str, bot, state: FSMContext = None):
     finally:
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
-# ================= PPTX NI PDF GA AYLANTIRISH =================
-@router.message(F.text.in_({"📄 PPTX ni PDF ga aylantirish", "📄 Конвертировать PPTX в PDF", "📄 Convert PPTX to PDF"}))
+@router.message(F.text.in_({
+    "📄 PPTX ➡️ PDF", "📄 PPTX ni PDF ga", "📄 PPTX ni PDF ga aylantirish",
+    "📄 PPTX в PDF", "📄 Конвертировать PPTX в PDF",
+    "📄 PPTX to PDF", "📄 Convert PPTX to PDF"
+}))
 async def prompt_pptx_to_pdf(message: Message, state: FSMContext):
     user_lang = await database.get_user_language(message.from_user.id)
     await state.set_state(PptxToPdfState.waiting_for_pptx)
@@ -2025,7 +2028,7 @@ async def admin_set_gamma(message: Message):
     else:
         await message.answer("❌ API kalitini saqlashda xatolik yuz berdi.")
 
-@router.message(F.text.in_({"⚙️ Admin panel", "⚙️ Админ панель", "⚙️ Admin Panel"}))
+@router.message(F.text.in_({"⚙️ Admin panel", "⚙️ Админ панель", "⚙️ Admin Panel", "📈 Statistika", "📈 Статистика", "📈 Statistics"}))
 @router.message(Command("stats"))
 async def admin_panel(message: Message):
     if not config.is_admin(message.from_user.id):

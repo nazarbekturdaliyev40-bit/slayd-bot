@@ -37,28 +37,34 @@ def get_slide_language_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
     ])
 
 def get_main_menu(is_admin: bool = False, lang: str = "uz") -> ReplyKeyboardMarkup:
-    """Foydalanuvchi tanlagan tildagi chiroyli va qulay tartiblangan asosiy menyu."""
+    """Foydalanuvchi tanlagan tildagi chiroyli va qulay yonma-yon tartiblangan asosiy menyu."""
     buttons = [
-        # Asosiy katta harakat tugmasi:
-        [KeyboardButton(text=locales.get_text("menu_new_slide", lang))],
-        # 1-qator: Shaxsiy profil va Tariflar
+        # 1-qator: Ikkita asosiy xizmat yonma-yon
+        [
+            KeyboardButton(text=locales.get_text("menu_new_slide", lang)),
+            KeyboardButton(text=locales.get_text("menu_pptx_to_pdf", lang))
+        ],
+        # 2-qator: Shaxsiy profil va Tariflar
         [
             KeyboardButton(text=locales.get_text("menu_profile", lang)),
             KeyboardButton(text=locales.get_text("menu_tariffs", lang))
         ],
-        # 2-qator: Bepul bonus limit va PPTX -> PDF konverter
+        # 3-qator: Bepul bonus limit va Tilni o'zgartirish
         [
             KeyboardButton(text=locales.get_text("menu_free_limit", lang)),
-            KeyboardButton(text=locales.get_text("menu_pptx_to_pdf", lang))
+            KeyboardButton(text=locales.get_text("menu_change_lang", lang))
         ],
-        # 3-qator: Tilni o'zgartirish va Yordam / Bot haqida
+        # 4-qator: Bot haqida va Adminga murojaat
         [
-            KeyboardButton(text=locales.get_text("menu_change_lang", lang)),
-            KeyboardButton(text=locales.get_text("menu_about", lang))
+            KeyboardButton(text=locales.get_text("menu_about", lang)),
+            KeyboardButton(text=locales.get_text("menu_contact", lang))
         ]
     ]
     if is_admin:
-        buttons.append([KeyboardButton(text=locales.get_text("menu_admin", lang))])
+        buttons.append([
+            KeyboardButton(text=locales.get_text("menu_admin", lang)),
+            KeyboardButton(text=locales.get_text("menu_stats", lang))
+        ])
     
     return ReplyKeyboardMarkup(
         keyboard=buttons,
@@ -137,9 +143,7 @@ def get_payment_keyboard(admin_username: str = "", lang: str = "uz") -> InlineKe
             InlineKeyboardButton(text=locales.get_text("send_receipt_btn", lang), callback_data="send_receipt")
         ],
         [
-            admin_btn
-        ],
-        [
+            admin_btn,
             InlineKeyboardButton(text=locales.get_text("back_main_menu", lang), callback_data="cancel_generation")
         ]
     ])
@@ -182,9 +186,7 @@ def get_about_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
 def get_skip_author_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text=locales.get_text("skip_btn", lang), callback_data="skip_author_info")
-        ],
-        [
+            InlineKeyboardButton(text=locales.get_text("skip_btn", lang), callback_data="skip_author_info"),
             InlineKeyboardButton(text=locales.get_text("cancel_btn", lang), callback_data="cancel_generation")
         ]
     ])
@@ -223,22 +225,16 @@ def get_theme_selection_keyboard() -> InlineKeyboardMarkup:
         rows.append([
             InlineKeyboardButton(text="🤖 AI Avtomatik (Mavzuga mos fon)", callback_data="theme_auto")
         ])
-    rows.extend([
-        [
-            InlineKeyboardButton(text="🖼 Oʻz fon rasmingizni yuklash", callback_data="theme_custom_bg")
-        ],
-        [
-            InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_generation")
-        ]
+    rows.append([
+        InlineKeyboardButton(text="🖼 Oʻz fon rasmi", callback_data="theme_custom_bg"),
+        InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_generation")
     ])
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 def get_custom_bg_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="🔙 Fon ranglariga qaytish", callback_data="back_to_theme_selection")
-        ],
-        [
+            InlineKeyboardButton(text="🔙 Orqaga", callback_data="back_to_theme_selection"),
             InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_generation")
         ]
     ])
