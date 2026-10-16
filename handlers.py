@@ -711,7 +711,7 @@ async def adm_reject_payment(callback: CallbackQuery):
             await callback.message.edit_reply_markup(reply_markup=None)
 
 # ----------------- ADMINGA MUROJAAT QILISH -----------------
-@router.message(F.text.in_({"👨‍💻 Adminga murojaat", "Adminga murojaat", "Admin bilan bog'lanish", "Murojaat", "Admin", "👨‍💻 Связаться с админом", "👨‍💻 Contact Admin"}))
+@router.message(F.text.in_({"👨‍💻 Adminga murojaat", "Adminga murojaat", "Adminga yozish", "💬 Adminga yozish", "Admin bilan bog'lanish", "Murojaat", "Admin", "👨‍💻 Связаться с админом", "👨‍💻 Contact Admin"}))
 @router.message(Command("murojaat"))
 @router.message(Command("admin"))
 @router.message(Command("boglanish"))
@@ -849,7 +849,7 @@ async def check_menu_navigation(message: Message, state: FSMContext) -> bool:
             await prompt_change_language(message)
         elif text in ("⚙️ Admin panel", "⚙️ Админ панель", "⚙️ Admin Panel", "📈 Statistika", "📈 Статистика", "📈 Statistics") and config.is_admin(message.from_user.id):
             await admin_panel(message)
-        elif text in ("👨‍💻 Adminga murojaat", "👨‍💻 Связаться с админом", "👨‍💻 Contact Admin", "Adminga murojaat", "/murojaat", "/admin"):
+        elif text in ("👨‍💻 Adminga murojaat", "👨‍💻 Связаться с админом", "👨‍💻 Contact Admin", "Adminga murojaat", "Adminga yozish", "💬 Adminga yozish", "/murojaat", "/admin"):
             await contact_admin_menu(message, state)
         return True
     return False
