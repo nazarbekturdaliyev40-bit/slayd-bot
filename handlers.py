@@ -749,7 +749,7 @@ async def contact_admin_menu(message: Message, state: FSMContext):
             "Savollaringiz, takliflaringiz yoki biron-bir muammo bo'lsa, xabaringizni yozib yuboring.\n"
             "<i>(Xabar bilan birga skrinshot / rasm, fayl yoki ovozli xabar ham yuborishingiz mumkin)</i>\n\n"
             "Admin xabaringizni ko'rib chiqib, tez orada sizga javob qaytaradi.\n\n"
-            "👉 <i>Yoki pastdagi tugma orqali to'g'ridan-to'g'ri admin lichkasiga yozishingiz mumkin:</i>"
+            "👉 <i>Yoki pastdagi «💬 Adminga yozish» tugmasi orqali to'g'ridan-to'g'ri lichkaga yozishingiz mumkin:</i>"
         )
     await message.answer(
         contact_text,
@@ -790,7 +790,7 @@ async def contact_admin_callback(callback: CallbackQuery, state: FSMContext):
             "Savollaringiz, takliflaringiz yoki biron-bir muammo bo'lsa, xabaringizni yozib yuboring.\n"
             "<i>(Xabar bilan birga skrinshot / rasm, fayl yoki ovozli xabar ham yuborishingiz mumkin)</i>\n\n"
             "Admin xabaringizni ko'rib chiqib, tez orada sizga javob qaytaradi.\n\n"
-            "👉 <i>Yoki pastdagi tugma orqali to'g'ridan-to'g'ri admin lichkasiga yozishingiz mumkin:</i>"
+            "👉 <i>Yoki pastdagi «💬 Adminga yozish» tugmasi orqali to'g'ridan-to'g'ri lichkaga yozishingiz mumkin:</i>"
         )
     await callback.message.answer(
         contact_text,

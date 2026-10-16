@@ -186,7 +186,7 @@ TEXTS = {
         "pay_card_btn": "💳 Karta raqami",
         "send_receipt_btn": "🧾 To'lov chekini yuborish",
         "contact_admin_btn": "👨‍💻 Adminga murojaat",
-        "write_to_pm_btn": "✈️ Lichkaga yozish",
+        "write_to_pm_btn": "💬 Adminga yozish",
         "contact_cancelled": "❌ Adminga murojaat bekor qilindi.",
         "referral_text": (
             "🎁 **Do'stlarni taklif qiling va bepul limit oling!**\n\n"
@@ -320,7 +320,7 @@ TEXTS = {
         "pay_card_btn": "💳 Номер карты",
         "send_receipt_btn": "🧾 Отправить чек оплаты",
         "contact_admin_btn": "👨‍💻 Связаться с админом",
-        "write_to_pm_btn": "✈️ Написать в ЛС",
+        "write_to_pm_btn": "💬 Написать админу",
         "contact_cancelled": "❌ Обращение к администратору отменено.",
         "referral_text": (
             "🎁 **Приглашайте друзей и получайте бесплатные лимиты!**\n\n"
@@ -453,7 +453,7 @@ TEXTS = {
         "pay_card_btn": "💳 Card Number",
         "send_receipt_btn": "🧾 Submit Receipt",
         "contact_admin_btn": "👨‍💻 Contact Admin",
-        "write_to_pm_btn": "✈️ Message Directly",
+        "write_to_pm_btn": "💬 Message Admin",
         "contact_cancelled": "❌ Contacting administrator cancelled.",
         "referral_text": (
             "🎁 **Invite friends and get free presentations!**\n\n"
