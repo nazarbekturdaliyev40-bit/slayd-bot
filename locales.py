@@ -454,6 +454,7 @@ TEXTS = {
         "profile_tariff": "👑 <b>Plan:</b>",
         "profile_limit": "✨ <b>Available limit:</b>",
         "profile_total": "📊 <b>Total slides created:</b>",
+        "profile_invited": "👥 <b>Invited friends:</b>",
         "back_main_menu": "🔙 Main Menu",
         "pay_card_btn": "💳 Card Number",
         "send_receipt_btn": "🧾 Submit Receipt",
