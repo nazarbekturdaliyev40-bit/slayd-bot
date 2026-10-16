@@ -110,7 +110,6 @@ TEXTS = {
         "choose_lang_title": "🌐 <b>Tilni tanlang / Выберите язык / Choose language:</b>",
         "lang_changed": "✅ <b>Interfeys tili O'zbekchaga o'zgartirildi!</b>",
         "menu_new_slide": "📊 Slayd tayyorlash",
-        "menu_pptx_to_pdf": "📄 PPTX ➡️ PDF",
         "menu_profile": "👤 Mening profilim",
         "menu_my_files": "📁 Mening fayllarim",
         "menu_free_limit": "🎁 Bepul limit",
@@ -123,7 +122,6 @@ TEXTS = {
         "menu_placeholder": "Mavzu yozing yoki menyudan tanlang...",
         "photo_to_slides_btn": "📊 Shu rasmdan taqdimot yasash",
         "doc_to_slides_btn": "📊 Hujjatdan taqdimot yasash",
-        "doc_to_pdf_btn": "📄 PPTX boʻlsa PDF ga aylantirish",
         "welcome": (
             "Assalomu alaykum, <b>{name}</b>! 👋\n\n"
             "🤖 <b>Slide AI</b> — sun'iy intellekt (Google Gemini) yordamida professional taqdimotlar (<b>PowerPoint .pptx</b>) tayyorlovchi bot.\n\n"
@@ -245,7 +243,6 @@ TEXTS = {
         "choose_lang_title": "🌐 <b>Выберите язык / Tilni tanlang / Choose language:</b>",
         "lang_changed": "✅ <b>Язык интерфейса изменен на Русский!</b>",
         "menu_new_slide": "📊 Создать слайды",
-        "menu_pptx_to_pdf": "📄 PPTX ➡️ PDF",
         "menu_profile": "👤 Мой профиль",
         "menu_my_files": "📁 Мои файлы",
         "menu_free_limit": "🎁 Бесплатные лимиты",
@@ -258,7 +255,6 @@ TEXTS = {
         "menu_placeholder": "Введите тему или выберите действие...",
         "photo_to_slides_btn": "📊 Создать презентацию по фото",
         "doc_to_slides_btn": "📊 Создать презентацию из документа",
-        "doc_to_pdf_btn": "📄 Конвертировать PPTX в PDF",
         "welcome": (
             "Здравствуйте, <b>{name}</b>! 👋\n\n"
             "🤖 <b>Slide AI</b> — создание профессиональных презентаций (<b>PowerPoint .pptx</b>) на базе искусственного интеллекта (Google Gemini).\n\n"
@@ -379,7 +375,6 @@ TEXTS = {
         "choose_lang_title": "🌐 <b>Choose language / Tilni tanlang / Выберите язык:</b>",
         "lang_changed": "✅ <b>Interface language changed to English!</b>",
         "menu_new_slide": "📊 Create Slides",
-        "menu_pptx_to_pdf": "📄 PPTX ➡️ PDF",
         "menu_profile": "👤 My Profile",
         "menu_my_files": "📁 My Files",
         "menu_free_limit": "🎁 Free Limits",
@@ -392,7 +387,6 @@ TEXTS = {
         "menu_placeholder": "Type topic or choose from menu...",
         "photo_to_slides_btn": "📊 Create Presentation from Photo",
         "doc_to_slides_btn": "📊 Create Presentation from Document",
-        "doc_to_pdf_btn": "📄 Convert PPTX to PDF",
         "welcome": (
             "Hello, <b>{name}</b>! 👋\n\n"
             "🤖 <b>Slide AI</b> — professional presentation (<b>PowerPoint .pptx</b>) generator powered by Artificial Intelligence (Google Gemini).\n\n"

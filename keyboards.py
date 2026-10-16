@@ -281,17 +281,11 @@ def get_media_choice_keyboard(is_doc: bool = False, lang: str = "uz") -> InlineK
     cancel_text = locales.get_text("cancel_btn", lang)
     if is_doc:
         first_btn = InlineKeyboardButton(text=locales.get_text("doc_to_slides_btn", lang), callback_data="media_to_slides")
-        second_btn = InlineKeyboardButton(text=locales.get_text("doc_to_pdf_btn", lang), callback_data="media_to_pdf")
-        return InlineKeyboardMarkup(inline_keyboard=[
-            [first_btn],
-            [second_btn],
-            [InlineKeyboardButton(text=cancel_text, callback_data="cancel_generation")]
-        ])
     else:
         first_btn = InlineKeyboardButton(text=locales.get_text("photo_to_slides_btn", lang), callback_data="media_to_slides")
-        return InlineKeyboardMarkup(inline_keyboard=[
-            [first_btn],
-            [InlineKeyboardButton(text=cancel_text, callback_data="cancel_generation")]
-        ])
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [first_btn],
+        [InlineKeyboardButton(text=cancel_text, callback_data="cancel_generation")]
+    ])
 
 

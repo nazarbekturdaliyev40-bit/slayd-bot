@@ -792,16 +792,16 @@ async def check_menu_navigation(message: Message, state: FSMContext) -> bool:
     text = message.text.strip()
     menu_items = {
         # Uzbek
-        "📊 Slayd tayyorlash", "📊 Yangi slayd tayyorlash", "📄 PPTX ➡️ PDF", "📄 PPTX ni PDF ga aylantirish", "📄 PPTX ni PDF ga",
+        "📊 Slayd tayyorlash", "📊 Yangi slayd tayyorlash",
         "👤 Mening profilim", "👤 Profilim", "📁 Mening fayllarim", "📁 Fayllarim", "🎁 Bepul limit", "🎁 Bepul limit olish", "💳 Tariflar",
         "💳 Limit va Obuna", "💳 Limit sotib olish",
         "ℹ️ Bot haqida", "👨‍💻 Adminga murojaat", "Adminga murojaat", "⚙️ Admin panel", "📈 Statistika", "🌐 Tilni o'zgartirish",
         # Russian
-        "📊 Создать слайды", "📊 Создать слайд", "📄 PPTX ➡️ PDF", "📄 PPTX в PDF", "📄 Конвертировать PPTX в PDF",
+        "📊 Создать слайды", "📊 Создать слайд",
         "👤 Мой профиль", "📁 Мои файлы", "🎁 Бесплатные лимиты", "🎁 Получить бесплатный лимит", "💳 Тарифы", "💳 Лимиты и Подписка",
         "ℹ️ О боте", "👨‍💻 Связаться с админом", "⚙️ Админ панель", "📈 Статистика", "🌐 Сменить язык",
         # English
-        "📊 Create Slides", "📊 Create slide", "📄 PPTX ➡️ PDF", "📄 PPTX to PDF", "📄 Convert PPTX to PDF",
+        "📊 Create Slides", "📊 Create slide",
         "👤 My Profile", "📁 My Files", "🎁 Free Limits", "🎁 Get free limits", "💳 Plans & Pricing", "💳 Limits & Subscription",
         "ℹ️ About Bot", "👨‍💻 Contact Admin", "⚙️ Admin Panel", "📈 Statistics", "🌐 Change Language", "🌐 Change language"
     }
@@ -811,8 +811,6 @@ async def check_menu_navigation(message: Message, state: FSMContext) -> bool:
             await cmd_start(message, state)
         elif text in ("📊 Slayd tayyorlash", "📊 Yangi slayd tayyorlash", "📊 Создать слайды", "📊 Создать слайд", "📊 Create Slides", "📊 Create slide", "/yangi_slayd", "/new_slide", "/slayd"):
             await start_new_slide(message, state)
-        elif text in ("📄 PPTX ➡️ PDF", "📄 PPTX ni PDF ga aylantirish", "📄 PPTX ni PDF ga", "📄 PPTX в PDF", "📄 Конвертировать PPTX в PDF", "📄 PPTX to PDF", "📄 Convert PPTX to PDF"):
-            await prompt_pptx_to_pdf(message, state)
         elif text in ("👤 Mening profilim", "👤 Profilim", "👤 Мой профиль", "👤 My Profile", "/profil", "/profile"):
             await show_profile(message)
         elif text in ("📁 Mening fayllarim", "📁 Fayllarim", "📁 Мои файлы", "📁 My Files", "/fayllarim", "/myfiles", "/files"):
@@ -1119,30 +1117,6 @@ async def _process_media_group(group_id: str, bot, state: FSMContext = None):
         await status_msg.edit_text(f"❌ Xatolik yuz berdi: {e}")
     finally:
         shutil.rmtree(tmp_dir, ignore_errors=True)
-
-@router.message(F.text.in_({
-    "📄 PPTX ➡️ PDF", "📄 PPTX ni PDF ga", "📄 PPTX ni PDF ga aylantirish",
-    "📄 PPTX в PDF", "📄 Конвертировать PPTX в PDF",
-    "📄 PPTX to PDF", "📄 Convert PPTX to PDF"
-}))
-async def prompt_pptx_to_pdf(message: Message, state: FSMContext):
-    user_lang = await database.get_user_language(message.from_user.id)
-    await state.set_state(PptxToPdfState.waiting_for_pptx)
-    await message.answer(
-        locales.get_text("pptx_to_pdf_prompt", user_lang),
-        reply_markup=keyboards.get_cancel_pptx_to_pdf_keyboard(),
-        parse_mode="HTML"
-    )
-
-@router.callback_query(F.data == "cancel_pptx_to_pdf")
-async def cancel_pptx_to_pdf_callback(callback: CallbackQuery, state: FSMContext):
-    await state.clear()
-    await callback.answer("Bekor qilindi")
-    user_lang = await database.get_user_language(callback.from_user.id)
-    await callback.message.answer(
-        "Asosiy menyu:",
-        reply_markup=keyboards.get_main_menu(is_admin=config.is_admin(callback.from_user.id), lang=user_lang)
-    )
 
 @router.message(F.text.in_({"🖼 Rasmni PDF ga aylantirish", "🖼 Конвертировать фото в PDF", "🖼 Convert Image to PDF"}))
 async def prompt_image_to_pdf(message: Message, state: FSMContext):
@@ -1922,7 +1896,7 @@ async def get_latest_pdf_handler(callback: CallbackQuery):
     if not os.path.exists(cached_pptx):
         await callback.message.answer(
             "⚠️ Oxirgi yaratilgan taqdimot topilmadi yoki muddati o'tgan.\n"
-            "«📄 PPTX ni PDF ga aylantirish» bo'limi orqali faylingizni yuborib PDF olishingiz mumkin."
+            "«📁 Mening fayllarim» bo'limi orqali avvalgi slaydlaringizni yuklab olishingiz mumkin."
         )
         return
 
