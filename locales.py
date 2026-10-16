@@ -2,7 +2,7 @@
 """
 Localization module for slayd_bot.
 Supports bot interface in Uzbek, Russian, and English.
-Supports presentation generation in 9+ languages (Uzbek, Russian, English, Turkish, Kazakh, Kyrgyz, Tajik, Arabic, German).
+Supports presentation generation in 8 languages (Uzbek, Russian, English, Turkish, Kazakh, Kyrgyz, Tajik, German).
 """
 
 # Available Bot Interface Languages
@@ -91,17 +91,6 @@ SLIDE_LANGUAGES = {
         "accepted_by": "Қабул кард",
         "intro_speaker": "Устодони мӯҳтарам ва донишҷӯён, мавзӯи имрӯза:"
     },
-    "ar": {
-        "name": "🇸🇦 العربية",
-        "prompt": "اللغة العربية الفصحى (الأكاديمية والمهنية السليمة)",
-        "agenda": "خطة العرض والمحتوى",
-        "conclusion": "الخاتمة والتوصيات",
-        "thanks": "شكراً لحسن استماعكم واهتمامكم!",
-        "references": "المراجع والمصادر",
-        "done_by": "إعداد الطالب",
-        "accepted_by": "إشراف",
-        "intro_speaker": "السادة الأساتذة والحضور الكريم، موضوع العرض اليوم هو:"
-    },
     "de": {
         "name": "🇩🇪 Deutsch",
         "prompt": "Deutsche Sprache (akademisches, professionelles Hochdeutsch)",
@@ -137,7 +126,7 @@ TEXTS = {
             "Assalomu alaykum, <b>{name}</b>! 👋\n\n"
             "🤖 <b>Slide AI</b> — sun'iy intellekt (Google Gemini) yordamida professional taqdimotlar (<b>PowerPoint .pptx</b>) tayyorlovchi bot.\n\n"
             "✨ <b>Imkoniyatlar:</b>\n"
-            "• 🌐 <b>Ko'p tilli slaydlar:</b> O'zbek, Rus, Ingliz va boshqa 9+ tillarda\n"
+            "• 🌐 <b>Ko'p tilli slaydlar:</b> O'zbek, Rus, Ingliz va boshqa tillarda\n"
             "• 🎙 <b>Ovozli xabar:</b> Mavzuni audio tarzda aytsangiz, bot o'zi tushunib slayd tuzadi\n"
             "• 📚 <b>Konspekt va kitob:</b> Kitob beti yoki konspekt rasmini yuboring, bot slayd chiqarib beradi\n"
             "• 📄 <b>PPTX ➡️ PDF:</b> Taqdimot faylini sifatli PDF ga o'girish\n\n"
@@ -237,7 +226,7 @@ TEXTS = {
             "• Xulosa va **Foydalanilgan adabiyotlar (manbalar)**\n"
             "• **Himoya nutq matni (doklad / shpargalka)** — darsda nima deb gapirishni toʻliq koʻrsatadi!\n\n"
             "🔹 **Formatlar:** Tahrirlash mumkin boʻlgan zamonaviy **PowerPoint (.pptx)** hamda **PDF**.\n"
-            "🔹 **Ko'p tilli slaydlar:** O'zbek, Rus, Ingliz, Turk, Qozoq, Qirg'iz, Tojik, Arab, Nemis tillarida!\n"
+            "🔹 **Ko'p tilli slaydlar:** O'zbek, Rus, Ingliz, Turk, Qozoq, Qirg'iz, Tojik, Nemis tillarida!\n"
             "🔹 **Rasmni PDF ga aylantirish:** Istalgan rasm(lar)ni bir zumda PDF qilib beradi.\n"
             "🔹 **Tariflar:** 2 ta bepul taqdimot, so'ngra 1 ta taqdimot — 5 000 so'm, oylik cheksiz — 20 000 so'm.\n"
             "🔹 **Referal:** Har 2 ta do'st taklif qilsangiz, +1 ta bepul limit beriladi!\n\n"
@@ -368,7 +357,7 @@ TEXTS = {
             "• Заключение и **список литературы (источников)**\n"
             "• **Речь для защиты (доклад / шпаргалка)** — готовый текст того, что говорить во время защиты!\n\n"
             "🔹 **Форматы:** Редактируемый **PowerPoint (.pptx)** и документ **PDF**.\n"
-            "🔹 **Многоязычность:** Русский, Узбекский, Английский, Турецкий, Казахский, Кыргызский, Таджикский, Арабский, Немецкий.\n"
+            "🔹 **Многоязычность:** Русский, Узбекский, Английский, Турецкий, Казахский, Кыргызский, Таджикский, Немецкий.\n"
             "🔹 **Конвертер:** Быстрое преобразование фото или PPTX в качественный PDF.\n"
             "🔹 **Тарифы:** 2 бесплатные презентации при старте, затем 1 презентация — 5 000 сум, безлимит на месяц — 20 000 сум.\n"
             "🔹 **Рефералы:** За каждые 2 приглашенных друга — **+1 бесплатный лимит**!\n\n"
@@ -400,7 +389,7 @@ TEXTS = {
             "Hello, <b>{name}</b>! 👋\n\n"
             "🤖 <b>Slide AI</b> — professional presentation (<b>PowerPoint .pptx</b>) generator powered by Artificial Intelligence (Google Gemini).\n\n"
             "✨ <b>Features:</b>\n"
-            "• 🌐 <b>Multi-language:</b> Generate slides in English, Russian, Uzbek and 9+ languages\n"
+            "• 🌐 <b>Multi-language:</b> Generate slides in English, Russian, Uzbek and other languages\n"
             "• 🎙 <b>Voice Input:</b> Speak your topic in an audio note, and AI creates the slides\n"
             "• 📚 <b>From Notes & Books:</b> Send photos of study materials to extract presentations\n"
             "• 📄 <b>PPTX to PDF:</b> Instant high-quality presentation converter\n\n"
@@ -498,7 +487,7 @@ TEXTS = {
             "• Conclusion and **academic references/bibliography**\n"
             "• **Speaker Defence Script** — full script of what to say while presenting!\n\n"
             "🔹 **Formats:** Editable **PowerPoint (.pptx)** and high quality **PDF**.\n"
-            "🔹 **Multi-language:** English, Russian, Uzbek, Turkish, Kazakh, Kyrgyz, Tajik, Arabic, German.\n"
+            "🔹 **Multi-language:** English, Russian, Uzbek, Turkish, Kazakh, Kyrgyz, Tajik, German.\n"
             "🔹 **Converters:** Convert documents or images to PDF in seconds.\n"
             "🔹 **Plans:** 2 free presentations, then 1 slide — 5,000 UZS, unlimited monthly — 20,000 UZS.\n"
             "🔹 **Referral:** Invite friends (+1 free limit for every 2 friends)!\n\n"

@@ -12,7 +12,7 @@ def get_language_selection_keyboard() -> InlineKeyboardMarkup:
     ])
 
 def get_slide_language_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
-    """Slayd qaysi tilda tayyorlanishini tanlash (O'zbek, Rus, Ingliz, Turk, Qozoq, Qirg'iz, Tojik, Arab, Nemis)."""
+    """Slayd qaysi tilda tayyorlanishini tanlash (O'zbek, Rus, Ingliz, Turk, Qozoq, Qirg'iz, Tojik, Nemis)."""
     cancel_text = locales.get_text("cancel_btn", lang)
     return InlineKeyboardMarkup(inline_keyboard=[
         [
@@ -29,9 +29,6 @@ def get_slide_language_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
         ],
         [
             InlineKeyboardButton(text="🇹🇯 Тоҷикӣ", callback_data="slidelang_tg"),
-            InlineKeyboardButton(text="🇸🇦 العربية", callback_data="slidelang_ar")
-        ],
-        [
             InlineKeyboardButton(text="🇩🇪 Deutsch", callback_data="slidelang_de")
         ],
         [

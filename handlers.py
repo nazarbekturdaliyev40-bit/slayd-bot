@@ -2122,8 +2122,6 @@ async def handle_voice_presentation(message: Message, state: FSMContext):
             slide_lang = "ky"
         elif "tg" in raw_lang or "taj" in raw_lang:
             slide_lang = "tg"
-        elif "ar" in raw_lang or "arab" in raw_lang:
-            slide_lang = "ar"
         elif "de" in raw_lang or "ger" in raw_lang or "nem" in raw_lang:
             slide_lang = "de"
         else:
