@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Fanlar bo'yicha slayd fonlari — PowerPoint 2016</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: var(--tg-theme-bg-color, #0b1120);
+      --card-bg: var(--tg-theme-secondary-bg-color, #1e293b);
+      --text: var(--tg-theme-text-color, #f8fafc);
+      --hint: var(--tg-theme-hint-color, #94a3b8);
+      --button: var(--tg-theme-button-color, #38bdf8);
+      --button-text: var(--tg-theme-button-text-color, #0f172a);
+      --border: #334155;
+      --accent: #38bdf8;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 12px 14px 40px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 4px;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p.subtitle {
+      font-size: 13px;
+      color: var(--hint);
+      margin: 0;
+      line-height: 1.4;
+    }
+    .search-box {
+      margin: 12px 0 10px;
+    }
+    .search-box input {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-box input:focus {
+      border-color: var(--accent);
+    }
+    .categories-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+      scrollbar-width: none;
+    }
+    .categories-bar::-webkit-scrollbar {
+      display: none;
+    }
+    .category-chip {
+      flex: 0 0 auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--hint);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .category-chip.active {
+      background: var(--accent);
+      color: #0b1120;
+      font-weight: 700;
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.35);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+    .theme-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .theme-card:active {
+      transform: scale(0.98);
+      border-color: var(--accent);
+    }
+    .slide-preview {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: 12px;
+      box-shadow: inset 0 -10px 20px rgba(0,0,0,0.25);
+    }
+    .slide-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #f8fafc;
+      border: 0.5px solid rgba(255,255,255,0.2);
+    }
+    .slide-mockup-header {
+      width: 60%;
+      height: 12px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.85);
+      margin-bottom: 8px;
+    }
+    .slide-mockup-sub {
+      width: 35%;
+      height: 8px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.45);
+      margin-bottom: 12px;
+    }
+    .slide-mockup-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      flex: 1;
+    }
+    .slide-mockup-box {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .mockup-line {
+      height: 5px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.6);
+    }
+    .card-content {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .category-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .theme-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .theme-desc {
+      font-size: 12px;
+      color: var(--hint);
+      line-height: 1.45;
+      margin-bottom: 10px;
+      flex: 1;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+    .tag {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      font-size: 10px;
+      padding: 2px 6px;
+      color: var(--hint);
+    }
+    .select-btn {
+      background: var(--button);
+      color: var(--button-text);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: opacity 0.2s ease;
+    }
+    .select-btn:active {
+      opacity: 0.85;
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(11, 17, 32, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 20px;
+      text-align: center;
+      opacity: 1;
+      transition: opacity 0.25s ease;
+    }
+    .overlay.hidden {
+      display: none;
+    }
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 3.5px solid rgba(56, 189, 248, 0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 16px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .overlay-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 6px;
+    }
+    .overlay-sub {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎨 Fanlar bo'yicha fonlar</h1>
+    <p class="subtitle">Mavzuingizga mos fan kategoriyasini tanlang.<br>Tanlashingiz bilanoq bot sizga slayd tayyorlaydi!</p>
+  </header>
+
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="🔍 Qidirish (masalan: IT, Tibbiyot, Fizika, Tarix)..." oninput="filterThemes()">
+  </div>
+
+  <div class="categories-bar" id="categoriesBar"></div>
+  <div class="grid" id="themesGrid"></div>
+
+  <div id="loadingOverlay" class="overlay hidden">
+    <div class="spinner"></div>
+    <div class="overlay-title" id="overlayTitle">Fon tanlandi!</div>
+    <div class="overlay-sub">🚀 Taqdimotingiz tayyorlanmoqda...</div>
+  </div>
+
+  <script>
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+      try { tg.enableClosingConfirmation(); } catch(e){}
+    }
+
+    const categories = [
+      { id: "all", name: "🔀 Barchasi" },
+      { id: "it", name: "💻 IT & Axborot" },
+      { id: "med", name: "🩺 Tibbiyot" },
+      { id: "eco", name: "🌿 Tabiat & Eko" },
+      { id: "business", name: "💼 Biznes & Iqtisod" },
+      { id: "math_eng", name: "📐 Fizika & Texnika" },
+      { id: "history", name: "🏛 Tarix & Meros" },
+      { id: "edu", name: "📚 Adabiyot & Ta'lim" },
+      { id: "art", name: "🎨 San'at & Dizayn" },
+      { id: "mix", name: "🔀 Dinamik Mix" }
+    ];
+
+    const themes = [
+      {
+        id: "mix",
+        category: "mix",
+        categoryTitle: "🔀 Barcha Fanlar Uchun",
+        title: "PPT 2016 Dinamik Mix",
+        badge: "Barcha Fanlar",
+        desc: "Har bir slaydda turli fan va shablonlar aralash, boy va dinamik uyg'unlikda shakllantiriladi.",
+        tags: ["#Universal", "#BarchaFanlar", "#Mix", "#Taqdimot"],
+        bg: "linear-gradient(135deg, #1f4e79 0%, #104b3c 50%, #721c34 100%)",
+        accent: "#38bdf8"
+      },
+      {
+        id: "circuit",
+        category: "it",
+        categoryTitle: "💻 Axborot Texnologiyalari & IT",
+        title: "Circuit 2016 (Kiber Texno)",
+        badge: "Dasturlash & IT",
+        desc: "Dasturlash tillari, Axborot xavfsizligi, AI, Kompyuter ilmlari va IT tizimlari uchun to'q kiber dizayn.",
+        tags: ["#Python", "#Dasturlash", "#AI", "#Kiberxavfsizlik", "#IT"],
+        bg: "linear-gradient(135deg, #0f172a 0%, #083344 100%)",
+        accent: "#06b6d4"
+      },
+      {
+        id: "slice",
+        category: "it",
+        categoryTitle: "💻 Dasturlash & Startaplar",
+        title: "Slice 2016 (Neo Kesim)",
+        badge: "Web, Mobile & Texno",
+        desc: "Web va Mobile dasturlar, Startaplar, Robototexnika va innovatsion texnologik taqdimotlar.",
+        tags: ["#Startap", "#WebDev", "#Frontend", "#Backend", "#Innovatsiya"],
+        bg: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+        accent: "#38bdf8"
+      },
+      {
+        id: "droplet",
+        category: "med",
+        categoryTitle: "🩺 Tibbiyot & Salomatlik",
+        title: "Droplet 2016 (Akvamarin)",
+        badge: "Tibbiyot & Farmatsevtika",
+        desc: "Tibbiyot, Anatomiya, Farmatsevtika, Stomatologiya, Terapiya va sog'lom turmush tarzi.",
+        tags: ["#Tibbiyot", "#Salomatlik", "#Farmatsevtika", "#Anatomiya", "#Kasalxona"],
+        bg: "linear-gradient(135deg, #0f766e 0%, #14b8a6 100%)",
+        accent: "#2dd4bf"
+      },
+      {
+        id: "blue",
+        category: "med",
+        categoryTitle: "🩺 Tibbiy Diagnostika & Klinika",
+        title: "Klassik Havorang (Moviy)",
+        badge: "Klinik Tibbiyot",
+        desc: "Davolash ishi, Hamshiralik, Laboratoriya tahlillari va xalqaro tibbiyot standartlari.",
+        tags: ["#Davolash", "#Diagnostika", "#Laboratoriya", "#Klinika", "#Shifokor"],
+        bg: "linear-gradient(135deg, #0369a1 0%, #38bdf8 100%)",
+        accent: "#0ea5e9"
+      },
+      {
+        id: "facet",
+        category: "eco",
+        categoryTitle: "🌿 Biologiya & Ekologiya",
+        title: "Facet 2016 (Zumrad Eko)",
+        badge: "Biologiya & Ekologiya",
+        desc: "Ekologiya, Biologiya, Botanika, Qishloq xo'jaligi, Yashil iqtisodiyot va tabiatni asrash.",
+        tags: ["#Ekologiya", "#Biologiya", "#Botanika", "#Tabiat", "#YashilEko"],
+        bg: "linear-gradient(135deg, #064e3b 0%, #059669 100%)",
+        accent: "#10b981"
+      },
+      {
+        id: "green",
+        category: "eco",
+        categoryTitle: "🌿 Tabiatshunoslik & Atrof-muhit",
+        title: "Tabiat Zumrad (Eko Yashil)",
+        badge: "Zoologiya & Geografiya",
+        desc: "Zoologiya, Geografiya, Tabiat boyliklari, O'rmon xo'jaligi va suv resurslari taqdimotlari.",
+        tags: ["#Zoologiya", "#Geografiya", "#Tabiatshunoslik", "#Ekotizim"],
+        bg: "linear-gradient(135deg, #065f46 0%, #34d399 100%)",
+        accent: "#34d399"
+      },
+      {
+        id: "office",
+        category: "business",
+        categoryTitle: "💼 Iqtisodiyot & Moliya",
+        title: "Office 2016 (Korporativ)",
+        badge: "Iqtisodiyot & Biznes",
+        desc: "Iqtisodiyot nazariyasi, Moliya, Bank ishi, Buxgalteriya, Menejment, Savdo va Audit.",
+        tags: ["#Iqtisodiyot", "#Moliya", "#Bank", "#Biznes", "#Boshqaruv"],
+        bg: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
+        accent: "#60a5fa"
+      },
+      {
+        id: "dark",
+        category: "business",
+        categoryTitle: "💼 Biznes & Investitsiyalar",
+        title: "Premium Dark Gold",
+        badge: "Investitsiyalar & VIP",
+        desc: "Katta biznes, Investitsiya loyihalari, Kripto moliya, Startap pitch va VIP hisobotlar.",
+        tags: ["#Investitsiya", "#PitchDeck", "#Kripto", "#Premium", "#Menejment"],
+        bg: "linear-gradient(135deg, #18181b 0%, #27272a 100%)",
+        accent: "#f59e0b"
+      },
+      {
+        id: "integral",
+        category: "math_eng",
+        categoryTitle: "📐 Fizika & Muhandislik",
+        title: "Integral 2016 (Muhandislik)",
+        badge: "Muhandislik & Texnika",
+        desc: "Oliy matematika, Mashinasozlik, Qurilish, Arxitektura, Mexanika va hisoblash texnikasi.",
+        tags: ["#Muhandislik", "#Matematika", "#Mexanika", "#Qurilish", "#Texnika"],
+        bg: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+        accent: "#eb5e3c"
+      },
+      {
+        id: "celestial",
+        category: "math_eng",
+        categoryTitle: "📐 Astronomiya & Koinot",
+        title: "Celestial 2016 (Koinot Moviy)",
+        badge: "Fizika & Kosmos",
+        desc: "Fizika qonuniyatlari, Astronomiya, Kosmik parvozlar, Optika va Kvant fizikasi.",
+        tags: ["#Fizika", "#Astronomiya", "#Kosmos", "#Kvant", "#IlmFan"],
+        bg: "linear-gradient(135deg, #0a193c 0%, #1e1b4b 100%)",
+        accent: "#eab308"
+      },
+      {
+        id: "retrospect",
+        category: "history",
+        categoryTitle: "🏛 Tarix & Madaniyat",
+        title: "Retrospect 2016 (Retro Oltin)",
+        badge: "O'zbekiston & Jahon Tarixi",
+        desc: "O'zbekiston tarixi, Jahon tarixi, Qadimgi sivilizatsiyalar, Temuriylar va madaniy meros.",
+        tags: ["#Tarix", "#Madaniyat", "#Temuriylar", "#Sivilizatsiya", "#Meros"],
+        bg: "linear-gradient(135deg, #451a03 0%, #78350f 100%)",
+        accent: "#d97706"
+      },
+      {
+        id: "vintage",
+        category: "history",
+        categoryTitle: "🏛 Falsafa & Sharqshunoslik",
+        title: "Pergament Retro (Qo'lyozma)",
+        badge: "Arxeologiya & Qo'lyozmalar",
+        desc: "Arxeologiya, Sharqshunoslik, Qo'lyozmalar, Falsafa, Etnografiya va qadimgi manbalar.",
+        tags: ["#Qolyozma", "#Sharqshunoslik", "#Arxeologiya", "#Falsafa"],
+        bg: "linear-gradient(135deg, #3f2e18 0%, #5c4028 100%)",
+        accent: "#c2892c"
+      },
+      {
+        id: "savon",
+        category: "edu",
+        categoryTitle: "📚 Adabiyot & Tilshunoslik",
+        title: "Savon 2016 (Aristokrat Shampan)",
+        badge: "Ona tili & Adabiyot",
+        desc: "O'zbek tili va adabiyoti, Jahon adabiyoti, Xorijiy tillar, Tilshunoslik va Kitobxonlik.",
+        tags: ["#OnaTili", "#Adabiyot", "#Tilshunoslik", "#InglizTili", "#Kitob"],
+        bg: "linear-gradient(135deg, #292524 0%, #44403c 100%)",
+        accent: "#d97706"
+      },
+      {
+        id: "ion",
+        category: "edu",
+        categoryTitle: "📚 Pedagogika & Ta'lim",
+        title: "Ion 2016 (Bordo Nafis)",
+        badge: "Pedagogika & Psixologiya",
+        desc: "Pedagogika nazariyasi, O'qitish metodikasi, Psixologiya va Ta'lim menejmenti.",
+        tags: ["#Pedagogika", "#Talim", "#Psixologiya", "#Metodika", "#Maktab"],
+        bg: "linear-gradient(135deg, #4c0519 0%, #881337 100%)",
+        accent: "#f43f5e"
+      },
+      {
+        id: "canva_pastel",
+        category: "art",
+        categoryTitle: "🎨 San'at & Ijodiyot",
+        title: "Canva Pastel (Ijodiy)",
+        badge: "San'at & Tasviriy San'at",
+        desc: "Tasviriy san'at, Musiqa, Dizayn, Moda, Ijodiy san'at, Teatr va Estrada san'ati.",
+        tags: ["#Sanat", "#Dizayn", "#Musiqa", "#Ijod", "#Moda"],
+        bg: "linear-gradient(135deg, #4f46e5 0%, #ec4899 100%)",
+        accent: "#f472b6"
+      },
+      {
+        id: "white",
+        category: "art",
+        categoryTitle: "🎨 Arxitektura & Minimalizm",
+        title: "Minimalist Oq (Galereya)",
+        badge: "Arxitektura & Galereya",
+        desc: "Arxitektura dizayni, Fotografiya, Zamonaviy san'at, Ko'rgazmalar va toza minimalizm.",
+        tags: ["#Minimalizm", "#Arxitektura", "#Fotografiya", "#Galereya"],
+        bg: "linear-gradient(135deg, #f1f5f9 0%, #ffffff 100%)",
+        accent: "#2563eb"
+      }
+    ];
+
+    let currentCategory = "all";
+
+    function renderCategories() {
+      const container = document.getElementById("categoriesBar");
+      container.innerHTML = "";
+      categories.forEach(cat => {
+        const chip = document.createElement("div");
+        chip.className = `category-chip ${cat.id === currentCategory ? "active" : ""}`;
+        chip.textContent = cat.name;
+        chip.onclick = () => {
+          currentCategory = cat.id;
+          renderCategories();
+          filterThemes();
+        };
+        container.appendChild(chip);
+      });
+    }
+
+    function renderThemes(list) {
+      const container = document.getElementById("themesGrid");
+      container.innerHTML = "";
+      if (list.length === 0) {
+        container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--hint); padding: 40px 0;">Hech qanday shablon topilmadi 🔍</div>`;
+        return;
+      }
+      list.forEach(t => {
+        const card = document.createElement("div");
+        card.className = "theme-card";
+        card.onclick = () => selectTheme(t);
+        card.innerHTML = `
+          <div class="slide-preview" style="background: ${t.bg}">
+            <div class="slide-badge">${t.badge}</div>
+            <div class="slide-mockup-header"></div>
+            <div class="slide-mockup-sub"></div>
+            <div class="slide-mockup-body">
+              <div class="slide-mockup-box">
+                <div class="mockup-line" style="width: 70%"></div>
+                <div class="mockup-line" style="width: 90%"></div>
+                <div class="mockup-line" style="width: 50%"></div>
+              </div>
+              <div class="slide-mockup-box">
+                <div class="mockup-line" style="width: 80%"></div>
+                <div class="mockup-line" style="width: 60%"></div>
+                <div class="mockup-line" style="width: 75%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-content">
+            <div class="category-tag">${t.categoryTitle}</div>
+            <div class="theme-title">${t.title}</div>
+            <div class="theme-desc">${t.desc}</div>
+            <div class="tags">${t.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}</div>
+            <button class="select-btn" onclick="event.stopPropagation(); selectThemeById('${t.id}')">
+              🚀 Ushbu fonga tayyorlash
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function selectThemeById(id) {
+      const t = themes.find(x => x.id === id);
+      if (t) selectTheme(t);
+    }
+
+    function filterThemes() {
+      const q = document.getElementById("searchInput").value.toLowerCase().trim();
+      let list = themes;
+      if (currentCategory !== "all") {
+        list = list.filter(t => t.category === currentCategory);
+      }
+      if (q) {
+        list = list.filter(t =>
+          t.title.toLowerCase().includes(q) ||
+          t.desc.toLowerCase().includes(q) ||
+          t.categoryTitle.toLowerCase().includes(q) ||
+          t.tags.some(tag => tag.toLowerCase().includes(q))
+        );
+      }
+      renderThemes(list);
+    }
+
+    function selectTheme(theme) {
+      if (tg?.HapticFeedback) {
+        try { tg.HapticFeedback.notificationOccurred("success"); } catch(e){}
+      }
+      const overlay = document.getElementById("loadingOverlay");
+      document.getElementById("overlayTitle").textContent = `${theme.title} tanlandi!`;
+      overlay.classList.remove("hidden");
+
+      const user = tg?.initDataUnsafe?.user;
+      const userId = user ? user.id : null;
+
+      // 1. Telegram WebApp sendData orqali yuborish (KeyboardButton ochilganda)
+      try {
+        if (tg && typeof tg.sendData === "function") {
+          tg.sendData(theme.id);
+        }
+      } catch(e) {
+        console.log("tg.sendData:", e);
+      }
+
+      // 2. HTTP POST orqali yuborish (Inline button ochilganda ham 100% ishlaydi)
+      if (userId) {
+        fetch("/api/select-theme", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: userId, theme: theme.id, initData: tg?.initData || "" })
+        }).finally(() => {
+          setTimeout(() => { if (tg) tg.close(); }, 350);
+        });
+      } else {
+        setTimeout(() => { if (tg) tg.close(); }, 400);
+      }
+    }
+
+    renderCategories();
+    renderThemes(themes);
+  </script>
+</body>
+</html>
