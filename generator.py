@@ -361,10 +361,20 @@ async def generate_presentation_content(topic: str, slide_count: int = 8, langua
     author_clause = f"\nTaqdimot muallifi va OTM ma'lumotlari: {author_info}" if author_info else ""
     theme_clause = f"\nFoydalanuvchi tanlagan dizayn mavzusi: '{theme_choice}'." if theme_choice and theme_choice != "auto" else ""
     context_clause = f"\nASOSIY MANBA MATN (Kitob/Konspekt/Hujjat):\n```\n{context_document[:8000]}\n```\nYuqoridagi manba matnidan foydalanib, undagi asosiy dalillar, faktlar va tushunchalar asosida taqdimot tuzing." if context_document else ""
+    if slide_count <= 4:
+        num_content = max(1, slide_count - 2)
+    elif slide_count == 5:
+        num_content = 2
+    elif slide_count <= 8:
+        num_content = slide_count - 4
+    else:
+        num_content = slide_count - 5
+
     prompt = f"""
 Siz universitet va oliy ta'lim talabalari uchun akademik va professional taqdimotlar tayyorlovchi yetuk AI mutaxassisiz.
 Mavzu: "{topic}"{author_clause}{theme_clause}{context_clause}
-Talab qilingan mazmuniy slaydlar soni: {slide_count} ta
+DIQQAT (QAT'IY TALAB): Foydalanuvchi jami taqdimot hajmi (titul muqova, reja, xulosa va yakun bilan birga) JAMI RO'PPA-ROSA {slide_count} TA SLAYDDAN iborat bo'lishini belgiladi (belgilangandan 1 list ham oshmasin!).
+Shu sababli, taqdimotning ichki 'slides' massivida RO'PPA-ROSA {num_content} ta asosiy mazmuniy slayd tuzib bering (hech qachon {num_content} tadan oshmasin yoki kam bo'lmasin).
 Qat'iy talab qilingan til: {prompt_lang}.
 DIQQAT: Taqdimotning barcha slaydlari, sarlavhalari, rejalari, matnlari, taqqoslashlari, xulosalari, manbalari va spiker nutqi (speaker_notes) 100% FAQAT va FAQAT {prompt_lang} tilida bo'lishi SHART! Barcha matnlar tanlangan tilning imlo, orfografik va grammatik qoidalariga to'liq mos kelishi, tushunarli, akademik va professional bo'lishi kerak.
 
@@ -445,7 +455,7 @@ Quyidagi qat'iy JSON formatida taqdimot rejasini, har bir slayd matnini, xulosas
 }}
 
 Talablar:
-- Jami mazmuniy slaydlar soni roppa-rosa {slide_count} taga teng bo'lsin.
+- Jami mazmuniy slaydlar soni ('slides' massivida) roppa-rosa {num_content} taga teng bo'lsin (kam ham, ko'p ham bo'lmasin).
 - TAQDIMOT REJASI ("agenda"): QAT'IY RAVISHDA ENG KO'PI 4 TAdan 5 TAgacha umumlashtirilgan asosiy reja bandlaridan iborat bo'lsin (hech qachon 5 tadan oshmasin).
 - DIZAYN VA LAYOUT XILMA-XILLIGI (MUHIM): Taqdimot bir xil zerikarli bullet point bo'lib qolmasligi uchun slaydlarga mos layout tanlang:
   * "kpi" — Asosiy raqamlar, statistika yoki foizlar bo'lgan slaydlarga (kamida 1 ta slaydda ishlating, 3 ta ko'rsatkich berilsin);
@@ -554,6 +564,11 @@ Talablar:
                         clean_agenda.append(re.sub(r"^\d+[\.\)\-\s]+", "", " ".join(str(v) for v in item.values() if v)).strip())
             clean_agenda = [a for a in clean_agenda if a][:5]
             data["agenda"] = clean_agenda
+
+            # Slides sonini qat'iy cheklash va target_slide_count saqlash
+            if "slides" in data and isinstance(data["slides"], list):
+                data["slides"] = data["slides"][:num_content]
+            data["target_slide_count"] = slide_count
 
             # Barcha matnlarni stiker va emojilardan tozalash
             data = clean_data_structure(data)
@@ -874,182 +889,10 @@ def _add_header(slide, title_text: str, theme: dict, slide_num: int = None, tota
         bp.font.color.rgb = RGBColor(255, 255, 255)
         bp.alignment = PP_ALIGN.CENTER
 
-def create_pptx_file(content: dict, output_path: str, theme_name: str = "", images_map: dict = None, author_info: str = "", default_student_name: str = "", custom_bg: str = None, language: str = "") -> str:
-    """Creates a beautiful 16:9 PowerPoint file with student academic structure, author info, references, and closing slides."""
-    content = clean_data_structure(content)
-    lang_code = language or content.get("language", "uz")
-    lang_info = locales.get_slide_lang_info(lang_code)
-    if not theme_name or theme_name not in THEMES:
-        theme_name = content.get("theme", "blue")
-    theme = THEMES.get(theme_name, THEMES["blue"])
-    is_dark = (theme_name == "dark")
-    is_white = (theme_name == "white")
-
-    prs = Presentation()
-    prs.slide_width = Inches(13.333)
-    prs.slide_height = Inches(7.5)
-    blank_layout = prs.slide_layouts[6]
-    
-    title_text = content.get("title", "Taqdimot")
-    subtitle_text = content.get("subtitle", "")
-    slides_data = content.get("slides", [])
-    conclusion_points = content.get("conclusion", [])
-    raw_refs = content.get("references", [])
-    
-    has_author = bool(author_info and author_info.strip())
-    # Titul(1) + Mavzu(2) + Reja(3) + Mazmun(N) + Xulosa + Adabiyotlar + Yakun (has_author bo'lsa 6 ta qo'shimcha slayd, aks holda 5 ta)
-    total_slides = len(slides_data) + (6 if has_author else 5)
-
-    if has_author:
-        # Structured student details
-        student_details = content.get("student_details") or smart_parse_student_details(author_info)
-        uni_name = (student_details.get("university") or "").strip()
-        faculty_name = (student_details.get("faculty") or "").strip()
-        student_name = (student_details.get("student") or "").strip()
-        direction_val = (student_details.get("direction") or "").strip()
-        group_val = (student_details.get("group") or "").strip()
-        teacher_name = (student_details.get("teacher") or "").strip()
-
-        student_name = clean_prefix(student_name, ["bajardi", "talaba", "talabasi", "muallif", "tayyorladi"])
-        teacher_name = clean_prefix(teacher_name, ["qabul qildi", "o'qituvchi", "oʻqituvchi", "ilmiy rahbar", "rahbar", "domla", "ustoz"])
-        uni_name = clean_prefix(uni_name, ["otm", "universitet", "institut"])
-        faculty_name = clean_prefix(faculty_name, ["fakultet", "fakulteti"])
-        group_val = clean_prefix(group_val, ["guruh", "guruhi", "kurs", "kursi"])
-        direction_val = clean_prefix(direction_val, ["yo'nalish", "yoʻnalishi"])
-
-        if not student_name and default_student_name:
-            student_name = default_student_name
-
-        # Display texts (OTM, Fakultet, Yoʻnalish, Guruh, Talaba, Ilmiy rahbar tagma-tag to'liq chiqadi)
-        display_uni = uni_name if uni_name else "Oliy taʼlim muassasasi"
-        display_fac = faculty_name if faculty_name else "Fakultet va kafedra"
-        display_dir = direction_val if direction_val else "Taʼlim yoʻnalishi"
-        display_group = group_val if group_val else "Akademik guruh"
-        display_student = student_name if student_name else "Talaba (Muallif)"
-        display_teacher = teacher_name if teacher_name else "Ilmiy rahbar / Oʻqituvchi"
-
-        # ================= 1. TITUL SLAYD (RASMIY TITUL VARAQASI) =================
-        slide = prs.slides.add_slide(blank_layout)
-        
-        # Background: Custom photo or theme color
-        if custom_bg and os.path.exists(custom_bg):
-            slide.shapes.add_picture(custom_bg, 0, 0, width=Inches(13.333), height=Inches(7.5))
-        else:
-            bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5))
-            bg.fill.solid()
-            if is_white:
-                bg.fill.fore_color.rgb = RGBColor(248, 250, 252)
-            else:
-                bg.fill.fore_color.rgb = theme["primary"]
-            bg.line.fill.background()
-
-        # Decorative top bar
-        bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(0.2))
-        bar.fill.solid()
-        bar.fill.fore_color.rgb = theme["accent"]
-        bar.line.fill.background()
-
-        # Top Ministry Header Text
-        top_tb = slide.shapes.add_textbox(Inches(1.0), Inches(0.35), Inches(11.333), Inches(0.65))
-        top_tf = top_tb.text_frame
-        top_tf.word_wrap = True
-        p_min = top_tf.paragraphs[0]
-        p_min.text = "OʻZBEKISTON RESPUBLIKASI OLIY TAʼLIM, FAN VA INNOVATSIYALAR VAZIRLIGI"
-        p_min.font.size = Pt(13)
-        p_min.font.bold = True
-        p_min.font.color.rgb = theme["primary"] if is_white else theme["accent"]
-        p_min.font.name = "Arial"
-        p_min.alignment = PP_ALIGN.CENTER
-
-        # Slide number badge
-        num_tb = slide.shapes.add_textbox(Inches(10.5), Inches(0.35), Inches(2.2), Inches(0.5))
-        num_tf = num_tb.text_frame
-        num_p = num_tf.paragraphs[0]
-        num_p.text = f"1 / {total_slides}"
-        num_p.font.size = Pt(14)
-        num_p.font.bold = True
-        num_p.font.color.rgb = theme["primary"] if is_white else theme["accent"]
-        num_p.alignment = PP_ALIGN.RIGHT
-
-        # Centered Academic Title Card on Slide 1
-        card_w = Inches(10.8)
-        card_h = Inches(5.6)
-        card_left = Inches(1.266)  # (13.333 - 10.8) / 2
-        card_top = Inches(1.15)
-
-        titul_card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, card_left, card_top, card_w, card_h)
-        titul_card.fill.solid()
-        if is_dark:
-            titul_card.fill.fore_color.rgb = RGBColor(30, 30, 35)
-            titul_card.line.color.rgb = theme["accent"]
-        elif custom_bg:
-            titul_card.fill.fore_color.rgb = RGBColor(255, 255, 255)
-            titul_card.line.color.rgb = theme["accent"]
-        else:
-            titul_card.fill.fore_color.rgb = theme.get("card_bg", RGBColor(255, 255, 255))
-            titul_card.line.color.rgb = theme.get("card_border", theme["accent"])
-        titul_card.line.width = Pt(2.0)
-
-        c_tf = titul_card.text_frame
-        c_tf.word_wrap = True
-        c_tf.margin_left = Inches(0.6)
-        c_tf.margin_right = Inches(0.6)
-        c_tf.margin_top = Inches(0.35)
-        c_tf.margin_bottom = Inches(0.35)
-
-        # Card Title
-        p_head = c_tf.paragraphs[0]
-        p_head.text = "OLIY TAʼLIM MUASSASASI TALABASINING TAQDIMOT ISHI"
-        p_head.font.size = Pt(15)
-        p_head.font.bold = True
-        p_head.font.color.rgb = theme["accent"] if is_dark else theme["primary"]
-        p_head.font.name = "Arial"
-        p_head.alignment = PP_ALIGN.CENTER
-        p_head.space_after = Pt(14)
-
-        # All fields tagma-tag (line-by-line stacked vertically)
-        fields = [
-            ("OTM (Taʼlim muassasasi):", display_uni),
-            ("Fakultet (Kafedra):", display_fac),
-            ("Taʼlim yoʻnalishi:", display_dir),
-            ("Akademik guruh:", display_group),
-            ("Bajardi (Talaba):", display_student),
-            ("Qabul qildi (Ilmiy rahbar):", display_teacher),
-        ]
-
-        for lbl, val in fields:
-            p_field = c_tf.add_paragraph()
-            p_field.space_after = Pt(10)
-            
-            r_lbl = p_field.add_run()
-            r_lbl.text = f"{lbl}   "
-            r_lbl.font.bold = True
-            r_lbl.font.size = Pt(15)
-            r_lbl.font.color.rgb = theme["accent"] if is_dark else theme["primary"]
-            r_lbl.font.name = "Arial"
-
-            r_val = p_field.add_run()
-            r_val.text = val
-            r_val.font.bold = True
-            r_val.font.size = Pt(15)
-            r_val.font.color.rgb = theme["text_dark"]
-            r_val.font.name = "Arial"
-
-        # Bottom footer: Toshkent - current year
-        current_year = datetime.now().year
-        p_foot = c_tf.add_paragraph()
-        p_foot.text = f"Toshkent — {current_year}"
-        p_foot.font.size = Pt(13)
-        p_foot.font.bold = True
-        p_foot.font.color.rgb = theme["text_muted"]
-        p_foot.font.name = "Arial"
-        p_foot.alignment = PP_ALIGN.CENTER
-        p_foot.space_before = Pt(14)
-    else:
-        student_name = teacher_name = uni_name = faculty_name = group_val = direction_val = ""
-
-    # ================= MAVZU SLAYDI (HERO MASTER SLIDE) =================
-    topic_slide_num = 2 if has_author else 1
+def _create_hero_slide(prs, blank_layout, theme, title_text, subtitle_text, total_slides, is_dark, custom_bg, images_map, lang_info=None):
+    """Foydalanuvchi muallif kiritmagan holatda 1-slayd uchun zamonaviy Hero Master Slide chizadi."""
+    if not lang_info:
+        lang_info = locales.get_slide_lang_info("uz")
     topic_slide = prs.slides.add_slide(blank_layout)
     if custom_bg and os.path.exists(custom_bg):
         topic_slide.shapes.add_picture(custom_bg, 0, 0, width=Inches(13.333), height=Inches(7.5))
@@ -1071,7 +914,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
     b_tag.fill.fore_color.rgb = theme["primary"]
     b_tag.line.fill.background()
     bp = b_tag.text_frame.paragraphs[0]
-    bp.text = "✦  ILMIY TAQDIMOT"
+    bp.text = f"✦  {lang_info.get('work_title', 'ILMIY TAQDIMOT')[:20]}"
     bp.font.size = Pt(11)
     bp.font.bold = True
     bp.font.color.rgb = theme["accent"]
@@ -1083,7 +926,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
     num_badge.fill.fore_color.rgb = theme["accent"]
     num_badge.line.fill.background()
     nb_p = num_badge.text_frame.paragraphs[0]
-    nb_p.text = f"{topic_slide_num:02d} / {total_slides:02d}"
+    nb_p.text = f"01 / {total_slides:02d}"
     nb_p.font.size = Pt(12)
     nb_p.font.bold = True
     nb_p.font.color.rgb = RGBColor(255, 255, 255)
@@ -1091,7 +934,6 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
 
     cover_img = images_map.get("cover") if images_map else None
     if cover_img and os.path.exists(cover_img):
-        # Left card layout with cover image
         t_box = topic_slide.shapes.add_textbox(Inches(0.9), Inches(1.25), Inches(7.0), Inches(1.8))
         t_tf = t_box.text_frame
         t_tf.word_wrap = True
@@ -1110,7 +952,6 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             p_sub.font.name = "Arial"
             p_sub.space_before = Pt(6)
 
-        # Pillars card on left
         card_l = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(3.25), Inches(7.0), Inches(3.8))
         card_l.fill.solid()
         card_l.fill.fore_color.rgb = theme["card_bg"]
@@ -1149,13 +990,11 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             r_txt.font.size = Pt(13)
             r_txt.font.color.rgb = theme["text_dark"]
 
-        # Hero Image on right with sleek border
         try:
             topic_slide.shapes.add_picture(cover_img, Inches(8.3), Inches(1.3), width=Inches(4.1), height=Inches(5.75))
         except Exception:
             pass
     else:
-        # Full width hero card
         card_full = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.3), Inches(11.533), Inches(5.75))
         card_full.fill.solid()
         card_full.fill.fore_color.rgb = theme["card_bg"]
@@ -1180,22 +1019,22 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             p_sub.font.size = Pt(16)
             p_sub.font.color.rgb = theme["text_muted"]
             p_sub.font.name = "Arial"
-            p_sub.alignment = PP_ALIGN.CENTER
             p_sub.space_before = Pt(8)
+            p_sub.alignment = PP_ALIGN.CENTER
 
-        # 3 Mini Pillar Cards inside
-        p_cols = [
-            ("MAQSADI", "Nazariy va amaliy asoslarni chuqur tahlil qilish"),
-            ("DOLZARBLIGI", "Sohadagi zamonaviy talablar va istiqbollar"),
-            ("NATIJALAR", "Ilmiy xulosalar va amaliy tavsiyalar majmuasi")
+        p_start_x = Inches(1.3)
+        p_w = Inches(3.35)
+        p_gap = Inches(0.32)
+        p_y = Inches(4.1)
+        p_h = Inches(2.5)
+
+        pillars = [
+            ("Mavzu Maqsadi", "Ushbu tadqiqotda mavzuning nazariy va amaliy asoslari tizimli yoritib beriladi."),
+            ("Dolzarbligi", "Zamonaviy rivojlanish bosqichida mazkur sohadagi masalalarga ilmiy yechim topish."),
+            ("Kutilayotgan Natija", "Aniq tahlillar, statistik ko'rsatkichlar va amaliy tavsiyalar majmuasi.")
         ]
-        p_w = Inches(3.4)
-        p_h = Inches(2.3)
-        p_gap = Inches(0.4)
-        p_start_x = Inches(1.4)
-        p_y = Inches(4.3)
 
-        for p_i, (p_title, p_body) in enumerate(p_cols):
+        for p_i, (p_title, p_body) in enumerate(pillars):
             px = p_start_x + p_i * (p_w + p_gap)
             p_card = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, px, p_y, p_w, p_h)
             p_card.fill.solid()
@@ -1219,8 +1058,10 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             pp2.font.size = Pt(13)
             pp2.font.color.rgb = theme["text_dark"]
             pp2.alignment = PP_ALIGN.CENTER
+    return topic_slide
 
-    # ================= 3. REJA / MUNDARIJA SLAYDI (INFOGRAPHIC CARDS) =================
+def _create_agenda_slide(prs, blank_layout, theme, content, slides_data, total_slides, custom_bg, lang_info):
+    """2-slayd sifatida Infografik Reja (Agenda / Mundarija) slaydi chizadi."""
     reja_slide = prs.slides.add_slide(blank_layout)
     if custom_bg and os.path.exists(custom_bg):
         reja_slide.shapes.add_picture(custom_bg, 0, 0, width=Inches(13.333), height=Inches(7.5))
@@ -1230,10 +1071,8 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         bg_reja.fill.fore_color.rgb = theme["bg_slide"]
         bg_reja.line.fill.background()
 
-    reja_slide_num = 3 if has_author else 2
-    _add_header(reja_slide, lang_info["agenda"], theme, slide_num=reja_slide_num, total_slides=total_slides, category=lang_info["agenda"].upper())
+    _add_header(reja_slide, lang_info["agenda"], theme, slide_num=2, total_slides=total_slides, category=lang_info["agenda"].upper())
 
-    # Reja / Agenda: qat'iy eng ko'pi 5 ta band
     raw_agenda = content.get("agenda")
     agenda_items = []
     if isinstance(raw_agenda, list) and raw_agenda:
@@ -1248,7 +1087,6 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             if cleaned:
                 agenda_items.append(cleaned)
 
-    # Agar agenda bo'lmasa, umumlashtirilgan 3-5 ta reja bandi tuzamiz:
     if not agenda_items:
         first_title = slides_data[0].get("title", "Kirish va dolzarblik") if slides_data else "Kirish va mavzuning dolzarbligi"
         agenda_items.append(re.sub(r"^\d+[\.\)\-\s]+", "", first_title))
@@ -1260,13 +1098,12 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         elif len(slides_data) == 2:
             mid = slides_data[1].get("title", "Asosiy tahliliy qism")
             agenda_items.append(re.sub(r"^\d+[\.\)\-\s]+", "", mid))
-        agenda_items.append("Xulosa va asosiy natijalar")
-        agenda_items.append("Foydalanilgan adabiyotlar va manbalar")
+        agenda_items.append(lang_info.get("conclusion", "Xulosa va asosiy natijalar"))
+        agenda_items.append(lang_info.get("references", "Foydalanilgan adabiyotlar va manbalar"))
 
     agenda_items = [a for a in agenda_items if a][:5]
-    content["agenda"] = agenda_items  # speech script uchun saqlaymiz
+    content["agenda"] = agenda_items
 
-    # Infographic Horizontal Cards Layout
     n_items = len(agenda_items)
     card_w = Inches(11.533)
     card_h = Inches(0.85 if n_items == 5 else 1.0)
@@ -1281,7 +1118,6 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         ag_card.line.color.rgb = theme["card_border"]
         ag_card.line.width = Pt(1.5)
 
-        # Number pill on left
         circ = reja_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.15), y + (card_h - Inches(0.55)) / 2, Inches(0.85), Inches(0.55))
         circ.fill.solid()
         circ.fill.fore_color.rgb = theme["accent"]
@@ -1293,7 +1129,6 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         cp.font.color.rgb = RGBColor(255, 255, 255)
         cp.alignment = PP_ALIGN.CENTER
 
-        # Agenda text
         ag_tb = reja_slide.shapes.add_textbox(Inches(2.2), y + (card_h - Inches(0.55)) / 2, Inches(9.3), Inches(0.55))
         ag_tf = ag_tb.text_frame
         ag_tf.word_wrap = True
@@ -1304,13 +1139,330 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         ag_p.font.color.rgb = theme["text_dark"]
         ag_p.font.name = "Arial"
 
-        # Sleek arrow indicator on right
         arr_b = reja_slide.shapes.add_textbox(Inches(11.8), y + (card_h - Inches(0.55)) / 2, Inches(0.5), Inches(0.55))
         arr_p = arr_b.text_frame.paragraphs[0]
         arr_p.text = "➔"
         arr_p.font.size = Pt(16)
         arr_p.font.bold = True
         arr_p.font.color.rgb = theme["accent"]
+    return reja_slide
+
+def _create_thanks_slide(prs, blank_layout, theme, custom_bg, is_white, is_dark, lang_info, presenter_str: str = ""):
+    """Yakuniy Minnatdorchilik slaydi chizadi."""
+    end_slide = prs.slides.add_slide(blank_layout)
+    if custom_bg and os.path.exists(custom_bg):
+        end_slide.shapes.add_picture(custom_bg, 0, 0, width=Inches(13.333), height=Inches(7.5))
+    else:
+        bg_end = end_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5))
+        bg_end.fill.solid()
+        if is_white:
+            bg_end.fill.fore_color.rgb = RGBColor(248, 250, 252)
+        else:
+            bg_end.fill.fore_color.rgb = theme["primary"]
+        bg_end.line.fill.background()
+
+    end_bar = end_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(0.35))
+    end_bar.fill.solid()
+    end_bar.fill.fore_color.rgb = theme["accent"]
+    end_bar.line.fill.background()
+
+    card_w = Inches(10.5)
+    card_h = Inches(5.2)
+    card_l = Inches(1.416)
+    card_t = Inches(1.3)
+
+    end_card = end_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, card_l, card_t, card_w, card_h)
+    end_card.fill.solid()
+    end_card.fill.fore_color.rgb = theme["card_bg"]
+    end_card.line.color.rgb = theme["accent"]
+    end_card.line.width = Pt(2.5)
+
+    end_box = end_slide.shapes.add_textbox(card_l + Inches(0.4), card_t + Inches(0.35), card_w - Inches(0.8), card_h - Inches(0.7))
+    end_tf = end_box.text_frame
+    end_tf.word_wrap = True
+    end_tf.margin_top = Inches(0.15)
+    end_tf.margin_bottom = Inches(0.15)
+    end_tf.margin_left = Inches(0.15)
+    end_tf.margin_right = Inches(0.15)
+
+    p_badge = end_tf.paragraphs[0]
+    p_badge.text = "✦  YAKUNIY MINNATDORCHILIK  ✦"
+    p_badge.font.size = Pt(13)
+    p_badge.font.bold = True
+    p_badge.font.color.rgb = theme["accent"]
+    p_badge.font.name = "Arial"
+    p_badge.alignment = PP_ALIGN.CENTER
+    p_badge.space_after = Pt(14)
+
+    ep1 = end_tf.add_paragraph()
+    ep1.text = lang_info["thanks"].upper()
+    ep1.font.size = Pt(38)
+    ep1.font.bold = True
+    ep1.font.color.rgb = theme["accent"] if is_dark else theme["primary"]
+    ep1.font.name = "Arial"
+    ep1.alignment = PP_ALIGN.CENTER
+    ep1.space_after = Pt(12)
+
+    ep2 = end_tf.add_paragraph()
+    ep2.text = lang_info.get("questions_welcome", "Savollar, fikr-mulohazalar va muhokama uchun tayyorman")
+    ep2.font.size = Pt(18)
+    ep2.font.bold = False
+    ep2.font.color.rgb = theme["accent"] if is_dark else theme.get("accent_secondary", theme["accent"])
+    ep2.font.name = "Arial"
+    ep2.alignment = PP_ALIGN.CENTER
+    ep2.space_after = Pt(16)
+
+    if presenter_str:
+        ep3 = end_tf.add_paragraph()
+        ep3.text = presenter_str
+        ep3.font.size = Pt(14)
+        ep3.font.bold = True
+        ep3.font.color.rgb = theme["text_dark"] if not is_dark else theme["white"]
+        ep3.font.name = "Arial"
+        ep3.alignment = PP_ALIGN.CENTER
+
+    return end_slide
+
+def create_pptx_file(content: dict, output_path: str, theme_name: str = "", images_map: dict = None, author_info: str = "", default_student_name: str = "", custom_bg: str = None, language: str = "", target_slide_count: int = 0) -> str:
+    """Creates a beautiful 16:9 PowerPoint file with student academic structure, author info, references, and closing slides."""
+    content = clean_data_structure(content)
+    lang_code = language or content.get("language", "uz")
+    lang_info = locales.get_slide_lang_info(lang_code)
+    if not theme_name or theme_name not in THEMES:
+        theme_name = content.get("theme", "blue")
+    theme = THEMES.get(theme_name, THEMES["blue"])
+    is_dark = (theme_name == "dark")
+    is_white = (theme_name == "white")
+
+    prs = Presentation()
+    prs.slide_width = Inches(13.333)
+    prs.slide_height = Inches(7.5)
+    blank_layout = prs.slide_layouts[6]
+    
+    title_text = content.get("title", "Taqdimot")
+    subtitle_text = content.get("subtitle", "")
+    slides_data = content.get("slides", [])
+    conclusion_points = content.get("conclusion", [])
+    raw_refs = content.get("references", [])
+    
+    has_author = bool(author_info and author_info.strip())
+
+    # Jami talab qilingan slaydlar soni (belgilangandan 1 list ham oshmasin)
+    if not target_slide_count or target_slide_count < 3:
+        target_slide_count = content.get("target_slide_count") or 8
+    total_slides = target_slide_count
+
+    has_agenda_slide = (total_slides >= 5)
+    intro_count = 2 if has_agenda_slide else 1
+
+    if total_slides <= 5:
+        closing_count = 1
+    elif total_slides <= 8:
+        closing_count = 2
+    else:
+        closing_count = 3
+
+    target_content_count = max(1, total_slides - (intro_count + closing_count))
+    slides_data = slides_data[:target_content_count]
+
+    if has_author:
+        # Structured student details
+        student_details = content.get("student_details") or smart_parse_student_details(author_info)
+        uni_name = (student_details.get("university") or "").strip()
+        faculty_name = (student_details.get("faculty") or "").strip()
+        student_name = (student_details.get("student") or "").strip()
+        direction_val = (student_details.get("direction") or "").strip()
+        group_val = (student_details.get("group") or "").strip()
+        teacher_name = (student_details.get("teacher") or "").strip()
+
+        student_name = clean_prefix(student_name, ["bajardi", "talaba", "talabasi", "muallif", "tayyorladi"])
+        teacher_name = clean_prefix(teacher_name, ["qabul qildi", "o'qituvchi", "oʻqituvchi", "ilmiy rahbar", "rahbar", "domla", "ustoz"])
+        uni_name = clean_prefix(uni_name, ["otm", "universitet", "institut"])
+        faculty_name = clean_prefix(faculty_name, ["fakultet", "fakulteti"])
+        group_val = clean_prefix(group_val, ["guruh", "guruhi", "kurs", "kursi"])
+        direction_val = clean_prefix(direction_val, ["yo'nalish", "yoʻnalishi"])
+
+        if not student_name and default_student_name:
+            student_name = default_student_name
+
+        # Display texts (OTM, Fakultet, Yoʻnalish, Guruh, Talaba, Ilmiy rahbar tagma-tag to'liq chiqadi)
+        display_uni = uni_name if uni_name else lang_info.get("uni_label", "Oliy taʼlim muassasasi")
+        display_fac = faculty_name if faculty_name else lang_info.get("faculty_label", "Fakultet va kafedra")
+        display_dir = direction_val if direction_val else lang_info.get("direction_label", "Taʼlim yoʻnalishi")
+        display_group = group_val if group_val else lang_info.get("group_label", "Akademik guruh")
+        display_student = student_name if student_name else lang_info.get("student_label", "Talaba (Muallif)")
+        display_teacher = teacher_name if teacher_name else lang_info.get("teacher_label", "Ilmiy rahbar / Oʻqituvchi")
+
+        # ================= 1. TITUL SLAYD (RASMIY TITUL VARAQASI) =================
+        slide = prs.slides.add_slide(blank_layout)
+        
+        # Background: Custom photo or theme color
+        if custom_bg and os.path.exists(custom_bg):
+            slide.shapes.add_picture(custom_bg, 0, 0, width=Inches(13.333), height=Inches(7.5))
+        else:
+            bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5))
+            bg.fill.solid()
+            if is_white:
+                bg.fill.fore_color.rgb = RGBColor(248, 250, 252)
+            else:
+                bg.fill.fore_color.rgb = theme["primary"]
+            bg.line.fill.background()
+
+        # Decorative top bar
+        bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(0.2))
+        bar.fill.solid()
+        bar.fill.fore_color.rgb = theme["accent"]
+        bar.line.fill.background()
+
+        # Top Ministry Header Text
+        top_tb = slide.shapes.add_textbox(Inches(1.0), Inches(0.35), Inches(11.333), Inches(0.65))
+        top_tf = top_tb.text_frame
+        top_tf.word_wrap = True
+        p_min = top_tf.paragraphs[0]
+        p_min.text = lang_info.get("ministry", "OʻZBEKISTON RESPUBLIKASI OLIY TAʼLIM, FAN VA INNOVATSIYALAR VAZIRLIGI")
+        p_min.font.size = Pt(13)
+        p_min.font.bold = True
+        p_min.font.color.rgb = theme["primary"] if is_white else theme["accent"]
+        p_min.font.name = "Arial"
+        p_min.alignment = PP_ALIGN.CENTER
+
+        # Slide number badge
+        num_tb = slide.shapes.add_textbox(Inches(10.5), Inches(0.35), Inches(2.2), Inches(0.5))
+        num_tf = num_tb.text_frame
+        num_p = num_tf.paragraphs[0]
+        num_p.text = f"01 / {total_slides:02d}"
+        num_p.font.size = Pt(14)
+        num_p.font.bold = True
+        num_p.font.color.rgb = theme["primary"] if is_white else theme["accent"]
+        num_p.alignment = PP_ALIGN.RIGHT
+
+        # Centered Academic Title Card on Slide 1
+        card_w = Inches(10.8)
+        card_h = Inches(5.6)
+        card_left = Inches(1.266)  # (13.333 - 10.8) / 2
+        card_top = Inches(1.15)
+
+        titul_card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, card_left, card_top, card_w, card_h)
+        titul_card.fill.solid()
+        if is_dark:
+            titul_card.fill.fore_color.rgb = RGBColor(30, 30, 35)
+            titul_card.line.color.rgb = theme["accent"]
+        elif custom_bg:
+            titul_card.fill.fore_color.rgb = RGBColor(255, 255, 255)
+            titul_card.line.color.rgb = theme["accent"]
+        else:
+            titul_card.fill.fore_color.rgb = theme.get("card_bg", RGBColor(255, 255, 255))
+            titul_card.line.color.rgb = theme.get("card_border", theme["accent"])
+        titul_card.line.width = Pt(2.0)
+
+        c_tf = titul_card.text_frame
+        c_tf.word_wrap = True
+        c_tf.margin_left = Inches(0.6)
+        c_tf.margin_right = Inches(0.6)
+        c_tf.margin_top = Inches(0.3)
+        c_tf.margin_bottom = Inches(0.3)
+
+        # Card Title
+        p_head = c_tf.paragraphs[0]
+        p_head.text = lang_info.get("work_title", "OLIY TAʼLIM MUASSASASI TALABASINING TAQDIMOT ISHI")
+        p_head.font.size = Pt(14)
+        p_head.font.bold = True
+        p_head.font.color.rgb = theme["accent"] if is_dark else theme["primary"]
+        p_head.font.name = "Arial"
+        p_head.alignment = PP_ALIGN.CENTER
+        p_head.space_after = Pt(8)
+
+        # Topic Title
+        p_topic = c_tf.add_paragraph()
+        topic_lbl = lang_info.get("topic_label", "Mavzu")
+        p_topic.text = f"{topic_lbl}: {remove_emojis(title_text)}"
+        p_topic.font.size = Pt(16)
+        p_topic.font.bold = True
+        p_topic.font.color.rgb = theme["accent"] if is_dark else theme["primary"]
+        p_topic.font.name = "Arial"
+        p_topic.alignment = PP_ALIGN.CENTER
+        p_topic.space_after = Pt(10)
+
+        # All fields tagma-tag (line-by-line stacked vertically)
+        fields = [
+            (lang_info.get("uni_label", "OTM (Taʼlim muassasasi)") + ":", display_uni),
+            (lang_info.get("faculty_label", "Fakultet (Kafedra)") + ":", display_fac),
+            (lang_info.get("direction_label", "Taʼlim yoʻnalishi") + ":", display_dir),
+            (lang_info.get("group_label", "Akademik guruh") + ":", display_group),
+            (lang_info.get("student_label", "Bajardi (Talaba)") + ":", display_student),
+            (lang_info.get("teacher_label", "Qabul qildi (Ilmiy rahbar)") + ":", display_teacher),
+        ]
+
+        for lbl, val in fields:
+            p_field = c_tf.add_paragraph()
+            p_field.space_after = Pt(10)
+            
+            r_lbl = p_field.add_run()
+            r_lbl.text = f"{lbl}   "
+            r_lbl.font.bold = True
+            r_lbl.font.size = Pt(15)
+            r_lbl.font.color.rgb = theme["accent"] if is_dark else theme["primary"]
+            r_lbl.font.name = "Arial"
+
+            r_val = p_field.add_run()
+            r_val.text = val
+            r_val.font.bold = True
+            r_val.font.size = Pt(15)
+            r_val.font.color.rgb = theme["text_dark"]
+            r_val.font.name = "Arial"
+
+        # Bottom footer: Toshkent - current year
+        current_year = datetime.now().year
+        p_foot = c_tf.add_paragraph()
+        city_label = lang_info.get("city_year", "Toshkent")
+        p_foot.text = f"{city_label} — {current_year}"
+        p_foot.font.size = Pt(13)
+        p_foot.font.bold = True
+        p_foot.font.color.rgb = theme["text_muted"]
+        p_foot.font.name = "Arial"
+        p_foot.alignment = PP_ALIGN.CENTER
+        p_foot.space_before = Pt(14)
+    else:
+        student_name = teacher_name = uni_name = faculty_name = group_val = direction_val = ""
+
+    # Slide 1: Agar muallif ma'lumotlari kiritilmagan bo'lsa, Hero Master Slide yaratiladi
+    if not has_author:
+        _create_hero_slide(prs, blank_layout, theme, title_text, subtitle_text, total_slides, is_dark, custom_bg, images_map, lang_info)
+
+    # Slide 2: Mundarija / Reja slaydi (agar jami slaydlar 5 yoki undan ortiq bo'lsa)
+    if has_agenda_slide:
+        _create_agenda_slide(prs, blank_layout, theme, content, slides_data, total_slides, custom_bg, lang_info)
+
+    # Agar sun'iy intellekt taqdim etgan mazmun slaydlari yetarli bo'lmasa, to'ldiramiz
+    while len(slides_data) < target_content_count:
+        pad_idx = len(slides_data) + 1
+        lang_name = lang_info.get("name", "")
+        if "Русский" in lang_name:
+            p_title = f"Практические аспекты и развитие темы ({pad_idx})"
+            p_pts = [
+                "Перспективы углубления научно-практических исследований.",
+                "Механизмы внедрения в практику и оценка эффективности.",
+                "Использование современных технологий и инноваций."
+            ]
+        elif "English" in lang_name:
+            p_title = f"Practical Applications & Insights ({pad_idx})"
+            p_pts = [
+                "Key perspectives and future research development.",
+                "Implementation mechanisms and performance analysis.",
+                "Application of modern technology and innovative practices."
+            ]
+        else:
+            p_title = f"Mavzuni rivojlantirish va amaliy tavsiyalar ({pad_idx})"
+            p_pts = [
+                "Mavzu bo'yicha ilmiy-amaliy tadqiqotlarni chuqurlashtirish istiqbollari.",
+                "Amaliyotga tatbiq etish mexanizmlari va samaradorlik ko'rsatkichlari.",
+                "Sohada zamonaviy axborot texnologiyalari va innovatsiyalardan foydalanish."
+            ]
+        slides_data.append({
+            "title": p_title,
+            "bullet_points": p_pts,
+            "layout": "standard"
+        })
 
     # ================= 3. ASOSIY MAZMUN SLAYDLARI =================
     for idx, s_data in enumerate(slides_data, 1):
@@ -1324,8 +1476,9 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             bg_c.line.fill.background()
 
         s_title = s_data.get("title", f"Boʻlim {idx}")
-        content_slide_num = idx + (3 if has_author else 2)
-        _add_header(c_slide, s_title, theme, slide_num=content_slide_num, total_slides=total_slides, category=f"BOʻLIM {idx}")
+        content_slide_num = len(prs.slides)
+        sec_lbl = lang_info.get("section_label", "BOʻLIM")
+        _add_header(c_slide, s_title, theme, slide_num=content_slide_num, total_slides=total_slides, category=f"{sec_lbl} {idx}")
 
         img_path = images_map.get(idx) if images_map else None
         bullets = s_data.get("bullet_points", [])
@@ -1561,61 +1714,6 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             text_frame = notes_slide.notes_text_frame
             text_frame.text = f"Ma'ruza nutqi:\n{notes}"
 
-    # ================= 5. XULOSA SLAYDI =================
-    concl_slide = prs.slides.add_slide(blank_layout)
-    if custom_bg and os.path.exists(custom_bg):
-        concl_slide.shapes.add_picture(custom_bg, 0, 0, width=Inches(13.333), height=Inches(7.5))
-    else:
-        bg_concl = concl_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5))
-        bg_concl.fill.solid()
-        bg_concl.fill.fore_color.rgb = theme["bg_slide"]
-        bg_concl.line.fill.background()
-
-    concl_num = len(slides_data) + (4 if has_author else 3)
-    _add_header(concl_slide, lang_info["conclusion"], theme, slide_num=concl_num, total_slides=total_slides, category=lang_info["conclusion"].upper())
-
-    concl_card = concl_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.75), Inches(11.533), Inches(5.25))
-    concl_card.fill.solid()
-    concl_card.fill.fore_color.rgb = theme["card_bg"]
-    concl_card.line.color.rgb = theme["card_border"]
-    concl_card.line.width = Pt(1.5)
-
-    concl_box = concl_slide.shapes.add_textbox(Inches(1.3), Inches(2.1), Inches(10.7), Inches(4.6))
-    concl_tf = concl_box.text_frame
-    concl_tf.word_wrap = True
-
-    if conclusion_points:
-        for c_idx, point in enumerate(conclusion_points):
-            _add_styled_bullet(concl_tf, point, theme, font_size=Pt(18), space_after=Pt(16), is_first=(c_idx == 0))
-    else:
-        p = concl_tf.paragraphs[0]
-        p.text = "Taqdimot mavzusi to'liq yoritildi va asosiy masalalar muhokama qilindi."
-        p.font.size = Pt(22)
-        p.font.color.rgb = theme["text_dark"]
-
-    # ================= 6. FOYDALANILGAN ADABIYOTLAR SLAYDI =================
-    ref_slide = prs.slides.add_slide(blank_layout)
-    if custom_bg and os.path.exists(custom_bg):
-        ref_slide.shapes.add_picture(custom_bg, 0, 0, width=Inches(13.333), height=Inches(7.5))
-    else:
-        bg_ref = ref_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5))
-        bg_ref.fill.solid()
-        bg_ref.fill.fore_color.rgb = theme["bg_slide"]
-        bg_ref.line.fill.background()
-
-    ref_num = len(slides_data) + (5 if has_author else 4)
-    _add_header(ref_slide, lang_info["references"], theme, slide_num=ref_num, total_slides=total_slides, category=lang_info["references"].upper())
-
-    ref_card = ref_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.75), Inches(11.533), Inches(5.25))
-    ref_card.fill.solid()
-    ref_card.fill.fore_color.rgb = theme["card_bg"]
-    ref_card.line.color.rgb = theme["card_border"]
-    ref_card.line.width = Pt(1.5)
-
-    ref_box = ref_slide.shapes.add_textbox(Inches(1.3), Inches(2.0), Inches(10.7), Inches(4.7))
-    ref_tf = ref_box.text_frame
-    ref_tf.word_wrap = True
-
     # References ro'yxatini tozalash va tekshirish
     clean_refs = []
     if isinstance(raw_refs, str):
@@ -1630,117 +1728,257 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         clean_refs = [str(v).strip() for v in raw_refs.values() if str(v).strip()]
 
     if len(clean_refs) < 3:
-        clean_refs = [
-            f"1. Oʻzbekiston Respublikasi qonun hujjatlari va davlat taʼlim standartlari toʻplami.",
-            f"2. {title_text} yoʻnalishi boʻyicha oliy taʼlim darsliklari va oʻquv qoʻllanmalari toʻplami.",
-            f"3. Xalqaro va respublika nufuzli ilmiy jurnallari materiallari (Scopus, Google Scholar, OAK).",
-            f"4. Davlat va xalqaro ochiq ilmiy-axborot resurslari hamda elektron kutubxona bazalari."
-        ]
-
-    font_sz = Pt(15 if len(clean_refs) > 4 else 17)
-    spacing = Pt(10 if len(clean_refs) > 4 else 14)
-
-    for r_idx, ref_text in enumerate(clean_refs):
-        p = ref_tf.paragraphs[0] if r_idx == 0 else ref_tf.add_paragraph()
-        t_cleaned = re.sub(r"^[\d\.\)\-\s•]+", "", remove_emojis(str(ref_text))).strip()
-        p.text = f"{r_idx + 1}.  {t_cleaned}"
-        p.font.size = font_sz
-        p.font.bold = False
-        p.font.color.rgb = theme["text_dark"]
-        p.font.name = "Arial"
-        p.space_after = spacing
-
-    # ================= 7. YAKUNIY MINNATDORCHILIK SLAYDI =================
-    end_slide = prs.slides.add_slide(blank_layout)
-    if custom_bg and os.path.exists(custom_bg):
-        end_slide.shapes.add_picture(custom_bg, 0, 0, width=Inches(13.333), height=Inches(7.5))
-    else:
-        bg_end = end_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5))
-        bg_end.fill.solid()
-        if is_white:
-            bg_end.fill.fore_color.rgb = RGBColor(248, 250, 252)
+        fb_refs = lang_info.get("fallback_refs", [])
+        if fb_refs:
+            clean_refs = [f"{i+1}. {r}" for i, r in enumerate(fb_refs)]
         else:
-            bg_end.fill.fore_color.rgb = theme["primary"]
-        bg_end.line.fill.background()
+            clean_refs = [
+                f"1. Oʻzbekiston Respublikasi qonun hujjatlari va davlat taʼlim standartlari toʻplami.",
+                f"2. {title_text} yoʻnalishi boʻyicha oliy taʼlim darsliklari va oʻquv qoʻllanmalari toʻplami.",
+                f"3. Xalqaro va respublika nufuzli ilmiy jurnallari materiallari (Scopus, Google Scholar, OAK).",
+                f"4. Davlat va xalqaro ochiq ilmiy-axborot resurslari hamda elektron kutubxona bazalari."
+            ]
 
-    # Top accent bar
-    end_bar = end_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(0.35))
-    end_bar.fill.solid()
-    end_bar.fill.fore_color.rgb = theme["accent"]
-    end_bar.line.fill.background()
-
-    # Center card background
-    card_w = Inches(10.5)
-    card_h = Inches(5.2)
-    card_l = Inches(1.416)
-    card_t = Inches(1.3)
-
-    end_card = end_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, card_l, card_t, card_w, card_h)
-    end_card.fill.solid()
-    end_card.fill.fore_color.rgb = theme["card_bg"]
-    end_card.line.color.rgb = theme["accent"]
-    end_card.line.width = Pt(2.5)
-
-    # Text box inside card (guarantees universal rendering across all Office viewers)
-    end_box = end_slide.shapes.add_textbox(card_l + Inches(0.4), card_t + Inches(0.35), card_w - Inches(0.8), card_h - Inches(0.7))
-    end_tf = end_box.text_frame
-    end_tf.word_wrap = True
-    end_tf.margin_top = Inches(0.15)
-    end_tf.margin_bottom = Inches(0.15)
-    end_tf.margin_left = Inches(0.15)
-    end_tf.margin_right = Inches(0.15)
-
-    # 1. Top badge/indicator
-    p_badge = end_tf.paragraphs[0]
-    p_badge.text = "✦  YAKUNIY MINNATDORCHILIK  ✦"
-    p_badge.font.size = Pt(13)
-    p_badge.font.bold = True
-    p_badge.font.color.rgb = theme["accent"]
-    p_badge.font.name = "Arial"
-    p_badge.alignment = PP_ALIGN.CENTER
-    p_badge.space_after = Pt(14)
-
-    # 2. Main "E'TIBORINGIZ UCHUN RAHMAT!" Title
-    ep1 = end_tf.add_paragraph()
-    ep1.text = lang_info["thanks"].upper()
-    ep1.font.size = Pt(38)
-    ep1.font.bold = True
-    ep1.font.color.rgb = theme["accent"] if is_dark else theme["primary"]
-    ep1.font.name = "Arial"
-    ep1.alignment = PP_ALIGN.CENTER
-    ep1.space_after = Pt(12)
-
-    # 3. Subtitle
-    ep2 = end_tf.add_paragraph()
-    ep2.text = "Savollar, fikr-mulohazalar va muhokama uchun tayyorman"
-    ep2.font.size = Pt(18)
-    ep2.font.bold = False
-    ep2.font.color.rgb = theme["accent"] if is_dark else theme.get("accent_secondary", theme["accent"])
-    ep2.font.name = "Arial"
-    ep2.alignment = PP_ALIGN.CENTER
-    ep2.space_after = Pt(16)
-
-    # 4. Presenter / University info (if present)
+    presenter_parts = []
     if has_author:
-        presenter_parts = []
+        done_by_lbl = lang_info.get("done_by", "Taqdimotchi")
+        acc_by_lbl = lang_info.get("accepted_by", "Ilmiy rahbar")
         if student_name:
-            presenter_parts.append(f"Taqdimotchi: {student_name}")
+            presenter_parts.append(f"{done_by_lbl}: {student_name}")
         elif author_info:
             first_line = author_info.splitlines()[0].strip()
-            presenter_parts.append(f"Taqdimotchi: {first_line}")
+            presenter_parts.append(f"{done_by_lbl}: {first_line}")
         if teacher_name:
-            presenter_parts.append(f"Ilmiy rahbar: {teacher_name}")
+            presenter_parts.append(f"{acc_by_lbl}: {teacher_name}")
         if uni_name:
             presenter_parts.append(uni_name)
+    presenter_str = "  |  ".join(presenter_parts)
 
-        if presenter_parts:
-            ep3 = end_tf.add_paragraph()
-            ep3.text = "  |  ".join(presenter_parts)
-            ep3.font.size = Pt(14)
-            ep3.font.bold = True
-            ep3.font.color.rgb = theme["text_dark"] if not is_dark else theme["white"]
-            ep3.font.name = "Arial"
-            ep3.alignment = PP_ALIGN.CENTER
+    # ================= 4. YAKUNIY SLAYDLAR (QAT'IY HISOB-KITOB ASOSIDA) =================
+    if closing_count == 1:
+        # total_slides <= 5 bo'lganda: Yagona birlashtirilgan Xulosa va Minnatdorchilik slaydi
+        end_slide = prs.slides.add_slide(blank_layout)
+        if custom_bg and os.path.exists(custom_bg):
+            end_slide.shapes.add_picture(custom_bg, 0, 0, width=Inches(13.333), height=Inches(7.5))
+        else:
+            bg_end = end_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5))
+            bg_end.fill.solid()
+            bg_end.fill.fore_color.rgb = theme["bg_slide"]
+            bg_end.line.fill.background()
+
+        concl_hdr = lang_info.get("concl_title", "Xulosa va Yakun")
+        _add_header(end_slide, concl_hdr, theme, slide_num=len(prs.slides), total_slides=total_slides, category=concl_hdr.upper())
+
+        # Top Card: Xulosa
+        card_t = end_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.6), Inches(11.533), Inches(2.5))
+        card_t.fill.solid()
+        card_t.fill.fore_color.rgb = theme["card_bg"]
+        card_t.line.color.rgb = theme["card_border"]
+        card_t.line.width = Pt(1.5)
+
+        t_tf = card_t.text_frame
+        t_tf.word_wrap = True
+        t_tf.margin_left = Inches(0.4)
+        t_tf.margin_top = Inches(0.2)
+        t_tf.margin_right = Inches(0.4)
+        p_ch = t_tf.paragraphs[0]
+        p_ch.text = lang_info.get("main_conclusions", "✦  ASOSIY ILMIY-AMALIY XULOSALAR")
+        p_ch.font.size = Pt(14)
+        p_ch.font.bold = True
+        p_ch.font.color.rgb = theme["accent"]
+        p_ch.space_after = Pt(8)
+
+        points = conclusion_points[:2] if conclusion_points else [
+            "Mavzu boʻyicha belgilangan barcha vazifalar toʻliq yoritildi va tahlil qilindi.",
+            "Olingan natijalar sohaning nazariy va amaliy rivojlanishi uchun muhim ahamiyat kasb etadi."
+        ]
+        for pt in points:
+            _add_styled_bullet(t_tf, pt, theme, font_size=Pt(14), space_after=Pt(6))
+
+        # Bottom Card: E'tiboringiz uchun rahmat
+        card_b = end_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(4.35), Inches(11.533), Inches(2.65))
+        card_b.fill.solid()
+        card_b.fill.fore_color.rgb = theme["card_bg"]
+        card_b.line.color.rgb = theme["accent"]
+        card_b.line.width = Pt(2.0)
+
+        b_tf = card_b.text_frame
+        b_tf.word_wrap = True
+        bp1 = b_tf.paragraphs[0]
+        bp1.text = lang_info["thanks"].upper()
+        bp1.font.size = Pt(30)
+        bp1.font.bold = True
+        bp1.font.color.rgb = theme["accent"] if is_dark else theme["primary"]
+        bp1.alignment = PP_ALIGN.CENTER
+        bp1.space_before = Pt(8)
+        bp1.space_after = Pt(6)
+
+        bp2 = b_tf.add_paragraph()
+        bp2.text = lang_info.get("questions_welcome", "Savollar, fikr-mulohazalar va muhokama uchun tayyorman")
+        bp2.font.size = Pt(15)
+        bp2.font.color.rgb = theme["accent"] if is_dark else theme.get("accent_secondary", theme["accent"])
+        bp2.alignment = PP_ALIGN.CENTER
+        bp2.space_after = Pt(8)
+
+        if presenter_str:
+            bp3 = b_tf.add_paragraph()
+            bp3.text = presenter_str
+            bp3.font.size = Pt(13)
+            bp3.font.bold = True
+            bp3.font.color.rgb = theme["text_dark"] if not is_dark else theme["white"]
+            bp3.alignment = PP_ALIGN.CENTER
+
+    elif closing_count == 2:
+        # 6 <= total_slides <= 8: Slide N-1 (Xulosa va Manbalar) + Slide N (Yakuniy Minnatdorchilik)
+        concl_slide = prs.slides.add_slide(blank_layout)
+        if custom_bg and os.path.exists(custom_bg):
+            concl_slide.shapes.add_picture(custom_bg, 0, 0, width=Inches(13.333), height=Inches(7.5))
+        else:
+            bg_concl = concl_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5))
+            bg_concl.fill.solid()
+            bg_concl.fill.fore_color.rgb = theme["bg_slide"]
+            bg_concl.line.fill.background()
+
+        concl_refs_hdr = lang_info.get("concl_and_refs", "Xulosa va Foydalanilgan manbalar")
+        _add_header(concl_slide, concl_refs_hdr, theme, slide_num=len(prs.slides), total_slides=total_slides, category=concl_refs_hdr.upper())
+
+        # Left Card: Xulosa
+        card_l = concl_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.75), Inches(5.6), Inches(5.25))
+        card_l.fill.solid()
+        card_l.fill.fore_color.rgb = theme["card_bg"]
+        card_l.line.color.rgb = theme["card_border"]
+        card_l.line.width = Pt(1.5)
+
+        cl_tf = card_l.text_frame
+        cl_tf.word_wrap = True
+        cl_tf.margin_left = Inches(0.3)
+        cl_tf.margin_top = Inches(0.25)
+        cl_tf.margin_right = Inches(0.3)
+        p_lh = cl_tf.paragraphs[0]
+        p_lh.text = lang_info.get("main_conclusions", "✦  ASOSIY XULOSALAR")
+        p_lh.font.size = Pt(16)
+        p_lh.font.bold = True
+        p_lh.font.color.rgb = theme["accent"]
+        p_lh.space_after = Pt(12)
+
+        points = conclusion_points[:4] if conclusion_points else [
+            "Mavzu boʻyicha belgilangan barcha vazifalar toʻliq yoritildi va tahlil qilindi.",
+            "Olingan natijalar sohaning nazariy va amaliy rivojlanishi uchun muhim ahamiyat kasb etadi.",
+            "Tadqiqot natijasida amaliyotga tatbiq qilish mumkin boʻlgan takliflar shakllantirildi."
+        ]
+        for pt in points:
+            _add_styled_bullet(cl_tf, pt, theme, font_size=Pt(14), space_after=Pt(10))
+
+        # Right Card: Adabiyotlar
+        card_r = concl_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(6.8), Inches(1.75), Inches(5.6), Inches(5.25))
+        card_r.fill.solid()
+        card_r.fill.fore_color.rgb = theme["card_bg"]
+        card_r.line.color.rgb = theme["card_border"]
+        card_r.line.width = Pt(1.5)
+
+        cr_tf = card_r.text_frame
+        cr_tf.word_wrap = True
+        cr_tf.margin_left = Inches(0.3)
+        cr_tf.margin_top = Inches(0.25)
+        cr_tf.margin_right = Inches(0.3)
+        p_rh = cr_tf.paragraphs[0]
+        p_rh.text = f"✦  {lang_info.get('references', 'FOYDALANILGAN MANBALAR').upper()}"
+        p_rh.font.size = Pt(16)
+        p_rh.font.bold = True
+        p_rh.font.color.rgb = theme["accent"]
+        p_rh.space_after = Pt(12)
+        p_rh.font.size = Pt(16)
+        p_rh.font.bold = True
+        p_rh.font.color.rgb = theme["accent"]
+        p_rh.space_after = Pt(12)
+
+        for r_idx, ref_text in enumerate(clean_refs[:4], 1):
+            p = cr_tf.add_paragraph()
+            t_cleaned = re.sub(r"^[\d\.\)\-\s•]+", "", remove_emojis(str(ref_text))).strip()
+            p.text = f"{r_idx}.  {t_cleaned}"
+            p.font.size = Pt(13)
+            p.font.color.rgb = theme["text_dark"]
+            p.font.name = "Arial"
+            p.space_after = Pt(10)
+
+        # Slide N: Yakuniy Minnatdorchilik
+        _create_thanks_slide(prs, blank_layout, theme, custom_bg, is_white, is_dark, lang_info, presenter_str)
+
+    else:
+        # total_slides >= 9: Slide N-2 (Xulosa) + Slide N-1 (Adabiyotlar) + Slide N (Yakuniy Minnatdorchilik)
+        concl_slide = prs.slides.add_slide(blank_layout)
+        if custom_bg and os.path.exists(custom_bg):
+            concl_slide.shapes.add_picture(custom_bg, 0, 0, width=Inches(13.333), height=Inches(7.5))
+        else:
+            bg_concl = concl_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5))
+            bg_concl.fill.solid()
+            bg_concl.fill.fore_color.rgb = theme["bg_slide"]
+            bg_concl.line.fill.background()
+
+        _add_header(concl_slide, lang_info["conclusion"], theme, slide_num=len(prs.slides), total_slides=total_slides, category=lang_info["conclusion"].upper())
+
+        concl_card = concl_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.75), Inches(11.533), Inches(5.25))
+        concl_card.fill.solid()
+        concl_card.fill.fore_color.rgb = theme["card_bg"]
+        concl_card.line.color.rgb = theme["card_border"]
+        concl_card.line.width = Pt(1.5)
+
+        concl_box = concl_slide.shapes.add_textbox(Inches(1.3), Inches(2.1), Inches(10.7), Inches(4.6))
+        concl_tf = concl_box.text_frame
+        concl_tf.word_wrap = True
+
+        if conclusion_points:
+            for c_idx, point in enumerate(conclusion_points):
+                _add_styled_bullet(concl_tf, point, theme, font_size=Pt(18), space_after=Pt(16), is_first=(c_idx == 0))
+        else:
+            p = concl_tf.paragraphs[0]
+            p.text = "Taqdimot mavzusi to'liq yoritildi va asosiy masalalar muhokama qilindi."
+            p.font.size = Pt(22)
+            p.font.color.rgb = theme["text_dark"]
+
+        # Slide N-1: Foydalanilgan adabiyotlar
+        ref_slide = prs.slides.add_slide(blank_layout)
+        if custom_bg and os.path.exists(custom_bg):
+            ref_slide.shapes.add_picture(custom_bg, 0, 0, width=Inches(13.333), height=Inches(7.5))
+        else:
+            bg_ref = ref_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5))
+            bg_ref.fill.solid()
+            bg_ref.fill.fore_color.rgb = theme["bg_slide"]
+            bg_ref.line.fill.background()
+
+        _add_header(ref_slide, lang_info["references"], theme, slide_num=len(prs.slides), total_slides=total_slides, category=lang_info["references"].upper())
+
+        ref_card = ref_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.75), Inches(11.533), Inches(5.25))
+        ref_card.fill.solid()
+        ref_card.fill.fore_color.rgb = theme["card_bg"]
+        ref_card.line.color.rgb = theme["card_border"]
+        ref_card.line.width = Pt(1.5)
+
+        ref_box = ref_slide.shapes.add_textbox(Inches(1.3), Inches(2.0), Inches(10.7), Inches(4.7))
+        ref_tf = ref_box.text_frame
+        ref_tf.word_wrap = True
+
+        font_sz = Pt(15 if len(clean_refs) > 4 else 17)
+        spacing = Pt(10 if len(clean_refs) > 4 else 14)
+
+        for r_idx, ref_text in enumerate(clean_refs):
+            p = ref_tf.paragraphs[0] if r_idx == 0 else ref_tf.add_paragraph()
+            t_cleaned = re.sub(r"^[\d\.\)\-\s•]+", "", remove_emojis(str(ref_text))).strip()
+            p.text = f"{r_idx + 1}.  {t_cleaned}"
+            p.font.size = font_sz
+            p.font.bold = False
+            p.font.color.rgb = theme["text_dark"]
+            p.font.name = "Arial"
+            p.space_after = spacing
+
+        # Slide N: Yakuniy Minnatdorchilik
+        _create_thanks_slide(prs, blank_layout, theme, custom_bg, is_white, is_dark, lang_info, presenter_str)
+
+    # Belgilangandan 1 list ham oshmasin: ortiqcha slaydlar bo'lsa oxiridan tozalaymiz
+    while len(prs.slides) > total_slides:
+        rId = prs.slides._sldIdLst[-1].rId
+        prs.part.drop_rel(rId)
+        del prs.slides._sldIdLst[-1]
 
     # Save to disk
     if os.path.dirname(output_path):
@@ -1748,7 +1986,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
     prs.save(output_path)
     return output_path
 
-def generate_speech_script(content: dict, author_info: str = "", default_student_name: str = "") -> str:
+def generate_speech_script(content: dict, author_info: str = "", default_student_name: str = "", target_slide_count: int = 0) -> str:
     """Talabalar uchun taqdimotni doskada himoya qilish bo'yicha to'liq nutq matnini tayyorlaydi."""
     content = clean_data_structure(content)
     title = content.get("title", "Taqdimot")
@@ -1756,7 +1994,24 @@ def generate_speech_script(content: dict, author_info: str = "", default_student
     slides = content.get("slides", [])
     conclusion = content.get("conclusion", [])
     has_author = bool(author_info and author_info.strip())
-    
+
+    if not target_slide_count or target_slide_count < 3:
+        target_slide_count = content.get("target_slide_count") or 8
+    total_slides = target_slide_count
+
+    has_agenda_slide = (total_slides >= 5)
+    intro_count = 2 if has_agenda_slide else 1
+
+    if total_slides <= 5:
+        closing_count = 1
+    elif total_slides <= 8:
+        closing_count = 2
+    else:
+        closing_count = 3
+
+    target_content_count = max(1, total_slides - (intro_count + closing_count))
+    slides = slides[:target_content_count]
+
     student_details = content.get("student_details") or (smart_parse_student_details(author_info) if has_author else {})
     uni = (student_details.get("university") or "").strip() if has_author else ""
     fac = (student_details.get("faculty") or "").strip() if has_author else ""
@@ -1766,11 +2021,11 @@ def generate_speech_script(content: dict, author_info: str = "", default_student
     teach = (student_details.get("teacher") or "").strip() if has_author else ""
     direction_val = (student_details.get("direction") or "").strip() if has_author else ""
     group_val = (student_details.get("group") or "").strip() if has_author else ""
-    
+
     dir_grp = direction_val
     if group_val:
         dir_grp = f"{dir_grp} ({group_val})" if dir_grp else group_val
-    
+
     lines = []
     lines.append("TAQDIMOT HIMOYASI UCHUN NUTQ MATNI (DOKLAD)")
     lines.append(f"Mavzu: {title}")
@@ -1787,13 +2042,13 @@ def generate_speech_script(content: dict, author_info: str = "", default_student
             lines.append(f"Talaba (bajardi): {stud}")
         if teach:
             lines.append(f"Oʻqituvchi (qabul qildi): {teach}")
-        
+
     lines.append("=" * 45)
     lines.append("")
-    
-    # 1. Titul (faqat muallif kiritilgan bo'lsa)
+
+    # 1-Slayd: Titul yoki Mavzu
     if has_author:
-        lines.append("1-SLAYD: TITUL VA TALABA MA'LUMOTLARI")
+        lines.append("1-SLAYD: RASMIY TITUL VARAQASI VA TAQDIMOT MAVZUSI")
         intro_parts = []
         if uni:
             intro_parts.append(uni)
@@ -1803,80 +2058,104 @@ def generate_speech_script(content: dict, author_info: str = "", default_student
             intro_parts.append(f"{dir_grp} talabasi")
         if stud:
             intro_parts.append(stud)
-            
+
         intro_who = " ".join(intro_parts)
         who_clause = f"Men {intro_who}. " if intro_who else ""
         teach_clause = f"oʻqituvchim (ilmiy rahbarim) {teach} rahbarligida tayyorlangan " if teach else ""
 
-        lines.append(f"«Assalomu alaykum, hurmatli ustozlar va qadrli talabalar!")
-        lines.append(f"{who_clause}Sizlarning eʼtiboringizga {teach_clause}ilmiy taqdimotimni himoya qilish uchun havola etmoqdaman.»\n")
-    
-    # Mavzu
-    mavzu_slide_num = 2 if has_author else 1
-    lines.append(f"{mavzu_slide_num}-SLAYD: TAQDIMOT MAVZUSI VA MAQSADI")
-    if not has_author:
+        lines.append("«Assalomu alaykum, hurmatli ustozlar va qadrli talabalar!")
+        lines.append(f"{who_clause}Sizlarning eʼtiboringizga {teach_clause}'{title}' mavzusidagi ilmiy taqdimotimni himoya qilish uchun havola etmoqdaman.")
+        lines.append("Ushbu mavzuning dolzarbligi shundaki, zamonaviy davrda bu masalani chuqur oʻrganish, mavjud muammolarni tahlil qilish va istiqbolli yechimlarni topish muhim amaliy ahamiyatga egadir.»\n")
+    else:
+        lines.append("1-SLAYD: TAQDIMOT MAVZUSI VA MAQSADI")
         lines.append("«Assalomu alaykum, hurmatli tinglovchilar!")
         lines.append(f"Bugungi taqdimotimiz mavzusi: '{title}'.")
-    else:
-        lines.append(f"«Bugungi taqdimotimiz mavzusi: '{title}'.")
-    if subtitle:
-        lines.append(f"Yoʻnalish va soha: {subtitle}.")
-    lines.append("Ushbu mavzuning dolzarbligi shundaki, zamonaviy davrda bu masalani chuqur oʻrganish, mavjud muammolarni tahlil qilish va istiqbolli yechimlarni topish muhim amaliy ahamiyatga egadir.»\n")
+        if subtitle:
+            lines.append(f"Yoʻnalish va soha: {subtitle}.")
+        lines.append("Ushbu mavzuning dolzarbligi shundaki, zamonaviy davrda bu masalani chuqur oʻrganish, mavjud muammolarni tahlil qilish va istiqbolli yechimlarni topish muhim amaliy ahamiyatga egadir.»\n")
 
-    # Reja
-    reja_slide_num = 3 if has_author else 2
-    lines.append(f"{reja_slide_num}-SLAYD: TAQDIMOT REJASI")
-    lines.append("«Taqdimotimiz reja asosida tizimli ravishda quyidagi asosiy yoʻnalishlar boʻyicha koʻrib chiqiladi:")
-    speech_agenda = content.get("agenda")
-    if not speech_agenda:
-        speech_agenda = [re.sub(r"^\d+[\.\)\-\s]+", "", s.get("title", f"Boʻlim {i}")) for i, s in enumerate(slides[:3], 1)]
-        speech_agenda.append("Xulosa va Asosiy Natijalar")
-        speech_agenda.append("Foydalanilgan Adabiyotlar")
-    for i, plan_item in enumerate(speech_agenda[:5], 1):
-        lines.append(f"   {i}. {plan_item}")
-    lines.append("Endi esa bevosita rejamizdagi asosiy mazmuniy slaydlarga oʻtsak.»\n")
-    
+    # 2-Slayd: Reja (agar total_slides >= 5 bo'lsa)
+    current_slide_num = 1
+    if has_agenda_slide:
+        current_slide_num = 2
+        lines.append("2-SLAYD: TAQDIMOT REJASI (MUNDARIJA)")
+        lines.append("«Taqdimotimiz reja asosida tizimli ravishda quyidagi asosiy yoʻnalishlar boʻyicha koʻrib chiqiladi:")
+        speech_agenda = content.get("agenda")
+        if not speech_agenda:
+            speech_agenda = [re.sub(r"^\d+[\.\)\-\s]+", "", s.get("title", f"Boʻlim {i}")) for i, s in enumerate(slides[:3], 1)]
+            speech_agenda.append("Xulosa va Asosiy Natijalar")
+            speech_agenda.append("Foydalanilgan Adabiyotlar")
+        for i, plan_item in enumerate(speech_agenda[:5], 1):
+            lines.append(f"   {i}. {plan_item}")
+        lines.append("Endi esa bevosita rejamizdagi asosiy mazmuniy slaydlarga oʻtsak.»\n")
+
     # Mazmun slaydlari
-    content_offset = 3 if has_author else 2
     for i, s in enumerate(slides, 1):
+        current_slide_num += 1
         s_title = s.get("title", f"Boʻlim {i}")
         notes = s.get("speaker_notes", "")
         bullets = s.get("bullet_points", [])
-        lines.append(f"{i + content_offset}-SLAYD: {s_title.upper()}")
+        lines.append(f"{current_slide_num}-SLAYD: {s_title.upper()}")
         if notes:
             lines.append(f"«{notes}»")
         else:
             bullets_text = "; ".join(bullets[:3])
             lines.append(f"«Ushbu slaydda {s_title} masalasiga toʻxtalib oʻtamiz. Xususan: {bullets_text} kabi muhim omillar taʼkidlab oʻtildi.»")
         lines.append("")
-        
-    # Xulosa
-    concl_offset = 4 if has_author else 3
-    lines.append(f"{len(slides) + concl_offset}-SLAYD: XULOSA")
-    lines.append("«Oʻtkazilgan tahlillar va oʻrganishlar asosida quyidagi xulosalarga keldik:")
-    if conclusion:
-        for c in conclusion:
-            lines.append(f" • {c}")
-    else:
-        lines.append(" • Mavzu doirasida barcha qoʻyilgan vazifalar toʻliq yoritib berildi.")
-    lines.append("Ushbu natijalar mavzuning nazariy va amaliy jihatdan dolzarbligini tasdiqlaydi.»\n")
-    
-    # Adabiyotlar
-    ref_offset = 5 if has_author else 4
-    lines.append(f"{len(slides) + ref_offset}-SLAYD: FOYDALANILGAN ADABIYOTLAR")
-    lines.append("«Taqdimotni tayyorlashda quyidagi asosiy ilmiy darsliklar va rasmiy manbalardan foydalanildi:")
-    raw_refs = content.get("references", [])
-    if isinstance(raw_refs, str):
-        raw_refs = [r.strip() for r in raw_refs.split("\n") if r.strip()]
-    for r_idx, ref_text in enumerate(raw_refs[:5], 1):
-        t_cleaned = re.sub(r"^[\d\.\)\-\s•]+", "", str(ref_text)).strip()
-        lines.append(f"   {r_idx}. {t_cleaned}")
-    lines.append("Ushbu manbalar mavzuning ilmiy asoslanganligini taʼminlaydi.»\n")
 
-    # Yakun
-    lines.append("YAKUNIY SOʻZ:")
-    lines.append("«Eʼtiboringiz uchun katta rahmat! Mavzu yuzasidan barcha savollaringiz va fikrlaringizga mamnuniyat bilan javob berishga tayyorman.»")
-    
+    # Yakuniy slaydlar
+    if closing_count == 1:
+        current_slide_num += 1
+        lines.append(f"{current_slide_num}-SLAYD: XULOSA VA YAKUNIY SOʻZ")
+        lines.append("«Oʻtkazilgan tahlillar va oʻrganishlar asosida quyidagi xulosalarga keldik:")
+        if conclusion:
+            for c in conclusion[:3]:
+                lines.append(f" • {c}")
+        else:
+            lines.append(" • Mavzu doirasida barcha qoʻyilgan vazifalar toʻliq yoritib berildi.")
+        lines.append("Eʼtiboringiz uchun katta rahmat! Mavzu yuzasidan barcha savollaringiz va fikrlaringizga mamnuniyat bilan javob berishga tayyorman.»")
+
+    elif closing_count == 2:
+        current_slide_num += 1
+        lines.append(f"{current_slide_num}-SLAYD: XULOSA VA ILMIY MANBALAR")
+        lines.append("«Oʻtkazilgan tahlillar va oʻrganishlar asosida quyidagi xulosalarga keldik:")
+        if conclusion:
+            for c in conclusion[:3]:
+                lines.append(f" • {c}")
+        else:
+            lines.append(" • Mavzu doirasida barcha qoʻyilgan vazifalar toʻliq yoritib berildi.")
+        lines.append("Ushbu tadqiqotda asosiy ilmiy adabiyotlar va davlat meʼyoriy manbalaridan foydalanildi.»\n")
+
+        current_slide_num += 1
+        lines.append(f"{current_slide_num}-SLAYD: YAKUNIY MINNATDORCHILIK")
+        lines.append("«Eʼtiboringiz uchun katta rahmat! Mavzu yuzasidan barcha savollaringiz va fikrlaringizga mamnuniyat bilan javob berishga tayyorman.»")
+
+    else:
+        current_slide_num += 1
+        lines.append(f"{current_slide_num}-SLAYD: XULOSA")
+        lines.append("«Oʻtkazilgan tahlillar va oʻrganishlar asosida quyidagi xulosalarga keldik:")
+        if conclusion:
+            for c in conclusion:
+                lines.append(f" • {c}")
+        else:
+            lines.append(" • Mavzu doirasida barcha qoʻyilgan vazifalar toʻliq yoritib berildi.")
+        lines.append("Ushbu natijalar mavzuning nazariy va amaliy jihatdan dolzarbligini tasdiqlaydi.»\n")
+
+        current_slide_num += 1
+        lines.append(f"{current_slide_num}-SLAYD: FOYDALANILGAN ADABIYOTLAR")
+        lines.append("«Taqdimotni tayyorlashda quyidagi asosiy ilmiy darsliklar va rasmiy manbalardan foydalanildi:")
+        raw_refs = content.get("references", [])
+        if isinstance(raw_refs, str):
+            raw_refs = [r.strip() for r in raw_refs.split("\n") if r.strip()]
+        for r_idx, ref_text in enumerate(raw_refs[:5], 1):
+            t_cleaned = re.sub(r"^[\d\.\)\-\s•]+", "", str(ref_text)).strip()
+            lines.append(f"   {r_idx}. {t_cleaned}")
+        lines.append("Ushbu manbalar mavzuning ilmiy asoslanganligini taʼminlaydi.»\n")
+
+        current_slide_num += 1
+        lines.append(f"{current_slide_num}-SLAYD: YAKUNIY MINNATDORCHILIK")
+        lines.append("«Eʼtiboringiz uchun katta rahmat! Mavzu yuzasidan barcha savollaringiz va fikrlaringizga mamnuniyat bilan javob berishga tayyorman.»")
+
     return "\n".join(lines)
 
 

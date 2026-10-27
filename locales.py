@@ -23,7 +23,28 @@ SLIDE_LANGUAGES = {
         "references": "Foydalanilgan adabiyotlar",
         "done_by": "Bajardi",
         "accepted_by": "Qabul qildi",
-        "intro_speaker": "Hurmatli ustoz va talabalar, ushbu taqdimot mavzusi:"
+        "intro_speaker": "Hurmatli ustoz va talabalar, ushbu taqdimot mavzusi:",
+        "ministry": "OʻZBEKISTON RESPUBLIKASI OLIY TAʼLIM, FAN VA INNOVATSIYALAR VAZIRLIGI",
+        "work_title": "OLIY TAʼLIM MUASSASASI TALABASINING TAQDIMOT ISHI",
+        "topic_label": "Mavzu",
+        "uni_label": "OTM (Taʼlim muassasasi)",
+        "faculty_label": "Fakultet (Kafedra)",
+        "direction_label": "Taʼlim yoʻnalishi",
+        "group_label": "Akademik guruh",
+        "student_label": "Bajardi (Talaba)",
+        "teacher_label": "Qabul qildi (Ilmiy rahbar)",
+        "city_year": "Toshkent",
+        "section_label": "BOʻLIM",
+        "concl_title": "Xulosa va Yakun",
+        "concl_and_refs": "Xulosa va Foydalanilgan manbalar",
+        "main_conclusions": "✦  ASOSIY ILMIY-AMALIY XULOSALAR",
+        "questions_welcome": "Savollar, fikr-mulohazalar va muhokama uchun tayyorman",
+        "fallback_refs": [
+            "Oʻzbekiston Respublikasi qonun hujjatlari va davlat taʼlim standartlari toʻplami.",
+            "Mavzu yoʻnalishi boʻyicha oliy taʼlim darsliklari va oʻquv qoʻllanmalari toʻplami.",
+            "Xalqaro va respublika nufuzli ilmiy jurnallari materiallari (Scopus, Google Scholar, OAK).",
+            "Davlat va xalqaro ochiq ilmiy-axborot resurslari hamda elektron kutubxona bazalari."
+        ]
     },
     "ru": {
         "name": "🇷🇺 Русский",
@@ -34,7 +55,28 @@ SLIDE_LANGUAGES = {
         "references": "Список использованной литературы",
         "done_by": "Выполнил(а)",
         "accepted_by": "Принял(а)",
-        "intro_speaker": "Уважаемые преподаватели и студенты, тема презентации:"
+        "intro_speaker": "Уважаемые преподаватели и студенты, тема презентации:",
+        "ministry": "МИНИСТЕРСТВО ВЫСШЕГО ОБРАЗОВАНИЯ, НАУКИ И ИННОВАЦИЙ",
+        "work_title": "ПРЕЗЕНТАЦИОННАЯ РАБОТА СТУДЕНТА ВУЗА",
+        "topic_label": "Тема",
+        "uni_label": "ВУЗ (Учебное заведение)",
+        "faculty_label": "Факультет (Кафедра)",
+        "direction_label": "Направление обучения",
+        "group_label": "Академическая группа",
+        "student_label": "Выполнил(а) (Студент)",
+        "teacher_label": "Принял(а) (Научный руководитель)",
+        "city_year": "Ташкент",
+        "section_label": "РАЗДЕЛ",
+        "concl_title": "Заключение и выводы",
+        "concl_and_refs": "Заключение и список литературы",
+        "main_conclusions": "✦  ОСНОВНЫЕ НАУЧНО-ПРАКТИЧЕСКИЕ ВЫВОДЫ",
+        "questions_welcome": "Готов(а) ответить на ваши вопросы и замечания",
+        "fallback_refs": [
+            "Нормативно-правовые акты и государственные образовательные стандарты.",
+            "Учебники и методические пособия для высших учебных заведений по данной специальности.",
+            "Материалы рецензируемых научных журналов и баз данных (Scopus, Web of Science, РИНЦ).",
+            "Электронно-библиотечные системы и открытые научные образовательные платформы."
+        ]
     },
     "en": {
         "name": "🇬🇧 English",
@@ -45,7 +87,28 @@ SLIDE_LANGUAGES = {
         "references": "References & Bibliography",
         "done_by": "Prepared by",
         "accepted_by": "Supervised by",
-        "intro_speaker": "Dear professors and students, today's presentation topic is:"
+        "intro_speaker": "Dear professors and students, today's presentation topic is:",
+        "ministry": "MINISTRY OF HIGHER EDUCATION, SCIENCE AND INNOVATION",
+        "work_title": "ACADEMIC STUDENT PRESENTATION PROJECT",
+        "topic_label": "Topic",
+        "uni_label": "University / Institution",
+        "faculty_label": "Faculty / Department",
+        "direction_label": "Field of Study",
+        "group_label": "Academic Group",
+        "student_label": "Prepared by (Student)",
+        "teacher_label": "Supervised by (Advisor)",
+        "city_year": "Academic Year",
+        "section_label": "SECTION",
+        "concl_title": "Conclusion & Summary",
+        "concl_and_refs": "Conclusion & References",
+        "main_conclusions": "✦  KEY FINDINGS & CONCLUSIONS",
+        "questions_welcome": "Open for questions, comments and constructive discussion",
+        "fallback_refs": [
+            "Academic standards, regulatory framework, and educational guidelines.",
+            "University textbooks, academic monographs, and specialized lecture materials.",
+            "Peer-reviewed academic journals and research databases (Scopus, IEEE, Google Scholar).",
+            "International open-access repositories and digital scientific libraries."
+        ]
     },
     "tr": {
         "name": "🇹🇷 Türkçe",
@@ -56,7 +119,28 @@ SLIDE_LANGUAGES = {
         "references": "Kaynakça",
         "done_by": "Hazırlayan",
         "accepted_by": "Danışman",
-        "intro_speaker": "Sayın hocalarım ve değerli arkadaşlar, bugünkü sunum konusu:"
+        "intro_speaker": "Sayın hocalarım ve değerli arkadaşlar, bugünkü sunum konusu:",
+        "ministry": "YÜKSEKÖĞRETİM, BİLİM VE YENİLİK BAKANLIĞI",
+        "work_title": "ÜNİVERSİTE ÖĞRENCİSİ SUNUM ÇALIŞMASI",
+        "topic_label": "Konu",
+        "uni_label": "Üniversite (Eğitim Kurumu)",
+        "faculty_label": "Fakülte (Bölüm)",
+        "direction_label": "Öğretim Alanı",
+        "group_label": "Akademik Grup",
+        "student_label": "Hazırlayan (Öğrenci)",
+        "teacher_label": "Danışman (Öğretim Üyesi)",
+        "city_year": "Akademik Yıl",
+        "section_label": "BÖLÜM",
+        "concl_title": "Sonuç ve Değerlendirme",
+        "concl_and_refs": "Sonuç ve Kaynakça",
+        "main_conclusions": "✦  TEMEL BİLİMSEL VE UYGULAMALI SONUÇLAR",
+        "questions_welcome": "Sorularınız ve katkılarınız için teşekkür ederim",
+        "fallback_refs": [
+            "Yükseköğretim mevzuatı ve ulusal akademik standartlar.",
+            "İlgili alandaki temel üniversite ders kitapları ve bilimsel kaynaklar.",
+            "Hakemli akademik dergiler ve uluslararası bilimsel veritabanları.",
+            "Açık erişimli akademik kütüphane ve dijital bilgi kaynakları."
+        ]
     },
     "kk": {
         "name": "🇰🇿 Қазақша",
@@ -67,7 +151,28 @@ SLIDE_LANGUAGES = {
         "references": "Пайдаланылған әдебиеттер тізімі",
         "done_by": "Орындаған",
         "accepted_by": "Тексерген",
-        "intro_speaker": "Құрметті ұстаздар мен студенттер, бүгінгі тақырып:"
+        "intro_speaker": "Құрметті ұстаздар мен студенттер, бүгінгі тақырып:",
+        "ministry": "ҒЫЛЫМ ЖӘНЕ ЖОҒАРЫ БІЛІМ МИНИСТРЛІГІ",
+        "work_title": "ЖОҒАРЫ ОҚУ ОРНЫ СТУДЕНТІНІҢ ТҰСАУКЕСЕР ЖҰМЫСЫ",
+        "topic_label": "Тақырып",
+        "uni_label": "ЖОО (Оқу орны)",
+        "faculty_label": "Факультет (Кафедра)",
+        "direction_label": "Білім беру бағыты",
+        "group_label": "Академиялық топ",
+        "student_label": "Орындаған (Студент)",
+        "teacher_label": "Тексерген (Ғылыми жетекші)",
+        "city_year": "Астана",
+        "section_label": "БӨЛІМ",
+        "concl_title": "Қорытынды және Түйін",
+        "concl_and_refs": "Қорытынды және пайдаланылған әдебиеттер",
+        "main_conclusions": "✦  НЕГІЗГІ ҒЫЛЫМИ-ТӘЖІРИБЕЛІК ҚОРЫТЫНДЫЛАР",
+        "questions_welcome": "Сұрақтар мен пікірлерге дайынмын",
+        "fallback_refs": [
+            "Мемлекеттік жалпыға міндетті білім беру стандарттары.",
+            "Жоғары оқу орындарына арналған оқулықтар мен оқу құралдары.",
+            "Ғылыми рецензияланатын журналдар мен халықаралық дерекқорлар.",
+            "Электронды кітапханалық жүйелер мен ашық білім беру ресурстары."
+        ]
     },
     "ky": {
         "name": "🇰🇬 Кыргызча",
@@ -78,7 +183,28 @@ SLIDE_LANGUAGES = {
         "references": "Колдонулган адабияттар",
         "done_by": "Аткарган",
         "accepted_by": "Кабыл алган",
-        "intro_speaker": "Урматтуу агай-эжейлер жана студенттер, презентациянын темасы:"
+        "intro_speaker": "Урматтуу агай-эжейлер жана студенттер, презентациянын темасы:",
+        "ministry": "БИЛИМ БЕРҮҮ ЖАНА ИЛИМ МИНИСТРЛИГИ",
+        "work_title": "ЖОГОРКУ ОКУУ ЖАЙЫНЫН СТУДЕНТИНИН ПРЕЗЕНТАЦИЯЛЫК ИШИ",
+        "topic_label": "Тема",
+        "uni_label": "ЖОЖ (Окуу жайы)",
+        "faculty_label": "Факультет (Кафедра)",
+        "direction_label": "Билим берүү багыты",
+        "group_label": "Академиялык топ",
+        "student_label": "Аткарган (Студент)",
+        "teacher_label": "Кабыл алган (Илимий жетекчи)",
+        "city_year": "Бишкек",
+        "section_label": "БӨЛҮМ",
+        "concl_title": "Корутунду жана Жыйынтык",
+        "concl_and_refs": "Корутунду жана адабияттар",
+        "main_conclusions": "✦  НЕГИЗГИ ИЛИМИЙ-ПРАКТИКАЛЫК КОРУТУНДУЛАР",
+        "questions_welcome": "Суроолор жана талкуу үчүн даярмын",
+        "fallback_refs": [
+            "Мамлекеттик билим берүү стандарттары жана нормативдик актылар.",
+            "Жогорку окуу жайлары үчүн негизги окуу китептери жана колдонмолор.",
+            "Илимий журналдар жана эл аралык маалымат базалары.",
+            "Электрондук китепканалар жана ачык илимий ресурстар."
+        ]
     },
     "tg": {
         "name": "🇹🇯 Тоҷикӣ",
@@ -89,7 +215,28 @@ SLIDE_LANGUAGES = {
         "references": "Адабиёти истифодашуда",
         "done_by": "Иҷро кард",
         "accepted_by": "Қабул кард",
-        "intro_speaker": "Устодони мӯҳтарам ва донишҷӯён, мавзӯи имрӯза:"
+        "intro_speaker": "Устодони мӯҳтарам ва донишҷӯён, мавзӯи имрӯза:",
+        "ministry": "ВАЗОРАТИ МАОРИФ ВА ИЛМ",
+        "work_title": "КОРИ ТАҚДИМОТИИ ДОНИШҶӮИ МУАССИСАИ ОЛӢ",
+        "topic_label": "Мавзӯъ",
+        "uni_label": "ДДО (Муассисаи таълимӣ)",
+        "faculty_label": "Факултет (Кафедра)",
+        "direction_label": "Самти таълим",
+        "group_label": "Гурӯҳи академӣ",
+        "student_label": "Иҷро кард (Донишҷӯ)",
+        "teacher_label": "Қабул кард (Роҳбари илмӣ)",
+        "city_year": "Душанбе",
+        "section_label": "ҚИСМИ",
+        "concl_title": "Хулоса ва Анҷом",
+        "concl_and_refs": "Хулоса ва адабиёти истифодашуда",
+        "main_conclusions": "✦  ХУЛОСАҲОИ АСОСИИ ИЛМИЮ АМАЛӢ",
+        "questions_welcome": "Барои саволҳо ва муҳокима омодаам",
+        "fallback_refs": [
+            "Стандартҳои давлатии таҳсилот ва санадҳои меъёрии ҳуқуқӣ.",
+            "Китобҳои дарсӣ ва дастурҳои таълимӣ барои муассисаҳои таҳсилоти олии касбӣ.",
+            "Маҷаллаҳои илмӣ ва пойгоҳҳои иттилоотии байналмилалӣ.",
+            "Китобхонаҳои электронӣ ва захираҳои кушодаи илмӣ."
+        ]
     },
     "de": {
         "name": "🇩🇪 Deutsch",
@@ -100,7 +247,28 @@ SLIDE_LANGUAGES = {
         "references": "Literaturverzeichnis",
         "done_by": "Vorgelegt von",
         "accepted_by": "Betreuer",
-        "intro_speaker": "Sehr geehrte Professoren und Kommilitonen, das Thema der Präsentation lautet:"
+        "intro_speaker": "Sehr geehrte Professoren und Kommilitonen, das Thema der Präsentation lautet:",
+        "ministry": "MINISTERIUM FÜR BILDUNG, WISSENSCHAFT UND FORSCHUNG",
+        "work_title": "AKADEMISCHE PRÄSENTATIONSARBEIT",
+        "topic_label": "Thema",
+        "uni_label": "Hochschule / Universität",
+        "faculty_label": "Fakultät (Fachbereich)",
+        "direction_label": "Studiengang",
+        "group_label": "Seminargruppe",
+        "student_label": "Vorgelegt von (Student)",
+        "teacher_label": "Betreuer (Dozent)",
+        "city_year": "Akademisches Jahr",
+        "section_label": "ABSCHNITT",
+        "concl_title": "Fazit und Ausblick",
+        "concl_and_refs": "Fazit und Literaturverzeichnis",
+        "main_conclusions": "✦  WICHTIGSTE WISSENSCHAFTLICHE ERKENNTNISSE",
+        "questions_welcome": "Bereit für Fragen, Anmerkungen und Diskussion",
+        "fallback_refs": [
+            "Akademische Richtlinien, Modulhandbücher und Studienordnungen.",
+            "Wissenschaftliche Fach- und Lehrbücher für Hochschulen.",
+            "Peer-Review-Fachzeitschriften und wissenschaftliche Datenbanken.",
+            "Elektronische Bibliothekskataloge und akademische Online-Repositorien."
+        ]
     }
 }
 
@@ -166,6 +334,23 @@ TEXTS = {
             "1️⃣ <b>Limit yoki Oylik obuna xarid qilishingiz mumkin</b> (1 ta taqdimot — 3 000 so'm, oylik cheksiz — 40 000 so'm);\n"
             "2️⃣ <b>Do'stlaringizni taklif qiling</b> — har 2 ta yangi do'st uchun <b>+1 ta bepul limit</b> oling!"
         ),
+        "confirm_title": (
+            "📋 <b>Taqdimot tayyorlash ma'lumotlari:</b>\n\n"
+            "📌 <b>Mavzu:</b> {topic}\n"
+            "🌐 <b>Slayd tili:</b> {slide_lang}\n"
+            "📊 <b>Slaydlar soni:</b> {count} ta slayd\n"
+            "👤 <b>Muallif:</b> {author}\n"
+            "🎨 <b>Dizayn foni:</b> {theme}\n\n"
+            "🛠 <b>Slayd qanday tayyorlanadi:</b>\n"
+            "1️⃣ <b>Akademik reja:</b> Mavzu chuqur tahlil qilinib, kirishdan xulosagacha tizimli reja tuziladi.\n"
+            "2️⃣ <b>Mazmun va infografika:</b> Asosiy tushunchalar, taqqoslashlar va statistika yoziladi.\n"
+            "3️⃣ <b>Vizual dizayn:</b> Mavzuga mos sifatli rasmlar va tanlangan fon uyg'unlashtiriladi.\n"
+            "4️⃣ <b>Spiker nutqi:</b> Taqdimotchi himoyada nima deyishi kerakligi bo'yicha matn shakllantiriladi.\n"
+            "5️⃣ <b>Formatlar:</b> PowerPoint (.pptx) va PDF (.pdf) ko'rinishida yuboriladi.\n\n"
+            "⏳ <i>Taxminiy tayyorlanish vaqti: ~15-20 soniya</i>\n\n"
+            "❓ <b>Slaydni tayyorlashni boshlaymizmi?</b>"
+        ),
+        "confirm_btn": "🚀 Ha, tayyorlansin",
         "cancel_btn": "❌ Bekor qilish",
         "cancelled": "❌ Amal bekor qilindi.",
         "skip_btn": "⏩ O'tkazib yuborish (Standart)",
@@ -300,6 +485,23 @@ TEXTS = {
             "1️⃣ <b>Приобретите лимиты или подписку</b> (1 презентация — 3 000 сум, безлимит на месяц — 40 000 сум);\n"
             "2️⃣ <b>Пригласите друзей</b> — получайте <b>+1 лимит</b> за каждые 2 приглашенных друга!"
         ),
+        "confirm_title": (
+            "📋 <b>Параметры создания презентации:</b>\n\n"
+            "📌 <b>Тема:</b> {topic}\n"
+            "🌐 <b>Язык слайдов:</b> {slide_lang}\n"
+            "📊 <b>Количество слайдов:</b> {count}\n"
+            "👤 <b>Автор:</b> {author}\n"
+            "🎨 <b>Тема оформления:</b> {theme}\n\n"
+            "🛠 <b>Как будет создана презентация:</b>\n"
+            "1️⃣ <b>Академический план:</b> Анализ темы и составление структуры от введения до заключения.\n"
+            "2️⃣ <b>Контент и инфографика:</b> Ключевые тезисы, сравнения и статистика.\n"
+            "3️⃣ <b>Визуальный дизайн:</b> Качественные тематические изображения и оформление.\n"
+            "4️⃣ <b>Речь спикера:</b> Текст для защиты презентации (заметки докладчика).\n"
+            "5️⃣ <b>Форматы:</b> Презентация в форматах PowerPoint (.pptx) и PDF (.pdf).\n\n"
+            "⏳ <i>Примерное время: ~15-20 секунд</i>\n\n"
+            "❓ <b>Начать создание слайдов?</b>"
+        ),
+        "confirm_btn": "🚀 Да, создать",
         "cancel_btn": "❌ Отмена",
         "cancelled": "❌ Действие отменено.",
         "skip_btn": "⏩ Пропустить (Стандарт)",
@@ -433,6 +635,23 @@ TEXTS = {
             "1️⃣ <b>Purchase limits or monthly subscription</b> (1 presentation — 3,000 UZS, unlimited month — 40,000 UZS);\n"
             "2️⃣ <b>Invite friends</b> — get <b>+1 free limit</b> for every 2 friends who join!"
         ),
+        "confirm_title": (
+            "📋 <b>Presentation Details:</b>\n\n"
+            "📌 <b>Topic:</b> {topic}\n"
+            "🌐 <b>Slide Language:</b> {slide_lang}\n"
+            "📊 <b>Slide Count:</b> {count} slides\n"
+            "👤 <b>Author:</b> {author}\n"
+            "🎨 <b>Design Theme:</b> {theme}\n\n"
+            "🛠 <b>How your presentation will be prepared:</b>\n"
+            "1️⃣ <b>Academic Outline:</b> In-depth topic analysis and structured agenda.\n"
+            "2️⃣ <b>Content & Infographics:</b> Key insights, bullet points, and comparisons.\n"
+            "3️⃣ <b>Visual Design:</b> High-resolution contextual images and chosen styling.\n"
+            "4️⃣ <b>Speaker Notes:</b> Ready-to-read speech script for your presentation defense.\n"
+            "5️⃣ <b>Deliverables:</b> Delivered in PowerPoint (.pptx) and PDF (.pdf).\n\n"
+            "⏳ <i>Estimated time: ~15-20 seconds</i>\n\n"
+            "❓ <b>Ready to generate your presentation?</b>"
+        ),
+        "confirm_btn": "🚀 Yes, generate",
         "cancel_btn": "❌ Cancel",
         "cancelled": "❌ Action cancelled.",
         "skip_btn": "⏩ Skip (Default)",

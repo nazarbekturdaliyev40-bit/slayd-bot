@@ -30,6 +30,7 @@ class SlideCreation(StatesGroup):
     waiting_for_author = State()
     waiting_for_theme = State()
     waiting_for_custom_bg = State()
+    waiting_for_confirmation = State()
 
 class PptxToPdfState(StatesGroup):
     waiting_for_pptx = State()
@@ -48,6 +49,8 @@ class AdminSendReplyState(StatesGroup):
 
 class MediaChoiceState(StatesGroup):
     waiting_for_action = State()
+
+ACTIVE_GENERATING_USERS: set[int] = set()
 
 
 @router.message(CommandStart())
@@ -1219,8 +1222,8 @@ async def handle_pptx_to_pdf_text(message: Message, state: FSMContext):
 @router.message(F.document)
 async def handle_document_to_pdf(message: Message, state: FSMContext = None):
     cur_state = await state.get_state() if state else None
-    if cur_state in (SlideCreation.waiting_for_custom_bg, SlideCreation.waiting_for_theme):
-        return  # Slide creation custom background handlers will process it
+    if cur_state in (SlideCreation.waiting_for_custom_bg, SlideCreation.waiting_for_theme, SlideCreation.waiting_for_confirmation):
+        return  # Slide creation handlers will process it
 
     doc = message.document
     mime = (doc.mime_type or "").lower()
@@ -1500,27 +1503,34 @@ async def process_custom_bg_photo(message: Message, state: FSMContext):
     photo = message.photo[-1]
     tmp_fd, tmp_path = tempfile.mkstemp(prefix="bg_upload_", suffix=".jpg")
     os.close(tmp_fd)
-    await message.bot.download(photo.file_id, destination=tmp_path)
+    try:
+        await asyncio.wait_for(message.bot.download(photo.file_id, destination=tmp_path), timeout=25.0)
+    except Exception as e:
+        logger.warning(f"Rasm yuklashda xatolik: {e}")
+        if os.path.exists(tmp_path):
+            try:
+                os.remove(tmp_path)
+            except Exception:
+                pass
+        await message.answer(
+            "⚠️ **Rasmni yuklab olishda vaqt tugadi yoki xatolik yuz berdi.**\n"
+            "Iltimos, hajmi kichikroq rasm yuboring yoki quyidagi tugmalar orqali orqaga qayting:",
+            reply_markup=keyboards.get_custom_bg_keyboard(),
+            parse_mode="Markdown"
+        )
+        return
     
-    data = await state.get_data()
-    topic = data.get("topic", "")
-    slide_count = data.get("slide_count", 8)
-    author_info = data.get("author_info", "")
-    context_doc = data.get("context_document", "")
-    slide_lang = data.get("slide_language", "uz")
-    await state.clear()
-    
-    await generate_and_send_presentation(
-        chat_message=message,
-        user_id=message.from_user.id,
-        topic=topic,
-        slide_count=slide_count,
-        author_info=author_info,
-        theme_choice="auto",
-        custom_bg=tmp_path,
-        context_document=context_doc,
-        slide_language=slide_lang
-    )
+    # Eski fon fayli mavjud bo'lsa tozalash
+    old_data = await state.get_data()
+    old_bg = old_data.get("custom_bg")
+    if old_bg and os.path.exists(old_bg):
+        try:
+            os.remove(old_bg)
+        except Exception:
+            pass
+
+    await state.update_data(theme_choice="auto", custom_bg=tmp_path)
+    await show_slide_confirmation(message, state, message.from_user.id, edit=False)
 
 @router.message(SlideCreation.waiting_for_custom_bg, F.document)
 @router.message(SlideCreation.waiting_for_theme, F.document)
@@ -1531,27 +1541,33 @@ async def process_custom_bg_document(message: Message, state: FSMContext):
     if mime.startswith("image/") or any(fname.endswith(ext) for ext in [".jpg", ".jpeg", ".png", ".webp"]):
         tmp_fd, tmp_path = tempfile.mkstemp(prefix="bg_upload_", suffix=".jpg")
         os.close(tmp_fd)
-        await message.bot.download(doc.file_id, destination=tmp_path)
+        try:
+            await asyncio.wait_for(message.bot.download(doc.file_id, destination=tmp_path), timeout=25.0)
+        except Exception as e:
+            logger.warning(f"Fon hujjatini yuklashda xatolik: {e}")
+            if os.path.exists(tmp_path):
+                try:
+                    os.remove(tmp_path)
+                except Exception:
+                    pass
+            await message.answer(
+                "⚠️ **Rasmni yuklab olishda vaqt tugadi yoki xatolik yuz berdi.**\n"
+                "Iltimos, hajmi kichikroq rasm yuboring yoki boshqa format tanlang:",
+                reply_markup=keyboards.get_custom_bg_keyboard(),
+                parse_mode="Markdown"
+            )
+            return
         
-        data = await state.get_data()
-        topic = data.get("topic", "")
-        slide_count = data.get("slide_count", 8)
-        author_info = data.get("author_info", "")
-        context_doc = data.get("context_document", "")
-        slide_lang = data.get("slide_language", "uz")
-        await state.clear()
-        
-        await generate_and_send_presentation(
-            chat_message=message,
-            user_id=message.from_user.id,
-            topic=topic,
-            slide_count=slide_count,
-            author_info=author_info,
-            theme_choice="auto",
-            custom_bg=tmp_path,
-            context_document=context_doc,
-            slide_language=slide_lang
-        )
+        old_data = await state.get_data()
+        old_bg = old_data.get("custom_bg")
+        if old_bg and os.path.exists(old_bg):
+            try:
+                os.remove(old_bg)
+            except Exception:
+                pass
+
+        await state.update_data(theme_choice="auto", custom_bg=tmp_path)
+        await show_slide_confirmation(message, state, message.from_user.id, edit=False)
     else:
         await message.answer(
             "⚠️ Iltimos, fon uchun **rasm (jpg, png)** yuboring yoki rang tanlashga qayting:",
@@ -1586,23 +1602,135 @@ async def process_theme_choice(callback: CallbackQuery, state: FSMContext):
         )
         await state.clear()
         return
+
+    old_bg = data.get("custom_bg")
+    if old_bg and os.path.exists(old_bg):
+        try:
+            os.remove(old_bg)
+        except Exception:
+            pass
+
+    await state.update_data(theme_choice=theme_key, custom_bg=None)
+    await show_slide_confirmation(callback.message, state, callback.from_user.id, edit=True)
+
+async def show_slide_confirmation(target_message: Message, state: FSMContext, user_id: int, edit: bool = False):
+    data = await state.get_data()
+    topic = data.get("topic", "")
+    slide_count = data.get("slide_count", 8)
+    author_info = data.get("author_info", "")
+    theme_choice = data.get("theme_choice", "auto")
+    custom_bg = data.get("custom_bg")
+    slide_lang = data.get("slide_language", "uz")
+
+    user = await database.get_user(user_id) or {}
+    user_lang = user.get("language") or "uz"
+
+    THEME_TITLES = {
+        "auto": "✨ PowerPoint AI (Avtomatik mos dizayn)",
+        "gamma": "🪄 Gamma AI (gamma.app taqdimot)",
+        "white": "⚪️ Oq fon (Minimal)",
+        "dark": "⚫️ Qora fon (Premium Dark)",
+        "navy": "🔵 Toʻq koʻk fon (Royal Navy)",
+        "blue": "🔷 Moviy fon (Havorang)",
+        "green": "🟢 Zumrad yashil fon",
+        "purple": "🟣 Binafsha fon (Kosmik)",
+        "canva_pastel": "🌸 Canva Pastel fon",
+        "vintage": "📜 Klassik pergament fon"
+    }
+
+    if custom_bg:
+        theme_title = "🖼 Oʻzingiz yuklagan maxsus fon rasmi" if user_lang == "uz" else ("🖼 Пользовательское фоновое изображение" if user_lang == "ru" else "🖼 Custom background image")
+    else:
+        theme_title = THEME_TITLES.get(theme_choice, theme_choice)
+
+    lang_info = locales.get_slide_lang_info(slide_lang)
+    lang_name = lang_info.get("name", slide_lang)
+
+    safe_topic = html.escape(topic)
+    if author_info:
+        safe_author = html.escape(author_info)
+    else:
+        safe_author = "Koʻrsatilmadi" if user_lang == "uz" else ("Не указан" if user_lang == "ru" else "Not specified")
+
+    confirm_text = locales.get_text(
+        "confirm_title",
+        user_lang,
+        topic=safe_topic,
+        slide_lang=lang_name,
+        count=slide_count,
+        author=safe_author,
+        theme=theme_title
+    )
+
+    await state.set_state(SlideCreation.waiting_for_confirmation)
+
+    reply_kb = keyboards.get_confirm_generation_keyboard(user_lang)
+    if edit:
+        try:
+            await target_message.edit_text(confirm_text, reply_markup=reply_kb, parse_mode="HTML")
+            return
+        except Exception:
+            pass
+    await target_message.answer(confirm_text, reply_markup=reply_kb, parse_mode="HTML")
+
+@router.callback_query(F.data == "confirm_slide_generation", SlideCreation.waiting_for_confirmation)
+async def process_confirm_slide_generation(callback: CallbackQuery, state: FSMContext):
+    if callback.from_user.id in ACTIVE_GENERATING_USERS:
+        await callback.answer("⏳ Sizning avvalgi slaydingiz tayyorlanmoqda. Iltimos, u yakunlanishini kuting!", show_alert=True)
+        return
+    await callback.answer()
+    data = await state.get_data()
+    topic = data.get("topic", "")
+    if not topic:
+        await callback.message.answer(
+            "⚠️ Taqdimot mavzusi topilmadi yoki sessiya muddati o'tgan.\n"
+            "Iltimos, '📊 Yangi slayd tayyorlash' tugmasini bosib qaytadan boshlang.",
+            reply_markup=keyboards.get_main_menu(is_admin=config.is_admin(callback.from_user.id))
+        )
+        await state.clear()
+        return
+
     slide_count = data.get("slide_count", 8)
     author_info = data.get("author_info", "")
     context_doc = data.get("context_document", "")
     slide_lang = data.get("slide_language", "uz")
+    theme_choice = data.get("theme_choice", "auto")
+    custom_bg = data.get("custom_bg")
+
     await state.clear()
+
+    try:
+        await callback.message.edit_reply_markup(reply_markup=None)
+    except Exception:
+        pass
+
     await generate_and_send_presentation(
         chat_message=callback.message,
         user_id=callback.from_user.id,
         topic=topic,
         slide_count=slide_count,
         author_info=author_info,
-        theme_choice=theme_key,
+        theme_choice=theme_choice,
+        custom_bg=custom_bg,
         context_document=context_doc,
         slide_language=slide_lang
     )
 
+@router.message(SlideCreation.waiting_for_confirmation)
+async def process_confirmation_unexpected_message(message: Message, state: FSMContext):
+    if await check_menu_navigation(message, state):
+        return
+    user = await database.get_user(message.from_user.id) or {}
+    user_lang = user.get("language") or "uz"
+    await message.answer(
+        "⚠️ Taqdimotni tayyorlashni tasdiqlash uchun quyidagi <b>'🚀 Ha, tayyorlansin'</b> tugmasini bosing yoki bekor qiling:",
+        reply_markup=keyboards.get_confirm_generation_keyboard(user_lang),
+        parse_mode="HTML"
+    )
+
+
 async def generate_and_send_presentation(chat_message: Message, user_id: int, topic: str, slide_count: int, author_info: str = "", theme_choice: str = "auto", custom_bg: str = None, context_document: str = "", slide_language: str = "uz"):
+    ACTIVE_GENERATING_USERS.add(user_id)
     time_estimate = "15-25 soniya" if slide_count >= 15 else "10-18 soniya"
     safe_topic = html.escape(topic)
     status_msg = await chat_message.answer(
@@ -1771,14 +1899,16 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
             author_info=author_info,
             default_student_name=user_full_name if has_author else "",
             custom_bg=custom_bg,
-            language=slide_language
+            language=slide_language,
+            target_slide_count=slide_count
         )
 
         # Generate defense speech text
         speech_text = generator.generate_speech_script(
             content, 
             author_info=author_info, 
-            default_student_name=user_full_name if has_author else ""
+            default_student_name=user_full_name if has_author else "",
+            target_slide_count=slide_count
         )
 
         # Save to user cache for on-demand PDF conversion & speech retrieval
@@ -1816,8 +1946,7 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
         else:
             theme_info = generator.THEMES.get(chosen_theme, generator.THEMES["blue"])
             theme_name = theme_info.get("name", "Zamonaviy")
-        total_slides_count = len(content.get('slides', [])) + (6 if has_author else 5)
-        slides_breakdown = "(1-Titul, 2-Mavzu, 3-Reja, Asosiy qismlar, Xulosa, Adabiyotlar, E'tiboringiz uchun rahmat!)" if has_author else "(1-Mavzu, 2-Reja, Asosiy qismlar, Xulosa, Adabiyotlar, E'tiboringiz uchun rahmat!)"
+        total_slides_count = slide_count
 
         bot_user = await chat_message.bot.get_me()
         share_url = f"https://t.me/share/url?url=https://t.me/{bot_user.username}?start=ref_{user_id}&text=Sun'iy%20intellekt%20(Google%20Gemini)%20yordamida%20talabalar%20uchun%20professional%20taqdimotlar%20tayyorlang!%20%F0%9F%8E%81%20Bepul%20sinab%20ko'rish:"
@@ -1828,10 +1957,10 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
             f"🎉 <b>Taqdimotingiz muvaffaqiyatli tayyorlandi!</b>\n\n"
             f"📄 Mavzu: <i>{safe_topic}</i>\n"
             f"🎨 Dizayn: <b>{theme_name}</b>\n"
-            f"📊 Jami slaydlar: <b>{total_slides_count} ta</b> {slides_breakdown}\n"
+            f"📊 Jami slaydlar: <b>{total_slides_count} ta</b> (aniq belgilangan hajmda)\n"
             f"📁 Format: <b>PowerPoint (.pptx)</b> — tahrirlash uchun\n"
             f"💡 Qolgan limitingiz: {limit_caption}\n\n"
-            f"👇 <i>Taqdimotni PDF ga aylantirish yoki himoya nutq matnini (shpargalka) olish uchun quyidagi tugmalardan foydalaning:</i>"
+            f"📱 <i>Telefoningizda PowerPoint ochilmasa, pastdagi «📄 PDF formatida olish» tugmasini bosing — PDF Telegram ichida toʻgʻridan-toʻgʻri ochiladi!</i>"
         )
         sent_doc = None
         try:
@@ -1849,7 +1978,7 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
                 f"🎨 Dizayn: {theme_name}\n"
                 f"📊 Jami slaydlar: {total_slides_count} ta\n"
                 f"📁 Format: PowerPoint (.pptx) — tahrirlash uchun\n\n"
-                f"Taqdimotni PDF ga aylantirish yoki nutq matnini olish uchun tugmalardan foydalaning:"
+                f"Telefoningizda ochilmasa, «PDF formatida olish» tugmasini bosing:"
             )
             sent_doc = await chat_message.reply_document(
                 document=pptx_document,
@@ -1893,6 +2022,7 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
                 "❌ Kechirasiz, slayd tayyorlashda xatolik yuz berdi.\n\nLimitlaringiz saqlanib qoldi. Iltimos, qayta urinib ko'ring."
             )
     finally:
+        ACTIVE_GENERATING_USERS.discard(user_id)
         if custom_bg and os.path.exists(custom_bg):
             try:
                 os.remove(custom_bg)
@@ -2000,8 +2130,19 @@ async def get_latest_speech_handler(callback: CallbackQuery):
 
 @router.callback_query(F.data == "cancel_generation")
 async def cancel_handler(callback: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    custom_bg = data.get("custom_bg")
+    if custom_bg and os.path.exists(custom_bg):
+        try:
+            os.remove(custom_bg)
+        except Exception:
+            pass
     await state.clear()
     await callback.answer("Bekor qilindi")
+    try:
+        await callback.message.edit_reply_markup(reply_markup=None)
+    except Exception:
+        pass
     user_lang = await database.get_user_language(callback.from_user.id)
     await callback.message.answer(
         locales.get_text("cancelled", user_lang),

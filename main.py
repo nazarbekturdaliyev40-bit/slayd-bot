@@ -1,9 +1,11 @@
 import asyncio
 import logging
 import sys
+import aiohttp
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
+from aiogram.exceptions import TelegramNetworkError
 
 from aiogram.types import BotCommand, BotCommandScopeDefault
 
@@ -92,13 +94,24 @@ async def main():
     dp.include_router(router)
 
     try:
-        await setup_bot_commands(bot)
-    except Exception as e:
-        logger.warning(f"Menu o'rnatish xatoligi: {e}")
+        while True:
+            try:
+                try:
+                    await setup_bot_commands(bot)
+                except Exception as e:
+                    logger.warning(f"Menu o'rnatish xatoligi: {e}")
 
-    logger.info("Bot polling ishga tushmoqda...")
-    try:
-        await dp.start_polling(bot)
+                logger.info("Bot polling ishga tushmoqda...")
+                await dp.start_polling(bot)
+                break
+            except (TelegramNetworkError, aiohttp.ClientError, asyncio.TimeoutError) as net_err:
+                logger.warning(f"Tarmoqqa ulanishda xatolik ({net_err}). 5 soniyadan so'ng qayta urinib ko'riladi...")
+                await asyncio.sleep(5)
+            except (KeyboardInterrupt, SystemExit):
+                break
+            except Exception as e:
+                logger.error(f"Kutilmagan xatolik yuz berdi: {e}")
+                await asyncio.sleep(5)
     finally:
         await bot.session.close()
 

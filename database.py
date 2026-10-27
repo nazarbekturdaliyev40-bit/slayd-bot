@@ -354,13 +354,13 @@ async def save_user_file(telegram_id: int, topic: str, file_name: str, file_id: 
         return cursor.lastrowid
 
 async def get_user_files(telegram_id: int, limit: int = 50) -> list:
-    """Foydalanuvchining barcha saqlangan slayd fayllari ro'yxatini olish."""
+    """Foydalanuvchining barcha saqlangan slayd fayllari ro'yxatini olish (eng yangilari birinchi)."""
     async with aiosqlite.connect(DB_PATH) as db:
         db.row_factory = aiosqlite.Row
         async with db.execute("""
             SELECT * FROM user_files 
             WHERE telegram_id = ? 
-            ORDER BY id ASC 
+            ORDER BY id DESC 
             LIMIT ?
         """, (telegram_id, limit)) as cursor:
             rows = await cursor.fetchall()

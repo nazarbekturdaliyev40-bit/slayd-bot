@@ -260,6 +260,17 @@ def get_custom_bg_keyboard() -> InlineKeyboardMarkup:
         ]
     ])
 
+def get_confirm_generation_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
+    """Taqdimot tayyorlashdan oldin barcha ma'lumotlarni ko'rib tasdiqlash tugmalari."""
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text=locales.get_text("confirm_btn", lang), callback_data="confirm_slide_generation")
+        ],
+        [
+            InlineKeyboardButton(text=locales.get_text("cancel_btn", lang), callback_data="cancel_generation")
+        ]
+    ])
+
 def get_slide_action_keyboard(share_url: str = "", gamma_url: str = "", lang: str = "uz") -> InlineKeyboardMarkup:
     btns = []
     if gamma_url:
