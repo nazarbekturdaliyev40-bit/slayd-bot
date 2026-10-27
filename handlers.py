@@ -2661,3 +2661,49 @@ async def media_to_pdf_callback(callback: CallbackQuery, state: FSMContext):
                 "Ushbu fayldan slayd yasash uchun **'📊 Ushbu hujjatdan taqdimot yasash'** tugmasini bosing."
             )
 
+@router.message(F.text)
+async def handle_direct_topic_text(message: Message, state: FSMContext):
+    """Foydalanuvchi to'g'ridan-to'g'ri mavzu yoki reja yozib yuborganda avtomatik slayd yaratish oqimini boshlash."""
+    if await check_menu_navigation(message, state):
+        return
+    text = (message.text or "").strip()
+    if len(text) < 3:
+        return
+
+    user = await database.get_or_create_user(
+        telegram_id=message.from_user.id,
+        username=message.from_user.username or "",
+        full_name=message.from_user.full_name or ""
+    )
+    user_lang = user.get("language") or "uz"
+    is_sub = database.is_subscription_active(user)
+    is_unlimited = bool(user.get("is_unlimited")) or config.is_unlimited(message.from_user.id) or is_sub
+    total_remaining = user["free_limit"] + user["paid_balance"]
+
+    if not is_unlimited and total_remaining <= 0:
+        bot_user = await message.bot.get_me()
+        await message.answer(
+            locales.get_text("no_limit", user_lang),
+            reply_markup=keyboards.get_no_limit_keyboard(bot_user.username, message.from_user.id, lang=user_lang),
+            parse_mode="HTML"
+        )
+        return
+
+    await state.update_data(topic=text, slide_language=user_lang)
+    await state.set_state(SlideCreation.waiting_for_count)
+
+    lang_info = locales.get_slide_lang_info(user_lang)
+    safe_topic = html.escape(text)
+    count_prompt = locales.get_text(
+        "prompt_count",
+        user_lang,
+        topic=safe_topic,
+        slide_lang=lang_info["name"]
+    )
+    await message.answer(
+        f"✍️ <b>Taqdimot mavzusi qabul qilindi!</b>\n\n{count_prompt}",
+        reply_markup=keyboards.get_slide_counts_keyboard(),
+        parse_mode="HTML"
+    )
+
+

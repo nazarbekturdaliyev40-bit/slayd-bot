@@ -351,6 +351,24 @@ def smart_parse_student_details(raw: str) -> dict:
 
     return details
 
+def calculate_slide_distribution(total_slides: int):
+    """Calculates the exact number of intro, content, and closing slides to ensure full coverage of topics."""
+    if total_slides <= 5:
+        has_agenda = False
+        intro_count = 1  # Titul
+        closing_count = 1  # Combined Xulosa & Minnatdorchilik
+    elif total_slides <= 10:
+        has_agenda = True
+        intro_count = 2  # Titul + Agenda
+        closing_count = 2  # Xulosa & Manbalar + Minnatdorchilik
+    else:
+        has_agenda = True
+        intro_count = 2  # Titul + Agenda
+        closing_count = 3  # Xulosa + Manbalar + Minnatdorchilik
+
+    target_content_count = max(1, total_slides - (intro_count + closing_count))
+    return has_agenda, intro_count, closing_count, target_content_count
+
 async def generate_presentation_content(topic: str, slide_count: int = 8, language: str = "uz", author_info: str = "", theme_choice: str = "auto", context_document: str = "") -> dict:
     """Uses Google Gemini to generate structured slide content in JSON with academic references, infographic layouts, and structured student details."""
     client = genai.Client(api_key=config.GEMINI_API_KEY)
@@ -361,18 +379,46 @@ async def generate_presentation_content(topic: str, slide_count: int = 8, langua
     author_clause = f"\nTaqdimot muallifi va OTM ma'lumotlari: {author_info}" if author_info else ""
     theme_clause = f"\nFoydalanuvchi tanlagan dizayn mavzusi: '{theme_choice}'." if theme_choice and theme_choice != "auto" else ""
     context_clause = f"\nASOSIY MANBA MATN (Kitob/Konspekt/Hujjat):\n```\n{context_document[:8000]}\n```\nYuqoridagi manba matnidan foydalanib, undagi asosiy dalillar, faktlar va tushunchalar asosida taqdimot tuzing." if context_document else ""
-    if slide_count <= 4:
-        num_content = max(1, slide_count - 2)
-    elif slide_count == 5:
-        num_content = 2
-    elif slide_count <= 8:
-        num_content = slide_count - 4
-    else:
-        num_content = slide_count - 5
+    
+    has_agenda, intro_count, closing_count, num_content = calculate_slide_distribution(slide_count)
 
     prompt = f"""
 Siz universitet va oliy ta'lim talabalari uchun akademik va professional taqdimotlar tayyorlovchi yetuk AI mutaxassisiz.
-Mavzu: "{topic}"{author_clause}{theme_clause}{context_clause}
+
+FOYDALANUVCHI YUBORGAN TAQDIMOT MAVZUSI VA TALABLARI:
+\"\"\"
+{topic.strip()}
+\"\"\"{author_clause}{theme_clause}{context_clause}
+
+======================================================================
+MUHIM VA QAT'IY TALAB: FOYDALANUVCHI YUBORGAN MAVZULARNI TO'LIQ VA CHUQUR YORITIB BERISH!
+======================================================================
+1. FOYDALANUVCHI YUBORGAN BARCHA MAVZU VA REJA BANDLARINI 100% QAMRAB OLISH:
+- Agar foydalanuvchi o'z xabarida bir nechta mavzular, reja bandlari, savollar yoki kichik mavzular (subtopics) yuborgan bo'lsa (masalan: 1, 2, 3... deb raqamlangan ro'yxat, qavs ichidagi mavzular yoki matndagi bir necha masalalar):
+  * Yuborilgan HAR BIR mavzu va reja bandini ISTISNOSIZ to'liq qamrab oling!
+  * Birorta ham mavzu, masala yoki reja bandi tashlab ketilmasin (o'tkazib yuborilmasin)!
+  * Taqdimotning asosiy 'slides' slaydlari aynan foydalanuvchi so'ragan mana shu mavzular va reja bandlariga bag'ishlansin.
+- Agar foydalanuvchi bitta umumiy mavzu yuborgan bo'lsa:
+  * Ushbu mavzuni tor va yuzaki emas, balki sohaning barcha asosiy tushunchalari, ilmiy-amaliy tarmoqlari, muhim tamoyillari, funksiyalari va zamonaviy yutuqlarini o'z ichiga olgan holda TO'LIQ, BAFURJA VA CHUQUR yoritib bering! Har bir mazmuniy slayd mavzuning alohida mustaqil qismini to'liq ochib bersin.
+
+2. SLAYDLARNI ZOYE KETKAZMASLIK VA 100% BEVOSITA MAZMUNGA QARATISH:
+- DIQQAT: Taqdimotning titul (muqova), mundarija (reja), xulosa va adabiyotlar slaydlari avtomatik tarzda alohida yaratiladi!
+- Shu sababli, 'slides' massividagi RO'PPA-ROSA {num_content} ta slaydning HAMMASI 100% BEVOSITA FOYDALANUVCHI MAVZULARIGA bag'ishlangan bo'lishi SHART!
+- 'slides' massivining boshida umumiy quruq "Kirish" yoki oxirida ortiqcha "Xulosa va amaliy tavsiyalar" kabi keraksiz slaydlarni QO'SHMANG! Har bir slayd bevosita foydalanuvchi yuborgan mavzuning alohida muhim qismini to'liq ochib bersin!
+
+3. TAQDIMOT REJASI ("agenda"):
+- Taqdimot rejasi ("agenda") umumiy quruq shablon ("Kirish", "Nazariya", "Amaliyot", "Xulosa") BO'LMASIN!
+- Reja bandlari aynan foydalanuvchi yuborgan mavzular va asosiy mazmuniy slaydlarning haqiqiy sarlavhalarini aks ettirsin (3 tadan 5 tagacha asosiy band)!
+
+4. SLAYD MATNLARI VA MAZMUNINING CHUQURLIGI:
+- Har bir slaydda 3 tadan 5 tagacha yuqori darajada mazmunli, chuqur va batafsil band ("bullet_points") bo'lsin.
+- Bandlar shunchaki 2-3 ta so'zdan iborat bo'sh gap bo'lmasin! Har bir bandni quyidagi tartibda to'liq yozing:
+  "Kalit so'z yoki tushuncha: Mazkur tushunchaning ilmiy-amaliy mohiyati, aniq faktlar, tahlillar va amaliy ahamiyati haqida kamida 15-25 so'zdan iborat to'liq, chuqur tushuntirish."
+- Talaba ushbu slaydni o'qiganda va ko'rsatganda mavzu to'liq, mukammal va professional yoritilgani yaqqol ko'rinib tursin!
+
+5. MA'RUZA NUTQI (SPEAKER_NOTES):
+- Har bir slayd uchun "speaker_notes" maydonida talaba doskada turib gapirib beradigan jonli, ravon, ilmiy va tushunarli ma'ruza nutqi (3-5 ta to'liq gap) bo'lsin.
+
 DIQQAT (QAT'IY TALAB): Foydalanuvchi jami taqdimot hajmi (titul muqova, reja, xulosa va yakun bilan birga) JAMI RO'PPA-ROSA {slide_count} TA SLAYDDAN iborat bo'lishini belgiladi (belgilangandan 1 list ham oshmasin!).
 Shu sababli, taqdimotning ichki 'slides' massivida RO'PPA-ROSA {num_content} ta asosiy mazmuniy slayd tuzib bering (hech qachon {num_content} tadan oshmasin yoki kam bo'lmasin).
 Qat'iy talab qilingan til: {prompt_lang}.
@@ -404,18 +450,17 @@ Quyidagi qat'iy JSON formatida taqdimot rejasini, har bir slayd matnini, xulosas
     "teacher": "Qabul qildi: O'qituvchi ismi va familiyasi (agar kiritilgan bo'lsa)"
   }},
   "agenda": [
-    "Kirish va mavzuning dolzarbligi",
-    "Asosiy nazariy asoslar va tushunchalar",
-    "Amaliy tahlil va sohadagi tendensiyalar",
-    "Muammolar va ularning istiqbolli yechimlari",
-    "Xulosa va amaliy tavsiyalar"
+    "Foydalanuvchi mavzusining 1-asosiy yo'nalishi",
+    "Foydalanuvchi mavzusining 2-asosiy yo'nalishi",
+    "Foydalanuvchi mavzusining 3-asosiy yo'nalishi",
+    "Foydalanuvchi mavzusining 4-asosiy yo'nalishi"
   ],
   "slides": [
     {{
       "slide_number": 1,
       "type": "content",
       "layout": "standard / kpi / comparison / steps",
-      "title": "Slayd sarlavhasi (masalan: Kirish va mavzuning dolzarbligi)",
+      "title": "Foydalanuvchi yuborgan mavzuning 1-yo'nalishi bo'yicha aniq mazmuniy sarlavha",
       "kpi_items": [
         {{"number": "85%", "label": "Ko'rsatkich yoki statistika tavsifi"}},
         {{"number": "2.4x", "label": "Ko'rsatkich yoki statistika tavsifi"}},
@@ -433,12 +478,12 @@ Quyidagi qat'iy JSON formatida taqdimot rejasini, har bir slayd matnini, xulosas
         {{"step": "03", "title": "3-bosqich nomi", "desc": "Qisqa tushuntirish"}}
       ],
       "bullet_points": [
-        "1-muhim tushuncha yoki asosiy ilmiy fikr (batafsil va mazmunli)",
-        "2-muhim tushuncha yoki fakt/statistik ma'lumot",
-        "3-muhim tushuncha yoki qiyosiy tahlil",
-        "4-muhim tushuncha yoki amaliy xulosa"
+        "1-muhim tushuncha: Mazkur tushunchaning ilmiy-amaliy mohiyati va faktlar bilan boyitilgan batafsil tushuntirishi",
+        "2-muhim tushuncha: Aniq raqamlar, qonuniyatlar yoki statistik ma'lumotlar bilan tahlil",
+        "3-muhim tushuncha: Sohadagi amaliy yondashuvlar va qiyosiy xulosa",
+        "4-muhim tushuncha: Zamonaviy rivojlanish omillari va istiqbolli jihatlar"
       ],
-      "speaker_notes": "Talaba himoya paytida ushbu slaydni tushuntirganda doskada turib aytishi kerak bo'lgan 2-3 jumlalik jonli ma'ruza nutqi.",
+      "speaker_notes": "Talaba himoya paytida ushbu slaydni tushuntirganda doskada turib aytishi kerak bo'lgan 3-5 jumlalik jonli va ilmiy ma'ruza nutqi.",
       "image_query": "Ushbu slayd uchun mavzuga mos inglizcha 1-3 ta aniq qidiruv so'zi (masalan: 'neural network', 'samarkand architecture', 'human heart anatomy')"
     }}
   ],
@@ -464,9 +509,8 @@ Talablar:
   * "standard" — Boshqa umumiy mazmunli slaydlar uchun (bullet_points va rasm).
   Har bir slaydga qaysi layout tanlanganidan qat'i nazar har doim "bullet_points" va "speaker_notes" ham yozilsin!
 - QAT'IY TALAB: Taqdimot sarlavhalarida, reja bandlarida, slayd matnlarida, xulosada, manbalarda va ma'ruza nutqida MUTLAQO HECH QANDAY emoji, stiker, piktogramma yoki smayliklar ISHLATILMASIN! Taqdimot sof akademik, rasmiy va ilmiy uslubda bo'lsin.
-- 1-slayd kirish va dolzarblik bo'lsin.
-- Keyingi slaydlar mavzuni bosqichma-bosqich, chuqur, qiziqarli va aniq yoritib bersin.
-- Har bir slaydda 3 tadan 5 tagacha sifatli band (bullet_points) bo'lsin. Har bir bandni "Kalit so'z: Tavsif" ko'rinishida yozing (masalan: "Asosiy omillar: Bozor talabining o'sishi va raqobatbardoshlik").
+- Har bir mazmuniy slayd foydalanuvchi so'ragan mavzularni chuqur, qiziqarli, dalillarga asoslangan holda to'liq yoritib bersin.
+- Har bir slaydda 3 tadan 5 tagacha sifatli band (bullet_points) bo'lsin. Har bir band "Kalit so'z: Batafsil tavsif va tahlil" ko'rinishida yozilsin.
 - Har bir slaydga talabaning himoyasi uchun speaker_notes (ma'ruza nutqi) yozilsin.
 - Har bir slaydga va muqovaga mos inglizcha aniq image_query yozilsin.
 - "references" maydonida kamida 3-4 ta haqiqiy va ishonarli adabiyot/manba bo'lsin.
@@ -1097,18 +1141,13 @@ def _create_agenda_slide(prs, blank_layout, theme, content, slides_data, total_s
                 agenda_items.append(cleaned)
 
     if not agenda_items:
-        first_title = slides_data[0].get("title", "Kirish va dolzarblik") if slides_data else "Kirish va mavzuning dolzarbligi"
-        agenda_items.append(re.sub(r"^\d+[\.\)\-\s]+", "", first_title))
-        if len(slides_data) >= 3:
-            mid1 = slides_data[len(slides_data) // 3].get("title", "Nazariy va amaliy asoslar")
-            agenda_items.append(re.sub(r"^\d+[\.\)\-\s]+", "", mid1))
-            mid2 = slides_data[(2 * len(slides_data)) // 3].get("title", "Tahlil va zamonaviy tendensiyalar")
-            agenda_items.append(re.sub(r"^\d+[\.\)\-\s]+", "", mid2))
-        elif len(slides_data) == 2:
-            mid = slides_data[1].get("title", "Asosiy tahliliy qism")
-            agenda_items.append(re.sub(r"^\d+[\.\)\-\s]+", "", mid))
-        agenda_items.append(lang_info.get("conclusion", "Xulosa va asosiy natijalar"))
-        agenda_items.append(lang_info.get("references", "Foydalanilgan adabiyotlar va manbalar"))
+        for s in slides_data[:5]:
+            t = re.sub(r"^\d+[\.\)\-\s]+", "", s.get("title", "")).strip()
+            if t and t not in agenda_items:
+                agenda_items.append(t)
+        if len(agenda_items) < 3:
+            agenda_items.append(lang_info.get("conclusion", "Xulosa va asosiy natijalar"))
+            agenda_items.append(lang_info.get("references", "Foydalanilgan adabiyotlar va manbalar"))
 
     agenda_items = [a for a in agenda_items if a][:5]
     content["agenda"] = agenda_items
@@ -1261,17 +1300,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         target_slide_count = content.get("target_slide_count") or 8
     total_slides = target_slide_count
 
-    has_agenda_slide = (total_slides >= 5)
-    intro_count = 2 if has_agenda_slide else 1
-
-    if total_slides <= 5:
-        closing_count = 1
-    elif total_slides <= 8:
-        closing_count = 2
-    else:
-        closing_count = 3
-
-    target_content_count = max(1, total_slides - (intro_count + closing_count))
+    has_agenda_slide, intro_count, closing_count, target_content_count = calculate_slide_distribution(total_slides)
     slides_data = slides_data[:target_content_count]
 
     if has_author:
@@ -2008,17 +2037,7 @@ def generate_speech_script(content: dict, author_info: str = "", default_student
         target_slide_count = content.get("target_slide_count") or 8
     total_slides = target_slide_count
 
-    has_agenda_slide = (total_slides >= 5)
-    intro_count = 2 if has_agenda_slide else 1
-
-    if total_slides <= 5:
-        closing_count = 1
-    elif total_slides <= 8:
-        closing_count = 2
-    else:
-        closing_count = 3
-
-    target_content_count = max(1, total_slides - (intro_count + closing_count))
+    has_agenda_slide, intro_count, closing_count, target_content_count = calculate_slide_distribution(total_slides)
     slides = slides[:target_content_count]
 
     student_details = content.get("student_details") or (smart_parse_student_details(author_info) if has_author else {})
