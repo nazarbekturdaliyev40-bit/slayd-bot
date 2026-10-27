@@ -141,61 +141,38 @@ THEMES_HTML = """<!DOCTYPE html>
       transform: scale(0.98);
       border-color: var(--accent);
     }
-    .slide-preview {
+    .slide-preview-wrap {
       width: 100%;
       aspect-ratio: 16 / 9;
       position: relative;
-      display: flex;
-      flex-direction: column;
-      padding: 12px;
-      box-shadow: inset 0 -10px 20px rgba(0,0,0,0.25);
+      background: #0f172a;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+    .slide-preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.25s ease;
+    }
+    .theme-card:hover .slide-preview-img {
+      transform: scale(1.03);
     }
     .slide-badge {
       position: absolute;
       top: 10px;
       right: 10px;
-      background: rgba(0, 0, 0, 0.45);
-      backdrop-filter: blur(4px);
-      padding: 3px 8px;
-      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(6px);
+      padding: 4px 10px;
+      border-radius: 8px;
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       color: #f8fafc;
-      border: 0.5px solid rgba(255,255,255,0.2);
-    }
-    .slide-mockup-header {
-      width: 60%;
-      height: 12px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.85);
-      margin-bottom: 8px;
-    }
-    .slide-mockup-sub {
-      width: 35%;
-      height: 8px;
-      border-radius: 3px;
-      background: rgba(255, 255, 255, 0.45);
-      margin-bottom: 12px;
-    }
-    .slide-mockup-body {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      flex: 1;
-    }
-    .slide-mockup-box {
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 6px;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-    .mockup-line {
-      height: 5px;
-      border-radius: 2px;
-      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255,255,255,0.25);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      z-index: 2;
     }
     .card-content {
       padding: 14px;
@@ -561,22 +538,9 @@ THEMES_HTML = """<!DOCTYPE html>
         card.className = "theme-card";
         card.onclick = () => selectTheme(t);
         card.innerHTML = `
-          <div class="slide-preview" style="background: ${t.bg}">
+          <div class="slide-preview-wrap">
+            <img src="/preview/${t.id}.png" alt="${t.title}" class="slide-preview-img" onerror="this.onerror=null;this.parentElement.style.background='${t.bg}'" />
             <div class="slide-badge">${t.badge}</div>
-            <div class="slide-mockup-header"></div>
-            <div class="slide-mockup-sub"></div>
-            <div class="slide-mockup-body">
-              <div class="slide-mockup-box">
-                <div class="mockup-line" style="width: 70%"></div>
-                <div class="mockup-line" style="width: 90%"></div>
-                <div class="mockup-line" style="width: 50%"></div>
-              </div>
-              <div class="slide-mockup-box">
-                <div class="mockup-line" style="width: 80%"></div>
-                <div class="mockup-line" style="width: 60%"></div>
-                <div class="mockup-line" style="width: 75%"></div>
-              </div>
-            </div>
           </div>
           <div class="card-content">
             <div class="category-tag">${t.categoryTitle}</div>
@@ -665,6 +629,27 @@ class HealthHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(b"Bot is running 24/7!")
             return
+
+        # Slayd fonlari rasmlarini ko'rsatish (/preview/circuit.png ...)
+        if self.path.startswith("/preview/"):
+            fname = os.path.basename(self.path.split("?")[0])
+            fpath = os.path.join(os.path.dirname(__file__), "previews", fname)
+            if os.path.exists(fpath):
+                self.send_response(200)
+                if fname.endswith(".png"):
+                    self.send_header("Content-Type", "image/png")
+                else:
+                    self.send_header("Content-Type", "image/jpeg")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.send_header("Cache-Control", "public, max-age=86400")
+                self.end_headers()
+                with open(fpath, "rb") as fp:
+                    self.wfile.write(fp.read())
+                return
+            else:
+                self.send_response(404)
+                self.end_headers()
+                return
 
         # Barcha so'rovlar (/, /themes, /index.html, /?tgWebApp... va boshqalar)
         # to'g'ridan-to'g'ri Slayd Fonlari Mini Ilovasini to'liq ko'rsatadi

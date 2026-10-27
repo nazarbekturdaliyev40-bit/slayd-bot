@@ -1482,10 +1482,24 @@ async def send_theme_selection_window(target_message: Message, state: FSMContext
         f"📌 Mavzu: <b>{safe_topic}</b>\n"
         f"📄 Slaydlar soni: <b>{slide_count} ta</b>\n\n"
         "Taqdimotingiz fanning mazmuniga toʻliq mos va chiroyli chiqishi uchun quyidagilardan birini tanlang:\n\n"
-        "1️⃣ <b>Fon rasmini tanlash</b> — Mini ilova orqali fanlar boʻyicha tayyor shablonlardan birini tanlash\n"
-        "2️⃣ <b>Oʻz fon rasmingizni yuklash</b> — Oʻzingiz xohlagan maxsus rasmni fon sifatida yuborish"
+        "1️⃣ <b>Fon rasmini tanlash</b> — Mini ilova orqali tayyor shablonlardan birini tanlash\n"
+        "2️⃣ <b>Oʻz fon rasmingizni yuklash</b> — Oʻzingiz xohlagan maxsus rasmni yuborish"
     )
     reply_markup = keyboards.get_theme_selection_keyboard()
+    collage_path = os.path.join(os.path.dirname(__file__), "previews", "all_themes_collage.jpg")
+    
+    if os.path.exists(collage_path):
+        try:
+            await target_message.answer_photo(
+                photo=FSInputFile(collage_path),
+                caption=window_text,
+                reply_markup=reply_markup,
+                parse_mode="HTML"
+            )
+            return
+        except Exception as e:
+            logger.warning(f"Rasm bilan yuborishda xatolik: {e}")
+
     if edit:
         try:
             await target_message.edit_text(window_text, reply_markup=reply_markup, parse_mode="HTML")
