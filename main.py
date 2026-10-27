@@ -10,7 +10,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 from aiogram.exceptions import TelegramNetworkError
-from aiogram.types import BotCommand, BotCommandScopeDefault
+from aiogram.types import BotCommand, BotCommandScopeDefault, MenuButtonWebApp, WebAppInfo
 
 import config
 import database
@@ -749,6 +749,30 @@ async def setup_bot_commands(bot: Bot):
         logger.info("Bot buyruqlari (Menu) muvaffaqiyatli o'rnatildi.")
     except Exception as e:
         logger.warning(f"Bot buyruqlarini o'rnatishda xatolik: {e}")
+
+    try:
+        await bot.set_chat_menu_button(
+            menu_button=MenuButtonWebApp(
+                text="📱 Slayd Fonlari",
+                web_app=WebAppInfo(url=config.THEMES_WEBAPP_URL)
+            )
+        )
+        logger.info("Chat MenuButtonWebApp muvaffaqiyatli o'rnatildi.")
+    except Exception as e:
+        logger.warning(f"MenuButtonWebApp o'rnatishda xatolik: {e}")
+
+    try:
+        render_url = os.getenv("RENDER_EXTERNAL_URL", "Aniqlanmadi (lokal)")
+        await bot.send_message(
+            config.ADMIN_ID,
+            f"🚀 <b>Bot muvaffaqiyatli ishga tushdi!</b>\n\n"
+            f"🌐 <b>Render URL:</b> <code>{render_url}</code>\n"
+            f"📱 <b>THEMES_WEBAPP_URL:</b> <code>{config.THEMES_WEBAPP_URL}</code>\n"
+            f"✨ Asosiy menyu va pastki chat menyusida Mini ilova tugmasi faollashtirildi!",
+            parse_mode="HTML"
+        )
+    except Exception as e:
+        logger.warning(f"Admin startup xabari xatosi: {e}")
 
 async def main():
     if not config.BOT_TOKEN:

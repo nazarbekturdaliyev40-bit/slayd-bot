@@ -2540,6 +2540,22 @@ async def admin_stats_callback(callback: CallbackQuery):
     )
     await callback.message.answer(text, parse_mode="HTML")
 
+@router.message(Command("url"))
+async def cmd_get_server_url(message: Message):
+    if not config.is_admin(message.from_user.id):
+        return
+    render_url = os.getenv("RENDER_EXTERNAL_URL", "Aniqlanmadi (lokal)")
+    port = os.getenv("PORT", "10000")
+    webapp_url = config.THEMES_WEBAPP_URL
+    await message.answer(
+        f"⚙️ <b>Server va Mini Ilova holati:</b>\n\n"
+        f"🌐 <b>Render External URL:</b> <code>{render_url}</code>\n"
+        f"🔌 <b>PORT:</b> <code>{port}</code>\n"
+        f"📱 <b>THEMES_WEBAPP_URL:</b> <code>{webapp_url}</code>\n\n"
+        f"<i>Agar Render manzili boshqacha bo'lsa, Render Dashboard -> Environment bo'limiga WEBAPP_URL qo'shishingiz mumkin.</i>",
+        parse_mode="HTML"
+    )
+
 @router.message(F.voice)
 @router.message(F.audio)
 async def handle_voice_presentation(message: Message, state: FSMContext):

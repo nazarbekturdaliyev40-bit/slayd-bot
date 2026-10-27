@@ -39,7 +39,19 @@ def get_slide_language_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
 
 def get_main_menu(is_admin: bool = False, lang: str = "uz") -> ReplyKeyboardMarkup:
     """Foydalanuvchi tanlagan tildagi chiroyli va qulay tartiblangan asosiy menyu."""
+    webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot.onrender.com/themes")
+    if lang == "ru":
+        mini_app_title = "📱 Темы и фоны (Мини-апп)"
+    elif lang == "en":
+        mini_app_title = "📱 Themes & Backgrounds (Mini App)"
+    else:
+        mini_app_title = "📱 Fanlar va fonlar (Mini ilova)"
+
     buttons = [
+        # Asosiy: Telegram Mini ilovani ochish tugmasi
+        [
+            KeyboardButton(text=mini_app_title, web_app=WebAppInfo(url=webapp_url))
+        ],
         # 1-qator: Slayd tayyorlash va Shaxsiy profil yonma-yon
         [
             KeyboardButton(text=locales.get_text("menu_new_slide", lang)),
