@@ -391,33 +391,30 @@ FOYDALANUVCHI YUBORGAN TAQDIMOT MAVZUSI VA TALABLARI:
 \"\"\"{author_clause}{theme_clause}{context_clause}
 
 ======================================================================
-MUHIM VA QAT'IY TALAB: FOYDALANUVCHI YUBORGAN MAVZULARNI TO'LIQ VA CHUQUR YORITIB BERISH!
+ENG ASOSIY TALAB: SLAYD SAHIFASINI TO'LIG'ICHA TO'LDIRIB, KENG QAMROVLI VA CHUQUR YORITISH!
 ======================================================================
-1. FOYDALANUVCHI YUBORGAN BARCHA MAVZU VA REJA BANDLARINI 100% QAMRAB OLISH:
-- Agar foydalanuvchi o'z xabarida bir nechta mavzular, reja bandlari, savollar yoki kichik mavzular (subtopics) yuborgan bo'lsa (masalan: 1, 2, 3... deb raqamlangan ro'yxat, qavs ichidagi mavzular yoki matndagi bir necha masalalar):
-  * Yuborilgan HAR BIR mavzu va reja bandini ISTISNOSIZ to'liq qamrab oling!
-  * Birorta ham mavzu, masala yoki reja bandi tashlab ketilmasin (o'tkazib yuborilmasin)!
-  * Taqdimotning asosiy 'slides' slaydlari aynan foydalanuvchi so'ragan mana shu mavzular va reja bandlariga bag'ishlansin.
-- Agar foydalanuvchi bitta umumiy mavzu yuborgan bo'lsa:
-  * Ushbu mavzuni tor va yuzaki emas, balki sohaning barcha asosiy tushunchalari, ilmiy-amaliy tarmoqlari, muhim tamoyillari, funksiyalari va zamonaviy yutuqlarini o'z ichiga olgan holda TO'LIQ, BAFURJA VA CHUQUR yoritib bering! Har bir mazmuniy slayd mavzuning alohida mustaqil qismini to'liq ochib bersin.
+1. SLAYD LISTINI TO'LIG'ICHA TO'LDIRISH (BO'SH JOYLAR QOLMASIN):
+- Slaydlar quruq, 2-3 ta qisqa jumladan iborat bo'lib, sahifa bo'm-bo'sh ko'rinmasligi SHART! Slayd kartochkasi yuqoridan pastgacha to'liq, mazmunli va go'zal to'ldirilgan bo'lsin.
+- Har bir mazmuniy slaydda kamida 4 tadan 5-6 tagacha keng qamrovli, chuqur, sifatli va faktlarga boy bandlar ("bullet_points") bo'lsin.
+- Har bir band shunchaki 4-5 ta so'zdan iborat bo'lmasin! Har bir bandni quyidagi tartibda to'liq va keng qamrovli yozing:
+  "Kalit tushuncha / Atama: Mazkur tushunchaning ilmiy-nazariy mohiyati, asosiy tamoyillari, aniq dalillar, qonuniyatlar, raqamlar va amaliyotdagi real ahamiyatini tushuntiruvchi 25-40 ta so'zdan iborat to'liq, chuqur tahliliy fikr."
+- Har bir slayd sahifasi (kartochkasi) to'liq, mukammal, boy ma'lumotlar bilan to'ldirilgan va o'qish uchun juda qiziqarli bo'lsin!
 
-2. SLAYDLARNI ZOYE KETKAZMASLIK VA 100% BEVOSITA MAZMUNGA QARATISH:
-- DIQQAT: Taqdimotning titul (muqova), mundarija (reja), xulosa va adabiyotlar slaydlari avtomatik tarzda alohida yaratiladi!
-- Shu sababli, 'slides' massividagi RO'PPA-ROSA {num_content} ta slaydning HAMMASI 100% BEVOSITA FOYDALANUVCHI MAVZULARIGA bag'ishlangan bo'lishi SHART!
-- 'slides' massivining boshida umumiy quruq "Kirish" yoki oxirida ortiqcha "Xulosa va amaliy tavsiyalar" kabi keraksiz slaydlarni QO'SHMANG! Har bir slayd bevosita foydalanuvchi yuborgan mavzuning alohida muhim qismini to'liq ochib bersin!
+2. MAVZULARNI KENG QAMROVLI VA TO'LIQ QAMRAB OLISH:
+- Foydalanuvchi taqdim etgan HAR BIR mavzu, reja bandi yoki so'ralgan yo'nalish 100% to'liq qamrab olinsin! Birorta ham mavzu, masala yoki reja bandi chetda qolib ketmasin.
+- Har bir mazmuniy slayd bitta mavzuning alohida muhim yo'nalishini chuqur, tahlillar va faktlar bilan to'liq ochib bersin.
+- Agar foydalanuvchi bitta umumiy mavzu yuborgan bo'lsa ham, uni tor doirada emas, sohaning barcha tarmoqlari, funksiyalari, zamonaviy tendensiyalari va yechimlarini to'liq qamrab olgan holda KENG VA BAFURJA yoritib bering!
 
-3. TAQDIMOT REJASI ("agenda"):
-- Taqdimot rejasi ("agenda") umumiy quruq shablon ("Kirish", "Nazariya", "Amaliyot", "Xulosa") BO'LMASIN!
-- Reja bandlari aynan foydalanuvchi yuborgan mavzular va asosiy mazmuniy slaydlarning haqiqiy sarlavhalarini aks ettirsin (3 tadan 5 tagacha asosiy band)!
+3. SLAYD GIDROLOGIYASI VA STRUKTURASI:
+- Titul (muqova), mundarija (reja), xulosa va adabiyotlar slaydlari dastur tomonidan avtomatik yaratiladi.
+- Shu sababli 'slides' massividagi BARCHA {num_content} ta slayd 100% BEVOSITA MAVZUNING O'ZIGA bag'ishlansin!
+- 'slides' boshida quruq "Kirish" yoki oxirida ortiqcha "Xulosa" kabi slaydlar qo'shilmasin — barcha slaydlar bevosita mavzuni to'liq yoritish uchun ishlatilsin!
 
-4. SLAYD MATNLARI VA MAZMUNINING CHUQURLIGI:
-- Har bir slaydda 3 tadan 5 tagacha yuqori darajada mazmunli, chuqur va batafsil band ("bullet_points") bo'lsin.
-- Bandlar shunchaki 2-3 ta so'zdan iborat bo'sh gap bo'lmasin! Har bir bandni quyidagi tartibda to'liq yozing:
-  "Kalit so'z yoki tushuncha: Mazkur tushunchaning ilmiy-amaliy mohiyati, aniq faktlar, tahlillar va amaliy ahamiyati haqida kamida 15-25 so'zdan iborat to'liq, chuqur tushuntirish."
-- Talaba ushbu slaydni o'qiganda va ko'rsatganda mavzu to'liq, mukammal va professional yoritilgani yaqqol ko'rinib tursin!
+4. TAQDIMOT REJASI ("agenda"):
+- Reja bandlari umumiy quruq shablon bo'lmasin! U aynan foydalanuvchi mavzusi va mazmuniy slaydlarning haqiqiy sarlavhalarini aks ettirsin (3 tadan 5 tagacha asosiy band).
 
 5. MA'RUZA NUTQI (SPEAKER_NOTES):
-- Har bir slayd uchun "speaker_notes" maydonida talaba doskada turib gapirib beradigan jonli, ravon, ilmiy va tushunarli ma'ruza nutqi (3-5 ta to'liq gap) bo'lsin.
+- Talaba doskada turib ushbu slaydni himoya qilayotganda gapirib beradigan 3-5 jumlalik jonli, ilmiy, tushunarli va professional ma'ruza matni bo'lsin.
 
 DIQQAT (QAT'IY TALAB): Foydalanuvchi jami taqdimot hajmi (titul muqova, reja, xulosa va yakun bilan birga) JAMI RO'PPA-ROSA {slide_count} TA SLAYDDAN iborat bo'lishini belgiladi (belgilangandan 1 list ham oshmasin!).
 Shu sababli, taqdimotning ichki 'slides' massivida RO'PPA-ROSA {num_content} ta asosiy mazmuniy slayd tuzib bering (hech qachon {num_content} tadan oshmasin yoki kam bo'lmasin).
@@ -822,6 +819,7 @@ def _add_styled_bullet(text_frame, bullet_text: str, theme: dict, font_size: Pt,
     """Slayd matn bandini kalit so'zlarni qalin qilib, yuqori sifatli infografika uslubida joylash."""
     p = text_frame.paragraphs[0] if is_first else text_frame.add_paragraph()
     p.space_after = space_after
+    p.line_spacing = 1.18
 
     clean_txt = re.sub(r"^[\s•\-\*–—\d\.\)]+", "", remove_emojis(str(bullet_text))).strip()
     if not clean_txt:
@@ -845,7 +843,7 @@ def _add_styled_bullet(text_frame, bullet_text: str, theme: dict, font_size: Pt,
     r_icon.font.name = "Arial"
 
     # Kalit so'z va tavsifni ajratish (masalan: "Kalit so'z: Tavsif matni" yoki "Bosqich — Izoh")
-    match = re.match(r"^([^:—–\-]{3,35}[:—–\-])\s*(.*)$", clean_txt)
+    match = re.match(r"^([^:—–\-]{3,55}[:—–\-])\s*(.*)$", clean_txt)
     if match:
         lead, rest = match.groups()
         r_lead = p.add_run()
@@ -1718,8 +1716,8 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             ctf = content_box.text_frame
             ctf.word_wrap = True
 
-            font_sz = Pt(15 if len(bullets) >= 4 else 17)
-            space_aft = Pt(12 if len(bullets) >= 4 else 16)
+            font_sz = Pt(14 if len(bullets) >= 5 else (15.5 if len(bullets) == 4 else 17))
+            space_aft = Pt(10 if len(bullets) >= 5 else (14 if len(bullets) == 4 else 18))
 
             for b_idx, bullet in enumerate(bullets):
                 _add_styled_bullet(ctf, bullet, theme, font_size=font_sz, space_after=space_aft, is_first=(b_idx == 0))
@@ -1739,8 +1737,8 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             ctf = content_box.text_frame
             ctf.word_wrap = True
 
-            font_sz = Pt(17 if len(bullets) >= 5 else 19)
-            space_aft = Pt(14 if len(bullets) >= 5 else 18)
+            font_sz = Pt(15.5 if len(bullets) >= 5 else (17 if len(bullets) == 4 else 18.5))
+            space_aft = Pt(11 if len(bullets) >= 5 else (15 if len(bullets) == 4 else 20))
 
             for b_idx, bullet in enumerate(bullets):
                 _add_styled_bullet(ctf, bullet, theme, font_size=font_sz, space_after=space_aft, is_first=(b_idx == 0))
