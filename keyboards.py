@@ -39,7 +39,7 @@ def get_slide_language_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
 
 def get_main_menu(is_admin: bool = False, lang: str = "uz") -> ReplyKeyboardMarkup:
     """Foydalanuvchi tanlagan tildagi chiroyli va qulay tartiblangan asosiy menyu."""
-    webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot.onrender.com/themes")
+    webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot-2.onrender.com/themes")
     if lang == "ru":
         mini_app_title = "📱 Темы и фоны (Мини-апп)"
     elif lang == "en":
@@ -227,7 +227,7 @@ def get_skip_author_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
 
 def get_theme_selection_keyboard() -> InlineKeyboardMarkup:
     """Hamma qurilmalarda 100% ishlaydigan fanlar tugmalari va Telegram Mini Ilova."""
-    webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot.onrender.com/themes")
+    webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot-2.onrender.com/themes")
     return InlineKeyboardMarkup(inline_keyboard=[
         # 1-qator: Mini ilovani ochish (Qo'llab-quvvatlaydigan qurilmalar uchun)
         [
@@ -277,7 +277,7 @@ def get_theme_selection_keyboard() -> InlineKeyboardMarkup:
 
 def get_theme_reply_keyboard() -> ReplyKeyboardMarkup:
     """Telegram pastki panelida Mini ilovaga kirish tugmasi."""
-    webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot.onrender.com/themes")
+    webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot-2.onrender.com/themes")
     return ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text="📱 Mini Ilovani ochish (Fanlar bo'yicha)", web_app=WebAppInfo(url=webapp_url))],
