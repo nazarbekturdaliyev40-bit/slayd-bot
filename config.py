@@ -33,3 +33,12 @@ def is_admin(user_id: int) -> bool:
 def is_unlimited(user_id: int) -> bool:
     return user_id in UNLIMITED_USERS or user_id in ADMIN_USERS or user_id == ADMIN_ID
 
+# Telegram Mini App (Web App) sozlamalari
+WEBAPP_URL = (
+    os.getenv("WEBAPP_URL", "")
+    or os.getenv("RENDER_EXTERNAL_URL", "")
+    or "https://slayd-bot.onrender.com"
+).rstrip("/")
+THEMES_WEBAPP_URL = f"{WEBAPP_URL}/themes"
+
+

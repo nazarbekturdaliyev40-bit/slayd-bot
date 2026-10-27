@@ -1444,29 +1444,51 @@ async def process_slide_count_invalid(message: Message, state: FSMContext):
     )
 
 
+THEME_TITLES = {
+    "auto": "✨ PowerPoint AI (Avtomatik mos shablon)",
+    "mix": "🔀 PPT 2016 Dinamik Mix (Barcha fanlar aralash)",
+    "circuit": "💻 IT, Dasturlash va Kiberxavfsizlik (Circuit 2016)",
+    "slice": "🔷 Axborot Texnologiyalari & Startaplar (Slice 2016)",
+    "droplet": "🩺 Tibbiyot, Farmatsevtika va Salomatlik (Droplet 2016)",
+    "blue": "🔷 Tibbiy Diagnostika va Klinika (Moviy)",
+    "facet": "🌿 Biologiya, Ekologiya va Qishloq xo'jaligi (Facet 2016)",
+    "green": "🟢 Tabiatshunoslik va Atrof-muhit (Eko Zumrad)",
+    "office": "💼 Iqtisodiyot, Moliya va Bank ishi (Office 2016)",
+    "dark": "🖤 Biznes, Menejment va Investitsiyalar (Dark Gold)",
+    "integral": "📐 Fizika, Matematika va Muhandislik (Integral 2016)",
+    "celestial": "🌌 Astronomiya, Fizika va Kosmos (Celestial 2016)",
+    "retrospect": "🏛 O'zbekiston va Jahon Tarixi (Retrospect 2016)",
+    "vintage": "📜 Arxeologiya, Sharqshunoslik va Falsafa (Pergament)",
+    "savon": "📚 O'zbek tili, Adabiyot va Tilshunoslik (Savon 2016)",
+    "ion": "🔴 Pedagogika, Ta'lim va Psixologiya (Ion 2016)",
+    "canva_pastel": "🌸 San'at, Tasviriy san'at va Dizayn (Canva Pastel)",
+    "white": "⚪️ Arxitektura, Galereya va Minimalizm (Minimal Oq)",
+    "navy": "🔵 Davlat boshqaruvi va Huquq (Royal Navy)",
+    "purple": "🟣 Innovatsiyalar va Ijodiyot (Kosmik Binafsha)",
+    "gamma": "🪄 Gamma AI (gamma.app taqdimot)"
+}
+
+
 async def send_theme_selection_window(target_message: Message, state: FSMContext, edit: bool = False):
-    """Faqat fon va PowerPoint 2016 shablonlarini tanlash uchun maxsus interaktiv oyna."""
+    """Fanlar bo'yicha slayd fonini tanlash uchun interaktiv oyna va Telegram Mini Ilova."""
     data = await state.get_data()
     topic = data.get("topic", "")
     safe_topic = html.escape(topic[:60]) + ("..." if len(topic) > 60 else "")
 
     window_text = (
-        "🖼 <b>POWERPOINT 2016 SHABLON VA FON TANLASH OYNASI</b>\n\n"
+        "🎨 <b>FANLAR BO'YICHA SLAYD FONINI TANLANG</b>\n\n"
         f"📌 Mavzu: <b>{safe_topic}</b>\n\n"
-        "Taqdimotingiz chiroyli, nafis va professional bo'lishi uchun <b>PowerPoint 2016</b> rasmiy shablonlaridan birini tanlang:\n\n"
-        "🏛 <b>PowerPoint 2016 Shablonlari:</b>\n"
-        "• 🟢 <b>Facet</b> — Zumrad yashil, qirrali geometriya va ekologik soflik\n"
-        "• 🔴 <b>Ion</b> — Bordo / sharob tusli nafislik va to'q qizil jilo\n"
-        "• 🔷 <b>Slice</b> — Zamonaviy kesimli burchaklar, kiber havorang va kontrast\n"
-        "• 🌌 <b>Celestial</b> — Tungi osmon moviyligi, yulduzsimon oltin aksent\n"
-        "• 📐 <b>Integral</b> — Muhandislik, po'lat kulrang va terrakota chiziqlar\n"
-        "• 🏺 <b>Retrospect</b> — Tarixiy, iliq oltin qum va terrakota ohanglar\n"
-        "• 💧 <b>Droplet</b> — Akvamarin, toza tomchi shakllari va tibbiy nafislik\n"
-        "• 📜 <b>Savon</b> — Aristokratik shampan, bronza va neytral nafosat\n"
-        "• ⚡️ <b>Circuit</b> — Kiber texno, IT va sun'iy intellekt foni\n"
-        "• 🏢 <b>Office 2016</b> — Klassik rasmiy ko'k va oq dizayn\n\n"
-        "🔀 <b>PPT 2016 Dinamik Mix</b> — Slaydlarda har xil shablonlar uyg'unlashtiriladi!\n\n"
-        "👇 <i>O'zingizga ma'qul shablonni pastdagi oynadan tanlang:</i>"
+        "Taqdimotingiz chiroyli, nafis va aynan fanning mazmuniga mos bo'lishi uchun tegishli fanni tanlang:\n\n"
+        "💻 <b>Aniq fanlar & IT</b> — Circuit 2016, Slice 2016\n"
+        "🩺 <b>Tibbiyot & Salomatlik</b> — Droplet 2016, Moviy\n"
+        "💼 <b>Iqtisodiyot & Biznes</b> — Office 2016, Dark Gold\n"
+        "📐 <b>Fizika & Muhandislik</b> — Integral 2016, Celestial\n"
+        "🌿 <b>Tabiiy fanlar & Eko</b> — Facet 2016, Tabiat Zumrad\n"
+        "🏛 <b>Tarix & Falsafa</b> — Retrospect 2016, Pergament\n"
+        "📚 <b>Adabiyot & Ta'lim</b> — Savon 2016, Ion 2016\n"
+        "🎨 <b>San'at & Dizayn</b> — Canva Pastel, Minimal Oq\n"
+        "🔀 <b>PPT 2016 Dinamik Mix</b> — Barcha fanlar aralash\n\n"
+        "📱 <i>Fonlarni vizual ko'rib tanlash uchun pastdagi <b>'Mini ilovani ochish'</b> tugmasini bosing yoki quyidagi fan tugmalaridan birini tanlang:</i>"
     )
     if edit:
         try:
@@ -1612,6 +1634,11 @@ async def process_theme_choice(callback: CallbackQuery, state: FSMContext):
         return
     await callback.answer()
     theme_key = callback.data.replace("theme_", "")
+
+    if callback.from_user.id in ACTIVE_GENERATING_USERS:
+        await callback.message.answer("⏳ Sizning avvalgi slaydingiz tayyorlanmoqda. Iltimos, u yakunlanishini kuting!")
+        return
+
     data = await state.get_data()
     topic = data.get("topic", "")
     if not topic:
@@ -1623,6 +1650,11 @@ async def process_theme_choice(callback: CallbackQuery, state: FSMContext):
         await state.clear()
         return
 
+    slide_count = data.get("slide_count", 8)
+    author_info = data.get("author_info", "")
+    context_doc = data.get("context_document", "")
+    slide_lang = data.get("slide_language", "uz")
+
     old_bg = data.get("custom_bg")
     if old_bg and os.path.exists(old_bg):
         try:
@@ -1630,23 +1662,151 @@ async def process_theme_choice(callback: CallbackQuery, state: FSMContext):
         except Exception:
             pass
 
-    await state.update_data(theme_choice=theme_key, custom_bg=None)
-    await show_slide_confirmation(callback.message, state, callback.from_user.id, edit=True)
+    await state.clear()
+
+    try:
+        await callback.message.edit_reply_markup(reply_markup=None)
+    except Exception:
+        pass
+
+    theme_title = THEME_TITLES.get(theme_key, theme_key)
+    status_msg = await callback.message.answer(
+        f"✅ <b>Tanlangan fan / dizayn:</b> {theme_title}\n\n"
+        f"🚀 <b>Taqdimotingiz tayyorlanmoqda...</b>",
+        parse_mode="HTML"
+    )
+
+    await generate_and_send_presentation(
+        chat_message=status_msg,
+        user_id=callback.from_user.id,
+        topic=topic,
+        slide_count=slide_count,
+        author_info=author_info,
+        theme_choice=theme_key,
+        custom_bg=None,
+        context_document=context_doc,
+        slide_language=slide_lang
+    )
 
 @router.message(F.web_app_data)
 async def process_web_app_theme(message: Message, state: FSMContext):
-    """Telegram WebApp orqali tanlangan PowerPoint 2016 shablonini qabul qilish."""
+    """Telegram WebApp orqali tanlangan fonga muvofiq zudlik bilan slayd tayyorlash."""
     data_str = (message.web_app_data.data or "").strip()
-    if data_str in generator.THEMES or data_str == "mix":
-        old_data = await state.get_data()
-        old_bg = old_data.get("custom_bg")
-        if old_bg and os.path.exists(old_bg):
-            try:
-                os.remove(old_bg)
-            except Exception:
-                pass
-        await state.update_data(theme_choice=data_str, custom_bg=None)
-        await show_slide_confirmation(message, state, message.from_user.id, edit=False)
+    theme_key = data_str if (data_str in generator.THEMES or data_str == "mix") else "mix"
+
+    if message.from_user.id in ACTIVE_GENERATING_USERS:
+        await message.answer("⏳ Sizning avvalgi slaydingiz tayyorlanmoqda. Iltimos, u yakunlanishini kuting!")
+        return
+
+    data = await state.get_data()
+    topic = data.get("topic")
+
+    old_bg = data.get("custom_bg")
+    if old_bg and os.path.exists(old_bg):
+        try:
+            os.remove(old_bg)
+        except Exception:
+            pass
+
+    if topic:
+        slide_count = data.get("slide_count", 8)
+        author_info = data.get("author_info", "")
+        context_doc = data.get("context_document", "")
+        slide_lang = data.get("slide_language", "uz")
+
+        await state.clear()
+
+        theme_title = THEME_TITLES.get(theme_key, theme_key)
+        status_msg = await message.answer(
+            f"✅ <b>Tanlangan fan / dizayn:</b> {theme_title}\n\n"
+            f"🚀 <b>Taqdimotingiz tayyorlanmoqda...</b>",
+            parse_mode="HTML"
+        )
+
+        await generate_and_send_presentation(
+            chat_message=status_msg,
+            user_id=message.from_user.id,
+            topic=topic,
+            slide_count=slide_count,
+            author_info=author_info,
+            theme_choice=theme_key,
+            custom_bg=None,
+            context_document=context_doc,
+            slide_language=slide_lang
+        )
+    else:
+        theme_title = THEME_TITLES.get(theme_key, theme_key)
+        await state.update_data(theme_choice=theme_key, custom_bg=None)
+        await state.set_state(SlideCreation.waiting_for_topic)
+        user = await database.get_user(message.from_user.id) or {}
+        user_lang = user.get("language") or "uz"
+        await message.answer(
+            f"✅ <b>{theme_title}</b> foni tanlandi!\n\n"
+            f"📌 Taqdimotingiz qaysi mavzuda bo'lsin? Mavzuni yozib yuboring:",
+            reply_markup=keyboards.get_main_menu(is_admin=config.is_admin(message.from_user.id), lang=user_lang),
+            parse_mode="HTML"
+        )
+
+async def handle_theme_from_webapp(user_id: int, theme_id: str, bot: Bot, dp: Dispatcher):
+    """Mini ilovadan tanlangan fonga muvofiq zudlik bilan slayd tayyorlash (API orqali)."""
+    if user_id in ACTIVE_GENERATING_USERS:
+        return
+
+    from aiogram.fsm.storage.base import StorageKey
+    key = StorageKey(bot_id=bot.id, chat_id=user_id, user_id=user_id)
+    state = FSMContext(storage=dp.fsm.storage, key=key)
+
+    theme_key = theme_id if (theme_id in generator.THEMES or theme_id == "mix") else "mix"
+    data = await state.get_data()
+    topic = data.get("topic")
+
+    old_bg = data.get("custom_bg")
+    if old_bg and os.path.exists(old_bg):
+        try:
+            os.remove(old_bg)
+        except Exception:
+            pass
+
+    if topic:
+        slide_count = data.get("slide_count", 8)
+        author_info = data.get("author_info", "")
+        context_doc = data.get("context_document", "")
+        slide_lang = data.get("slide_language", "uz")
+
+        await state.clear()
+
+        theme_title = THEME_TITLES.get(theme_key, theme_key)
+        status_msg = await bot.send_message(
+            user_id,
+            f"✅ <b>Tanlangan fan / dizayn:</b> {theme_title}\n\n"
+            f"🚀 <b>Taqdimotingiz tayyorlanmoqda...</b>",
+            parse_mode="HTML"
+        )
+
+        await generate_and_send_presentation(
+            chat_message=status_msg,
+            user_id=user_id,
+            topic=topic,
+            slide_count=slide_count,
+            author_info=author_info,
+            theme_choice=theme_key,
+            custom_bg=None,
+            context_document=context_doc,
+            slide_language=slide_lang
+        )
+    else:
+        theme_title = THEME_TITLES.get(theme_key, theme_key)
+        await state.update_data(theme_choice=theme_key, custom_bg=None)
+        await state.set_state(SlideCreation.waiting_for_topic)
+        user = await database.get_user(user_id) or {}
+        user_lang = user.get("language") or "uz"
+        await bot.send_message(
+            user_id,
+            f"✅ <b>{theme_title}</b> foni tanlandi!\n\n"
+            f"📌 Taqdimotingiz qaysi mavzuda bo'lsin? Mavzuni yozib yuboring:",
+            reply_markup=keyboards.get_main_menu(is_admin=config.is_admin(user_id), lang=user_lang),
+            parse_mode="HTML"
+        )
 
 async def show_slide_confirmation(target_message: Message, state: FSMContext, user_id: int, edit: bool = False):
     data = await state.get_data()
@@ -1659,30 +1819,6 @@ async def show_slide_confirmation(target_message: Message, state: FSMContext, us
 
     user = await database.get_user(user_id) or {}
     user_lang = user.get("language") or "uz"
-
-    THEME_TITLES = {
-        "auto": "✨ PowerPoint AI (Avtomatik mos shablon)",
-        "mix": "🔀 PPT 2016 Dinamik Mix (Xar xil shablon)",
-        "facet": "🟢 Facet 2016 (Geometrik Zumrad)",
-        "ion": "🔴 Ion 2016 (Bordo & To'q qizil)",
-        "slice": "🔷 Slice 2016 (Kesimli Neo Havorang)",
-        "celestial": "🌌 Celestial 2016 (Koinot Tungi Moviy)",
-        "integral": "📐 Integral 2016 (Muhandislik & Terrakota)",
-        "retrospect": "🏺 Retrospect 2016 (Retro Oltin Qum)",
-        "droplet": "💧 Droplet 2016 (Yumshoq Tomchi Akva)",
-        "savon": "📜 Savon 2016 (Aristokrat Shampan)",
-        "circuit": "⚡️ Circuit 2016 (Kiber Texno Dark)",
-        "office": "🏢 Office 2016 (Klassik Moviy)",
-        "white": "⚪️ Oq fon (Minimal)",
-        "dark": "🖤 Qora fon (Premium Dark Gold)",
-        "navy": "🔵 Toʻq koʻk fon (Royal Navy)",
-        "blue": "🔷 Moviy fon (Havorang)",
-        "green": "🟢 Zumrad yashil fon",
-        "purple": "🟣 Binafsha fon (Kosmik)",
-        "canva_pastel": "🌸 Canva Pastel fon",
-        "vintage": "📜 Klassik pergament fon",
-        "gamma": "🪄 Gamma AI (gamma.app taqdimot)"
-    }
 
     if custom_bg:
         theme_title = "🖼 Oʻzingiz yuklagan maxsus fon rasmi" if user_lang == "uz" else ("🖼 Пользовательское фоновое изображение" if user_lang == "ru" else "🖼 Custom background image")

@@ -1,5 +1,6 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 import locales
+import config
 
 def get_language_selection_keyboard() -> InlineKeyboardMarkup:
     """Interfeys tilini tanlash uchun tugmalar (Start bosilganda va sozlamalarda)."""
@@ -213,38 +214,48 @@ def get_skip_author_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
     ])
 
 def get_theme_selection_keyboard() -> InlineKeyboardMarkup:
-    """PowerPoint 2016 rasmiy shablonlari va fonlarini tanlash oynasi uchun tugmalar."""
+    """Fanlar bo'yicha kategoriyalangan PowerPoint 2016 shablonlarini tanlash oynasi va Mini Ilova tugmasi."""
+    webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot.onrender.com/themes")
     rows = [
+        # 1-qator: Telegram Mini Ilova tugmasi (Oyna ochilishi uchun)
         [
-            InlineKeyboardButton(text="🔀 PPT 2016 Dinamik Mix (Xar xil shablon)", callback_data="theme_mix")
+            InlineKeyboardButton(
+                text="📱 Fanlar bo'yicha fon tanlash (Mini ilova)",
+                web_app=WebAppInfo(url=webapp_url)
+            )
+        ],
+        # 2-qator: Universal Dinamik Mix
+        [
+            InlineKeyboardButton(text="🔀 Barcha fanlar uchun (Dinamik Mix)", callback_data="theme_mix")
+        ],
+        # Fanlar bo'yicha juftliklar
+        [
+            InlineKeyboardButton(text="💻 IT & Kiber (Circuit)", callback_data="theme_circuit"),
+            InlineKeyboardButton(text="🩺 Tibbiyot (Droplet)", callback_data="theme_droplet")
         ],
         [
-            InlineKeyboardButton(text="🟢 Facet (Zumrad)", callback_data="theme_facet"),
-            InlineKeyboardButton(text="🔴 Ion (To'q Bordo)", callback_data="theme_ion")
+            InlineKeyboardButton(text="💼 Biznes & Moliya (Office)", callback_data="theme_office"),
+            InlineKeyboardButton(text="📐 Fizika & Texnika (Integral)", callback_data="theme_integral")
         ],
         [
-            InlineKeyboardButton(text="🔷 Slice (Neo Kesim)", callback_data="theme_slice"),
-            InlineKeyboardButton(text="🌌 Celestial (Koinot)", callback_data="theme_celestial")
+            InlineKeyboardButton(text="🌿 Biologiya & Eko (Facet)", callback_data="theme_facet"),
+            InlineKeyboardButton(text="🏛 Tarix & Meros (Retrospect)", callback_data="theme_retrospect")
         ],
         [
-            InlineKeyboardButton(text="📐 Integral (Muhandislik)", callback_data="theme_integral"),
-            InlineKeyboardButton(text="🏺 Retrospect (Retro Qum)", callback_data="theme_retrospect")
+            InlineKeyboardButton(text="📚 Adabiyot & Til (Savon)", callback_data="theme_savon"),
+            InlineKeyboardButton(text="🔴 Ta'lim & Psixologiya (Ion)", callback_data="theme_ion")
         ],
         [
-            InlineKeyboardButton(text="💧 Droplet (Yumshoq Tomchi)", callback_data="theme_droplet"),
-            InlineKeyboardButton(text="📜 Savon (Aristokrat)", callback_data="theme_savon")
+            InlineKeyboardButton(text="🔷 IT Startaplar (Slice)", callback_data="theme_slice"),
+            InlineKeyboardButton(text="🌌 Koinot & Astronomiya (Celestial)", callback_data="theme_celestial")
         ],
         [
-            InlineKeyboardButton(text="⚡️ Circuit (Kiber Texno)", callback_data="theme_circuit"),
-            InlineKeyboardButton(text="🏢 Office 2016 (Klassik)", callback_data="theme_office")
+            InlineKeyboardButton(text="🌸 San'at & Ijod (Pastel)", callback_data="theme_canva_pastel"),
+            InlineKeyboardButton(text="🖤 Hashamatli Dark (Dark Gold)", callback_data="theme_dark")
         ],
         [
-            InlineKeyboardButton(text="⚪️ Minimal Oq", callback_data="theme_white"),
-            InlineKeyboardButton(text="🖤 Premium Dark", callback_data="theme_dark")
-        ],
-        [
-            InlineKeyboardButton(text="🌸 Canva Pastel", callback_data="theme_canva_pastel"),
-            InlineKeyboardButton(text="📜 Pergament Retro", callback_data="theme_vintage")
+            InlineKeyboardButton(text="⚪️ Minimal Oq Galereya", callback_data="theme_white"),
+            InlineKeyboardButton(text="📜 Antik Pergament", callback_data="theme_vintage")
         ],
         [
             InlineKeyboardButton(text="🖼 Oʻz fon rasmingizni yuklash", callback_data="theme_custom_bg")
@@ -254,6 +265,18 @@ def get_theme_selection_keyboard() -> InlineKeyboardMarkup:
         ]
     ]
     return InlineKeyboardMarkup(inline_keyboard=rows)
+
+def get_theme_reply_keyboard() -> ReplyKeyboardMarkup:
+    """Telegram pastki panelida Mini ilovani ochish tugmasi."""
+    webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot.onrender.com/themes")
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="📱 Fanlar bo'yicha fon tanlash (Mini ilova)", web_app=WebAppInfo(url=webapp_url))],
+            [KeyboardButton(text="❌ Bekor qilish")]
+        ],
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )
 
 def get_custom_bg_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
