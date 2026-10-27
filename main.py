@@ -583,13 +583,18 @@ THEMES_HTML = """<!DOCTYPE html>
             <div class="theme-title">${t.title}</div>
             <div class="theme-desc">${t.desc}</div>
             <div class="tags">${t.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}</div>
-            <button class="select-btn" onclick="event.stopPropagation(); selectTheme(${JSON.stringify(t).replace(/"/g, '&quot;')})">
+            <button class="select-btn" onclick="event.stopPropagation(); selectThemeById('${t.id}')">
               🚀 Ushbu fonga tayyorlash
             </button>
           </div>
         `;
         container.appendChild(card);
       });
+    }
+
+    function selectThemeById(id) {
+      const t = themes.find(x => x.id === id);
+      if (t) selectTheme(t);
     }
 
     function filterThemes() {

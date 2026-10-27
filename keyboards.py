@@ -214,15 +214,50 @@ def get_skip_author_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
     ])
 
 def get_theme_selection_keyboard() -> InlineKeyboardMarkup:
-    """Telegram Mini Ilovasiga kirishga ruxsat so'rash uchun yagona tugma."""
+    """Hamma qurilmalarda 100% ishlaydigan fanlar tugmalari va Telegram Mini Ilova."""
     webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot.onrender.com/themes")
     return InlineKeyboardMarkup(inline_keyboard=[
+        # 1-qator: Mini ilovani ochish (Qo'llab-quvvatlaydigan qurilmalar uchun)
         [
             InlineKeyboardButton(
-                text="📱 Ha, Mini ilovaga kirish",
+                text="📱 Mini Ilovani ochish (Vizual ko'rish)",
                 web_app=WebAppInfo(url=webapp_url)
             )
         ],
+        # 2-qator: Barcha fanlar uchun universal Dinamik Mix
+        [
+            InlineKeyboardButton(text="🔀 Barcha fanlar uchun (Dinamik Mix)", callback_data="theme_mix")
+        ],
+        # 3-qator: IT va Tibbiyot
+        [
+            InlineKeyboardButton(text="💻 IT & Dasturlash (Circuit)", callback_data="theme_circuit"),
+            InlineKeyboardButton(text="🩺 Tibbiyot (Droplet)", callback_data="theme_droplet")
+        ],
+        # 4-qator: Iqtisodiyot va Fizika
+        [
+            InlineKeyboardButton(text="💼 Biznes & Moliya (Office)", callback_data="theme_office"),
+            InlineKeyboardButton(text="📐 Fizika & Texnika (Integral)", callback_data="theme_integral")
+        ],
+        # 5-qator: Tabiat va Tarix
+        [
+            InlineKeyboardButton(text="🌿 Tabiat & Eko (Facet)", callback_data="theme_facet"),
+            InlineKeyboardButton(text="🏛 Tarix & Meros (Retrospect)", callback_data="theme_retrospect")
+        ],
+        # 6-qator: Adabiyot va Ta'lim
+        [
+            InlineKeyboardButton(text="📚 Adabiyot & Til (Savon)", callback_data="theme_savon"),
+            InlineKeyboardButton(text="🔴 Ta'lim & Psixologiya (Ion)", callback_data="theme_ion")
+        ],
+        # 7-qator: San'at va Koinot
+        [
+            InlineKeyboardButton(text="🌸 San'at & Dizayn (Pastel)", callback_data="theme_canva_pastel"),
+            InlineKeyboardButton(text="🌌 Koinot & Astronomiya (Celestial)", callback_data="theme_celestial")
+        ],
+        # 8-qator: Maxsus rasm
+        [
+            InlineKeyboardButton(text="🖼 Oʻz fon rasmingizni yuklash", callback_data="theme_custom_bg")
+        ],
+        # 9-qator: Bekor qilish
         [
             InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_generation")
         ]
@@ -233,7 +268,7 @@ def get_theme_reply_keyboard() -> ReplyKeyboardMarkup:
     webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot.onrender.com/themes")
     return ReplyKeyboardMarkup(
         keyboard=[
-            [KeyboardButton(text="📱 Ha, Mini ilovaga kirish", web_app=WebAppInfo(url=webapp_url))],
+            [KeyboardButton(text="📱 Mini Ilovani ochish (Fanlar bo'yicha)", web_app=WebAppInfo(url=webapp_url))],
             [KeyboardButton(text="❌ Bekor qilish")]
         ],
         resize_keyboard=True,

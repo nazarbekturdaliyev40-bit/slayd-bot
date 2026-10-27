@@ -1470,19 +1470,19 @@ THEME_TITLES = {
 
 
 async def send_theme_selection_window(target_message: Message, state: FSMContext, edit: bool = False):
-    """Slayd orqa fonini tanlash uchun Telegram Mini Ilovaga kirishga ruxsat so'rash oynasi."""
+    """Slayd orqa fonini tanlash oynasi (Mini ilova va barcha qurilmalar uchun to'liq fanlar tugmalari)."""
     data = await state.get_data()
     topic = data.get("topic", "")
     slide_count = data.get("slide_count", 8)
     safe_topic = html.escape(topic[:80]) + ("..." if len(topic) > 80 else "")
 
     window_text = (
-        "🎨 <b>SLAYD ORQA FONINI TANLASH</b>\n\n"
+        "🎨 <b>FANLAR BO'YICHA SLAYD FONINI TANLASH</b>\n\n"
         f"📌 Mavzu: <b>{safe_topic}</b>\n"
         f"📄 Slaydlar soni: <b>{slide_count} ta</b>\n\n"
-        "Slaydingiz uchun fanlar boʻyicha eng mos fon va PowerPoint 2016 rasmiy dizaynini tanlash uchun "
-        "<b>Telegram Mini Ilovasi</b>ga kirishga ruxsat berasizmi?\n\n"
-        "👇 <i>Ilovaga kirish uchun quyidagi tugmani bosing:</i>"
+        "Taqdimotingiz fanning mazmuniga toʻliq mos va chiroyli chiqishi uchun quyidagi fanlardan birini tanlang.\n"
+        "<i>Tugmani bosishingiz bilan taqdimotingiz darhol tayyorlanadi!</i>\n\n"
+        "📱 <b>Qulay vizual koʻrish uchun:</b> Pastdagi <i>'Mini Ilovani ochish'</i> tugmasini bosing yoki toʻgʻridan-toʻgʻri oʻzingizga kerakli fan tugmasini tanlang:"
     )
     reply_markup = keyboards.get_theme_selection_keyboard()
     if edit:
