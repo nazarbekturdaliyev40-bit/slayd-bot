@@ -1434,6 +1434,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
     theme = THEMES.get(theme_name, THEMES["blue"])
     is_dark = (theme_name == "dark")
     is_white = (theme_name == "white")
+    is_mix_theme = (theme_name == "mix")
 
     prs = Presentation()
     prs.slide_width = Inches(13.333)
