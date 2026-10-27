@@ -1470,33 +1470,28 @@ THEME_TITLES = {
 
 
 async def send_theme_selection_window(target_message: Message, state: FSMContext, edit: bool = False):
-    """Fanlar bo'yicha slayd fonini tanlash uchun interaktiv oyna va Telegram Mini Ilova."""
+    """Slayd orqa fonini tanlash uchun Telegram Mini Ilovaga kirishga ruxsat so'rash oynasi."""
     data = await state.get_data()
     topic = data.get("topic", "")
-    safe_topic = html.escape(topic[:60]) + ("..." if len(topic) > 60 else "")
+    slide_count = data.get("slide_count", 8)
+    safe_topic = html.escape(topic[:80]) + ("..." if len(topic) > 80 else "")
 
     window_text = (
-        "🎨 <b>FANLAR BO'YICHA SLAYD FONINI TANLANG</b>\n\n"
-        f"📌 Mavzu: <b>{safe_topic}</b>\n\n"
-        "Taqdimotingiz chiroyli, nafis va aynan fanning mazmuniga mos bo'lishi uchun tegishli fanni tanlang:\n\n"
-        "💻 <b>Aniq fanlar & IT</b> — Circuit 2016, Slice 2016\n"
-        "🩺 <b>Tibbiyot & Salomatlik</b> — Droplet 2016, Moviy\n"
-        "💼 <b>Iqtisodiyot & Biznes</b> — Office 2016, Dark Gold\n"
-        "📐 <b>Fizika & Muhandislik</b> — Integral 2016, Celestial\n"
-        "🌿 <b>Tabiiy fanlar & Eko</b> — Facet 2016, Tabiat Zumrad\n"
-        "🏛 <b>Tarix & Falsafa</b> — Retrospect 2016, Pergament\n"
-        "📚 <b>Adabiyot & Ta'lim</b> — Savon 2016, Ion 2016\n"
-        "🎨 <b>San'at & Dizayn</b> — Canva Pastel, Minimal Oq\n"
-        "🔀 <b>PPT 2016 Dinamik Mix</b> — Barcha fanlar aralash\n\n"
-        "📱 <i>Fonlarni vizual ko'rib tanlash uchun pastdagi <b>'Mini ilovani ochish'</b> tugmasini bosing yoki quyidagi fan tugmalaridan birini tanlang:</i>"
+        "🎨 <b>SLAYD ORQA FONINI TANLASH</b>\n\n"
+        f"📌 Mavzu: <b>{safe_topic}</b>\n"
+        f"📄 Slaydlar soni: <b>{slide_count} ta</b>\n\n"
+        "Slaydingiz uchun fanlar boʻyicha eng mos fon va PowerPoint 2016 rasmiy dizaynini tanlash uchun "
+        "<b>Telegram Mini Ilovasi</b>ga kirishga ruxsat berasizmi?\n\n"
+        "👇 <i>Ilovaga kirish uchun quyidagi tugmani bosing:</i>"
     )
+    reply_markup = keyboards.get_theme_selection_keyboard()
     if edit:
         try:
-            await target_message.edit_text(window_text, reply_markup=keyboards.get_theme_selection_keyboard(), parse_mode="HTML")
+            await target_message.edit_text(window_text, reply_markup=reply_markup, parse_mode="HTML")
             return
         except Exception:
             pass
-    await target_message.answer(window_text, reply_markup=keyboards.get_theme_selection_keyboard(), parse_mode="HTML")
+    await target_message.answer(window_text, reply_markup=reply_markup, parse_mode="HTML")
 
 @router.message(SlideCreation.waiting_for_author, F.text)
 async def process_author_info_message(message: Message, state: FSMContext):
