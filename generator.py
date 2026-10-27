@@ -49,8 +49,8 @@ THEMES = {
         "bg_slide": RGBColor(24, 24, 27),         # Dark Zinc
         "card_bg": RGBColor(39, 39, 42),          # Zinc Card
         "card_border": RGBColor(245, 158, 11),
-        "text_dark": RGBColor(250, 250, 250),     # Bright Crisp Text
-        "text_muted": RGBColor(161, 161, 170),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Crisp White (Never dark on black)
+        "text_muted": RGBColor(212, 212, 216),    # Bright Zinc 300 (Clear silver, never black)
         "white": RGBColor(255, 255, 255),
         "bullet_icon": "•",
         "tag": "PREMIUM DARK"
@@ -783,6 +783,15 @@ def _add_styled_bullet(text_frame, bullet_text: str, theme: dict, font_size: Pt,
     if not clean_txt:
         return
 
+    is_dark = (
+        theme.get("tag") == "PREMIUM DARK" or
+        theme.get("bg_slide") == RGBColor(24, 24, 27) or
+        "qora" in theme.get("name", "").lower()
+    )
+
+    lead_color = theme["accent"] if is_dark else theme.get("primary", theme["text_dark"])
+    body_color = theme["white"] if is_dark else theme["text_dark"]
+
     # Bullet ikonkasi
     r_icon = p.add_run()
     r_icon.text = f"{theme.get('bullet_icon', '✦')}  "
@@ -799,7 +808,7 @@ def _add_styled_bullet(text_frame, bullet_text: str, theme: dict, font_size: Pt,
         r_lead.text = f"{lead} "
         r_lead.font.bold = True
         r_lead.font.size = font_size
-        r_lead.font.color.rgb = theme.get("primary", theme["text_dark"])
+        r_lead.font.color.rgb = lead_color
         r_lead.font.name = "Arial"
 
         if rest:
@@ -807,7 +816,7 @@ def _add_styled_bullet(text_frame, bullet_text: str, theme: dict, font_size: Pt,
             r_rest.text = rest
             r_rest.font.bold = False
             r_rest.font.size = font_size
-            r_rest.font.color.rgb = theme["text_dark"]
+            r_rest.font.color.rgb = body_color
             r_rest.font.name = "Arial"
     else:
         words = clean_txt.split()
@@ -818,21 +827,21 @@ def _add_styled_bullet(text_frame, bullet_text: str, theme: dict, font_size: Pt,
             r_lead.text = lead
             r_lead.font.bold = True
             r_lead.font.size = font_size
-            r_lead.font.color.rgb = theme.get("primary", theme["text_dark"])
+            r_lead.font.color.rgb = lead_color
             r_lead.font.name = "Arial"
 
             r_rest = p.add_run()
             r_rest.text = rest
             r_rest.font.bold = False
             r_rest.font.size = font_size
-            r_rest.font.color.rgb = theme["text_dark"]
+            r_rest.font.color.rgb = body_color
             r_rest.font.name = "Arial"
         else:
             r = p.add_run()
             r.text = clean_txt
             r.font.bold = False
             r.font.size = font_size
-            r.font.color.rgb = theme["text_dark"]
+            r.font.color.rgb = body_color
             r.font.name = "Arial"
 
 def _add_header(slide, title_text: str, theme: dict, slide_num: int = None, total_slides: int = None, category: str = "ILMIY TAQDIMOT"):
@@ -1418,7 +1427,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         p_foot.text = f"{city_label} — {current_year}"
         p_foot.font.size = Pt(13)
         p_foot.font.bold = True
-        p_foot.font.color.rgb = theme["text_muted"]
+        p_foot.font.color.rgb = theme["accent"] if is_dark else theme["text_muted"]
         p_foot.font.name = "Arial"
         p_foot.alignment = PP_ALIGN.CENTER
         p_foot.space_before = Pt(14)
@@ -1545,7 +1554,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
                     dp = dtf.paragraphs[0]
                     dp.text = b_txt
                     dp.font.size = Pt(13)
-                    dp.font.color.rgb = theme["text_muted"]
+                    dp.font.color.rgb = theme["white"] if is_dark else theme["text_muted"]
                     dp.font.name = "Arial"
                     dp.alignment = PP_ALIGN.CENTER
 
