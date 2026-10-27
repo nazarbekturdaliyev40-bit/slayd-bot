@@ -756,7 +756,7 @@ async def setup_bot_commands(bot: Bot):
     try:
         await bot.set_chat_menu_button(
             menu_button=MenuButtonWebApp(
-                text="📱 Slayd Fonlari",
+                text="🖼 Fon rasmini tanlash",
                 web_app=WebAppInfo(url=config.THEMES_WEBAPP_URL)
             )
         )

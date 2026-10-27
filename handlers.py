@@ -1471,19 +1471,19 @@ THEME_TITLES = {
 
 
 async def send_theme_selection_window(target_message: Message, state: FSMContext, edit: bool = False):
-    """Slayd orqa fonini tanlash oynasi (Mini ilova va barcha qurilmalar uchun to'liq fanlar tugmalari)."""
+    """Slayd orqa fonini tanlash oynasi (Fon tanlash, O'z fonini yuklash, Bekor qilish)."""
     data = await state.get_data()
     topic = data.get("topic", "")
     slide_count = data.get("slide_count", 8)
     safe_topic = html.escape(topic[:80]) + ("..." if len(topic) > 80 else "")
 
     window_text = (
-        "🎨 <b>FANLAR BO'YICHA SLAYD FONINI TANLASH</b>\n\n"
+        "🎨 <b>SLAYD ORQA FONINI TANLASH</b>\n\n"
         f"📌 Mavzu: <b>{safe_topic}</b>\n"
         f"📄 Slaydlar soni: <b>{slide_count} ta</b>\n\n"
-        "Taqdimotingiz fanning mazmuniga toʻliq mos va chiroyli chiqishi uchun quyidagi fanlardan birini tanlang.\n"
-        "<i>Tugmani bosishingiz bilan taqdimotingiz darhol tayyorlanadi!</i>\n\n"
-        "📱 <b>Qulay vizual koʻrish uchun:</b> Pastdagi <i>'Mini Ilovani ochish'</i> tugmasini bosing yoki toʻgʻridan-toʻgʻri oʻzingizga kerakli fan tugmasini tanlang:"
+        "Taqdimotingiz fanning mazmuniga toʻliq mos va chiroyli chiqishi uchun quyidagilardan birini tanlang:\n\n"
+        "1️⃣ <b>Fon rasmini tanlash</b> — Mini ilova orqali fanlar boʻyicha tayyor shablonlardan birini tanlash\n"
+        "2️⃣ <b>Oʻz fon rasmingizni yuklash</b> — Oʻzingiz xohlagan maxsus rasmni fon sifatida yuborish"
     )
     reply_markup = keyboards.get_theme_selection_keyboard()
     if edit:
