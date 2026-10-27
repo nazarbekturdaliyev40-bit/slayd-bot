@@ -136,18 +136,173 @@ THEMES = {
         "text_dark": RGBColor(55, 30, 16),        # Espresso
         "text_muted": RGBColor(107, 79, 61),
         "white": RGBColor(255, 255, 255),
-        "bullet_icon": "•",
+        "bullet_icon": "✦",
         "tag": "KLASSIK RETRO"
+    },
+    # ================= POWERPOINT 2016 RASMIY SHABLONLARI =================
+    "facet": {
+        "name": "🟢 Facet 2016 (Geometrik Zumrad)",
+        "primary": RGBColor(16, 75, 60),          # Deep Forest Pine
+        "accent": RGBColor(16, 185, 129),         # Bright Emerald / Mint
+        "accent_secondary": RGBColor(45, 212, 191),# Teal
+        "bg_slide": RGBColor(240, 253, 244),      # Mint Tint
+        "card_bg": RGBColor(255, 255, 255),
+        "card_border": RGBColor(52, 211, 153),
+        "text_dark": RGBColor(6, 78, 59),
+        "text_muted": RGBColor(75, 85, 99),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "PPT 2016 FACET"
+    },
+    "ion": {
+        "name": "🔴 Ion 2016 (Bordo & To'q qizil)",
+        "primary": RGBColor(114, 28, 52),         # Deep Burgundy
+        "accent": RGBColor(249, 115, 22),         # Radiant Orange / Amber
+        "accent_secondary": RGBColor(225, 29, 72),# Crimson
+        "bg_slide": RGBColor(255, 245, 247),      # Warm Rose Tint
+        "card_bg": RGBColor(255, 255, 255),
+        "card_border": RGBColor(225, 29, 72),
+        "text_dark": RGBColor(76, 5, 25),
+        "text_muted": RGBColor(100, 116, 139),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "PPT 2016 ION"
+    },
+    "slice": {
+        "name": "🔷 Slice 2016 (Kesimli Neo Havorang)",
+        "primary": RGBColor(30, 41, 59),          # Deep Slate
+        "accent": RGBColor(6, 182, 212),          # Electric Cyan
+        "accent_secondary": RGBColor(249, 115, 22),# Tangerine
+        "bg_slide": RGBColor(248, 250, 252),      # Modern Slate Tint
+        "card_bg": RGBColor(255, 255, 255),
+        "card_border": RGBColor(6, 182, 212),
+        "text_dark": RGBColor(15, 23, 42),
+        "text_muted": RGBColor(100, 116, 139),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "PPT 2016 SLICE"
+    },
+    "celestial": {
+        "name": "🌌 Celestial 2016 (Koinot Tungi Moviy)",
+        "primary": RGBColor(10, 25, 60),          # Midnight Space Blue
+        "accent": RGBColor(234, 179, 8),          # Starlight Gold
+        "accent_secondary": RGBColor(56, 189, 248),# Celestial Blue
+        "bg_slide": RGBColor(241, 245, 255),      # Soft Ice Tint
+        "card_bg": RGBColor(255, 255, 255),
+        "card_border": RGBColor(234, 179, 8),
+        "text_dark": RGBColor(15, 23, 42),
+        "text_muted": RGBColor(71, 85, 105),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "PPT 2016 CELESTIAL"
+    },
+    "integral": {
+        "name": "📐 Integral 2016 (Muhandislik & Terrakota)",
+        "primary": RGBColor(33, 64, 95),          # Steel Navy
+        "accent": RGBColor(235, 94, 60),          # Terracotta Coral
+        "accent_secondary": RGBColor(217, 119, 6),# Warm Amber
+        "bg_slide": RGBColor(244, 247, 250),      # Clean Mist
+        "card_bg": RGBColor(255, 255, 255),
+        "card_border": RGBColor(235, 94, 60),
+        "text_dark": RGBColor(24, 38, 54),
+        "text_muted": RGBColor(100, 116, 139),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "PPT 2016 INTEGRAL"
+    },
+    "retrospect": {
+        "name": "🏺 Retrospect 2016 (Retro Oltin Qum)",
+        "primary": RGBColor(88, 47, 23),          # Mahogany Earth
+        "accent": RGBColor(217, 119, 6),          # Rich Amber Gold
+        "accent_secondary": RGBColor(180, 83, 9), # Warm Copper
+        "bg_slide": RGBColor(253, 250, 243),      # Warm Sand
+        "card_bg": RGBColor(255, 255, 255),
+        "card_border": RGBColor(217, 119, 6),
+        "text_dark": RGBColor(60, 30, 10),
+        "text_muted": RGBColor(120, 80, 50),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "PPT 2016 RETROSPECT"
+    },
+    "droplet": {
+        "name": "💧 Droplet 2016 (Yumshoq Tomchi Akva)",
+        "primary": RGBColor(13, 92, 99),          # Deep Ocean Teal
+        "accent": RGBColor(20, 184, 166),         # Aquamarine
+        "accent_secondary": RGBColor(56, 189, 248),# Soft Sky
+        "bg_slide": RGBColor(240, 253, 250),      # Fresh Aqua Pale
+        "card_bg": RGBColor(255, 255, 255),
+        "card_border": RGBColor(20, 184, 166),
+        "text_dark": RGBColor(17, 49, 53),
+        "text_muted": RGBColor(71, 85, 105),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "PPT 2016 DROPLET"
+    },
+    "savon": {
+        "name": "📜 Savon 2016 (Aristokrat Shampan)",
+        "primary": RGBColor(68, 64, 60),          # Muted Bronze
+        "accent": RGBColor(217, 119, 6),          # Champagne Gold
+        "accent_secondary": RGBColor(168, 85, 247),
+        "bg_slide": RGBColor(250, 249, 246),      # Warm Linen
+        "card_bg": RGBColor(255, 255, 255),
+        "card_border": RGBColor(214, 180, 140),
+        "text_dark": RGBColor(41, 37, 36),
+        "text_muted": RGBColor(120, 113, 108),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "PPT 2016 SAVON"
+    },
+    "circuit": {
+        "name": "⚡️ Circuit 2016 (Kiber Texno Dark)",
+        "primary": RGBColor(15, 23, 42),          # Cyber Black
+        "accent": RGBColor(6, 182, 212),          # Neon Cyan
+        "accent_secondary": RGBColor(139, 92, 246),# Neon Violet
+        "bg_slide": RGBColor(20, 26, 42),         # Dark Circuit Canvas
+        "card_bg": RGBColor(30, 41, 59),          # Dark Card
+        "card_border": RGBColor(6, 182, 212),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(203, 213, 225),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "PPT 2016 CIRCUIT"
+    },
+    "office": {
+        "name": "🏢 Office 2016 (Klassik Moviy)",
+        "primary": RGBColor(31, 78, 121),         # Official Office Blue
+        "accent": RGBColor(47, 117, 181),         # Steel Vivid Blue
+        "accent_secondary": RGBColor(217, 119, 6),# Warm Accent
+        "bg_slide": RGBColor(242, 247, 252),      # Office Light Slate
+        "card_bg": RGBColor(255, 255, 255),
+        "card_border": RGBColor(47, 117, 181),
+        "text_dark": RGBColor(15, 23, 42),
+        "text_muted": RGBColor(71, 85, 105),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "PPT 2016 OFFICE"
+    },
+    "mix": {
+        "name": "🔀 PPT 2016 Dinamik Mix",
+        "primary": RGBColor(31, 78, 121),
+        "accent": RGBColor(234, 179, 8),
+        "accent_secondary": RGBColor(6, 182, 212),
+        "bg_slide": RGBColor(242, 247, 252),
+        "card_bg": RGBColor(255, 255, 255),
+        "card_border": RGBColor(47, 117, 181),
+        "text_dark": RGBColor(15, 23, 42),
+        "text_muted": RGBColor(71, 85, 105),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "PPT 2016 MIX"
     }
 }
 
 # Moslik uchun taxalluslar (aliases)
-THEMES["tech"] = THEMES["blue"]
-THEMES["business"] = THEMES["navy"]
-THEMES["nature"] = THEMES["green"]
-THEMES["science"] = THEMES["purple"]
-THEMES["art"] = THEMES["canva_pastel"]
-THEMES["history"] = THEMES["vintage"]
+THEMES["tech"] = THEMES["circuit"]
+THEMES["business"] = THEMES["office"]
+THEMES["nature"] = THEMES["facet"]
+THEMES["science"] = THEMES["celestial"]
+THEMES["art"] = THEMES["ion"]
+THEMES["history"] = THEMES["retrospect"]
 
 def detect_theme(topic: str, ai_theme: str = "") -> str:
     """Mavzu matniga qarab mos rang va fon mavzusini aniqlaydi."""
@@ -1501,20 +1656,29 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         })
 
     # ================= 3. ASOSIY MAZMUN SLAYDLARI =================
+    ppt_mix_sequence = ["office", "facet", "slice", "integral", "droplet", "ion", "circuit", "celestial", "savon", "retrospect"]
     for idx, s_data in enumerate(slides_data, 1):
+        if is_mix_theme:
+            cur_key = ppt_mix_sequence[(idx - 1) % len(ppt_mix_sequence)]
+            curr_theme = THEMES.get(cur_key, theme)
+            curr_is_dark = (cur_key in ("dark", "circuit"))
+        else:
+            curr_theme = theme
+            curr_is_dark = is_dark
+
         c_slide = prs.slides.add_slide(blank_layout)
         if custom_bg and os.path.exists(custom_bg):
             c_slide.shapes.add_picture(custom_bg, 0, 0, width=Inches(13.333), height=Inches(7.5))
         else:
             bg_c = c_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5))
             bg_c.fill.solid()
-            bg_c.fill.fore_color.rgb = theme["bg_slide"]
+            bg_c.fill.fore_color.rgb = curr_theme["bg_slide"]
             bg_c.line.fill.background()
 
         s_title = s_data.get("title", f"Boʻlim {idx}")
         content_slide_num = len(prs.slides)
         sec_lbl = lang_info.get("section_label", "BOʻLIM")
-        _add_header(c_slide, s_title, theme, slide_num=content_slide_num, total_slides=total_slides, category=f"{sec_lbl} {idx}")
+        _add_header(c_slide, s_title, curr_theme, slide_num=content_slide_num, total_slides=total_slides, category=f"{sec_lbl} {idx}")
 
         img_path = images_map.get(idx) if images_map else None
         bullets = s_data.get("bullet_points", [])
@@ -1536,14 +1700,14 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
                 x_pos = start_x + k_idx * (card_w + gap)
                 k_card = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_pos, y_pos, card_w, card_h)
                 k_card.fill.solid()
-                k_card.fill.fore_color.rgb = theme["card_bg"]
-                k_card.line.color.rgb = theme["accent"] if k_idx == 0 else theme["card_border"]
+                k_card.fill.fore_color.rgb = curr_theme["card_bg"]
+                k_card.line.color.rgb = curr_theme["accent"] if k_idx == 0 else curr_theme["card_border"]
                 k_card.line.width = Pt(2.0 if k_idx == 0 else 1.5)
 
                 # Top color bar
                 c_bar = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_pos + Inches(0.3), y_pos + Inches(0.3), card_w - Inches(0.6), Inches(0.08))
                 c_bar.fill.solid()
-                c_bar.fill.fore_color.rgb = theme["accent"]
+                c_bar.fill.fore_color.rgb = curr_theme["accent"]
                 c_bar.line.fill.background()
 
                 # Big Number Textbox
@@ -1555,7 +1719,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
                 np.text = remove_emojis(raw_num)
                 np.font.size = Pt(38)
                 np.font.bold = True
-                np.font.color.rgb = theme["accent"]
+                np.font.color.rgb = curr_theme["accent"]
                 np.font.name = "Arial"
                 np.alignment = PP_ALIGN.CENTER
 
@@ -1568,7 +1732,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
                 lp.text = remove_emojis(raw_lbl)
                 lp.font.size = Pt(18)
                 lp.font.bold = True
-                lp.font.color.rgb = theme["primary"] if not is_dark else theme["white"]
+                lp.font.color.rgb = curr_theme["primary"] if not curr_is_dark else curr_theme["white"]
                 lp.font.name = "Arial"
                 lp.alignment = PP_ALIGN.CENTER
 
@@ -1581,7 +1745,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
                     dp = dtf.paragraphs[0]
                     dp.text = b_txt
                     dp.font.size = Pt(13)
-                    dp.font.color.rgb = theme["white"] if is_dark else theme["text_muted"]
+                    dp.font.color.rgb = curr_theme["white"] if curr_is_dark else curr_theme["text_muted"]
                     dp.font.name = "Arial"
                     dp.alignment = PP_ALIGN.CENTER
 
@@ -1598,8 +1762,8 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             # Left Card
             left_card = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), y_pos, card_w, card_h)
             left_card.fill.solid()
-            left_card.fill.fore_color.rgb = theme["card_bg"]
-            left_card.line.color.rgb = theme["card_border"]
+            left_card.fill.fore_color.rgb = curr_theme["card_bg"]
+            left_card.line.color.rgb = curr_theme["card_border"]
             left_card.line.width = Pt(1.5)
 
             lt_box = c_slide.shapes.add_textbox(Inches(1.15), y_pos + Inches(0.2), card_w - Inches(0.5), Inches(0.7))
@@ -1609,20 +1773,20 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             lp.text = remove_emojis(col1_title)
             lp.font.size = Pt(20)
             lp.font.bold = True
-            lp.font.color.rgb = theme["primary"] if not is_dark else theme["accent"]
+            lp.font.color.rgb = curr_theme["primary"] if not curr_is_dark else curr_theme["accent"]
             lp.font.name = "Arial"
 
             lb_box = c_slide.shapes.add_textbox(Inches(1.15), y_pos + Inches(0.95), card_w - Inches(0.5), card_h - Inches(1.1))
             lbtf = lb_box.text_frame
             lbtf.word_wrap = True
             for p_idx, pt in enumerate(col1_pts[:4]):
-                _add_styled_bullet(lbtf, str(pt), theme, font_size=Pt(15), space_after=Pt(10), is_first=(p_idx == 0))
+                _add_styled_bullet(lbtf, str(pt), curr_theme, font_size=Pt(15), space_after=Pt(10), is_first=(p_idx == 0))
 
             # Right Card
             right_card = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(7.1), y_pos, card_w, card_h)
             right_card.fill.solid()
-            right_card.fill.fore_color.rgb = theme["card_bg"]
-            right_card.line.color.rgb = theme["accent"]
+            right_card.fill.fore_color.rgb = curr_theme["card_bg"]
+            right_card.line.color.rgb = curr_theme["accent"]
             right_card.line.width = Pt(2.0)
 
             rt_box = c_slide.shapes.add_textbox(Inches(7.35), y_pos + Inches(0.2), card_w - Inches(0.5), Inches(0.7))
@@ -1632,19 +1796,19 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             rp.text = remove_emojis(col2_title)
             rp.font.size = Pt(20)
             rp.font.bold = True
-            rp.font.color.rgb = theme["accent"]
+            rp.font.color.rgb = curr_theme["accent"]
             rp.font.name = "Arial"
 
             rb_box = c_slide.shapes.add_textbox(Inches(7.35), y_pos + Inches(0.95), card_w - Inches(0.5), card_h - Inches(1.1))
             rbtf = rb_box.text_frame
             rbtf.word_wrap = True
             for p_idx, pt in enumerate(col2_pts[:4]):
-                _add_styled_bullet(rbtf, str(pt), theme, font_size=Pt(15), space_after=Pt(10), is_first=(p_idx == 0))
+                _add_styled_bullet(rbtf, str(pt), curr_theme, font_size=Pt(15), space_after=Pt(10), is_first=(p_idx == 0))
 
             # Central VS Badge
             vs_badge = c_slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(6.25), y_pos + Inches(2.1), Inches(0.8), Inches(0.8))
             vs_badge.fill.solid()
-            vs_badge.fill.fore_color.rgb = theme["accent"]
+            vs_badge.fill.fore_color.rgb = curr_theme["accent"]
             vs_badge.line.fill.background()
             vs_tf = vs_badge.text_frame
             vsp = vs_tf.paragraphs[0]
@@ -1666,14 +1830,14 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
                 x_pos = start_x + st_idx * (card_w + gap)
                 step_card = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_pos, y_pos, card_w, card_h)
                 step_card.fill.solid()
-                step_card.fill.fore_color.rgb = theme["card_bg"]
-                step_card.line.color.rgb = theme["card_border"]
+                step_card.fill.fore_color.rgb = curr_theme["card_bg"]
+                step_card.line.color.rgb = curr_theme["card_border"]
                 step_card.line.width = Pt(1.5)
 
                 # Step Number Pill
                 circ = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_pos + Inches(0.3), y_pos + Inches(0.35), Inches(0.9), Inches(0.55))
                 circ.fill.solid()
-                circ.fill.fore_color.rgb = theme["accent"]
+                circ.fill.fore_color.rgb = curr_theme["accent"]
                 circ.line.fill.background()
                 ctf = circ.text_frame
                 cp = ctf.paragraphs[0]
@@ -1692,7 +1856,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
                 tp.text = remove_emojis(str(st.get("title", "")))
                 tp.font.size = Pt(18)
                 tp.font.bold = True
-                tp.font.color.rgb = theme["primary"] if not is_dark else theme["accent"]
+                tp.font.color.rgb = curr_theme["primary"] if not curr_is_dark else curr_theme["accent"]
                 tp.font.name = "Arial"
 
                 # Step Desc
@@ -1702,14 +1866,14 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
                 dp = dtf.paragraphs[0]
                 dp.text = remove_emojis(str(st.get("desc", "")))
                 dp.font.size = Pt(14)
-                dp.font.color.rgb = theme["text_dark"]
+                dp.font.color.rgb = curr_theme["text_dark"]
                 dp.font.name = "Arial"
 
         elif img_path and os.path.exists(img_path):
             card = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.75), Inches(6.9), Inches(5.25))
             card.fill.solid()
-            card.fill.fore_color.rgb = theme["card_bg"]
-            card.line.color.rgb = theme["card_border"]
+            card.fill.fore_color.rgb = curr_theme["card_bg"]
+            card.line.color.rgb = curr_theme["card_border"]
             card.line.width = Pt(1.5)
 
             content_box = c_slide.shapes.add_textbox(Inches(1.15), Inches(1.95), Inches(6.4), Inches(4.85))
@@ -1720,7 +1884,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             space_aft = Pt(10 if len(bullets) >= 5 else (14 if len(bullets) == 4 else 18))
 
             for b_idx, bullet in enumerate(bullets):
-                _add_styled_bullet(ctf, bullet, theme, font_size=font_sz, space_after=space_aft, is_first=(b_idx == 0))
+                _add_styled_bullet(ctf, bullet, curr_theme, font_size=font_sz, space_after=space_aft, is_first=(b_idx == 0))
 
             try:
                 c_slide.shapes.add_picture(img_path, Inches(8.05), Inches(1.75), width=Inches(4.4), height=Inches(5.25))
@@ -1729,8 +1893,8 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         else:
             card = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.75), Inches(11.533), Inches(5.25))
             card.fill.solid()
-            card.fill.fore_color.rgb = theme["card_bg"]
-            card.line.color.rgb = theme["card_border"]
+            card.fill.fore_color.rgb = curr_theme["card_bg"]
+            card.line.color.rgb = curr_theme["card_border"]
             card.line.width = Pt(1.5)
 
             content_box = c_slide.shapes.add_textbox(Inches(1.3), Inches(2.0), Inches(10.7), Inches(4.75))
@@ -1741,7 +1905,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             space_aft = Pt(11 if len(bullets) >= 5 else (15 if len(bullets) == 4 else 20))
 
             for b_idx, bullet in enumerate(bullets):
-                _add_styled_bullet(ctf, bullet, theme, font_size=font_sz, space_after=space_aft, is_first=(b_idx == 0))
+                _add_styled_bullet(ctf, bullet, curr_theme, font_size=font_sz, space_after=space_aft, is_first=(b_idx == 0))
 
         # Speaker notes
         notes = s_data.get("speaker_notes", "")

@@ -24,8 +24,143 @@ import os
 import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
+THEMES_HTML = """<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PowerPoint 2016 Shablonlari</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --accent: #38bdf8;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 16px;
+    }
+    h1 {
+      font-size: 20px;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    p.subtitle {
+      font-size: 13px;
+      color: #94a3b8;
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 18px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
+    .theme-card {
+      background: var(--card-bg);
+      border: 2px solid #334155;
+      border-radius: 12px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .theme-card:hover, .theme-card:active {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .color-preview {
+      width: 100%;
+      height: 52px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .theme-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .theme-desc {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <h1>PowerPoint 2016 Shablonlari</h1>
+  <p class="subtitle">Oʻzingizga maʼqul shablon ustiga bosing:</p>
+  <div class="grid" id="themesGrid"></div>
+
+  <script>
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
+    const themes = [
+      { id: "mix", name: "PPT 2016 Mix", desc: "Xar xil aralash shablon", icon: "🔀", bg: "linear-gradient(135deg, #1f4e79, #104b3c, #721c34)" },
+      { id: "facet", name: "Facet 2016", desc: "Zumrad geometrik", icon: "🟢", bg: "linear-gradient(135deg, #104b3c, #10b981)" },
+      { id: "ion", name: "Ion 2016", desc: "Bordo sharob tusli", icon: "🔴", bg: "linear-gradient(135deg, #721c34, #f97316)" },
+      { id: "slice", name: "Slice 2016", desc: "Kesimli neo kiber", icon: "🔷", bg: "linear-gradient(135deg, #1e293b, #06b6d4)" },
+      { id: "celestial", name: "Celestial 2016", desc: "Tungi koinot moviy", icon: "🌌", bg: "linear-gradient(135deg, #0a193c, #eab308)" },
+      { id: "integral", name: "Integral 2016", desc: "Muhandislik terrakota", icon: "📐", bg: "linear-gradient(135deg, #21405f, #eb5e3c)" },
+      { id: "retrospect", name: "Retrospect 2016", desc: "Retro oltin qum", icon: "🏺", bg: "linear-gradient(135deg, #582f17, #d97706)" },
+      { id: "droplet", name: "Droplet 2016", desc: "Yumshoq tomchi akva", icon: "💧", bg: "linear-gradient(135deg, #0d5c63, #14b8a6)" },
+      { id: "savon", name: "Savon 2016", desc: "Aristokrat shampan", icon: "📜", bg: "linear-gradient(135deg, #44403c, #d97706)" },
+      { id: "circuit", name: "Circuit 2016", desc: "Kiber texno qora", icon: "⚡️", bg: "linear-gradient(135deg, #0f172a, #06b6d4)" },
+      { id: "office", name: "Office 2016", desc: "Klassik moviy oq", icon: "🏢", bg: "linear-gradient(135deg, #1f4e79, #2f75b5)" },
+      { id: "white", name: "Minimal Oq", desc: "Toza oq & moviy", icon: "⚪️", bg: "#f8fafc" },
+      { id: "dark", name: "Premium Dark", desc: "Qora & oltin jilo", icon: "🖤", bg: "#18181b" },
+      { id: "canva_pastel", name: "Canva Pastel", desc: "Nafis pushti binafsha", icon: "🌸", bg: "linear-gradient(135deg, #4f46e5, #ec4899)" },
+      { id: "vintage", name: "Pergament", desc: "Antikvar pergament", icon: "📜", bg: "linear-gradient(135deg, #432818, #c2892c)" }
+    ];
+
+    const container = document.getElementById("themesGrid");
+    themes.forEach(t => {
+      const card = document.createElement("div");
+      card.className = "theme-card";
+      card.innerHTML = `
+        <div class="color-preview" style="background: ${t.bg}">${t.icon}</div>
+        <div class="theme-name">${t.name}</div>
+        <div class="theme-desc">${t.desc}</div>
+      `;
+      card.onclick = () => {
+        if (tg) {
+          tg.sendData(t.id);
+        } else {
+          alert("Tanlandi: " + t.name);
+        }
+      };
+      container.appendChild(card);
+    });
+  </script>
+</body>
+</html>
+"""
+
 class HealthHandler(BaseHTTPRequestHandler):
     def do_GET(self):
+        if self.path.startswith("/themes"):
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(THEMES_HTML.encode("utf-8"))
+            return
+
         self.send_response(200)
         self.send_header("Content-Type", "text/plain; charset=utf-8")
         self.end_headers()

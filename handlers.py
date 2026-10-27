@@ -1444,6 +1444,38 @@ async def process_slide_count_invalid(message: Message, state: FSMContext):
     )
 
 
+async def send_theme_selection_window(target_message: Message, state: FSMContext, edit: bool = False):
+    """Faqat fon va PowerPoint 2016 shablonlarini tanlash uchun maxsus interaktiv oyna."""
+    data = await state.get_data()
+    topic = data.get("topic", "")
+    safe_topic = html.escape(topic[:60]) + ("..." if len(topic) > 60 else "")
+
+    window_text = (
+        "🖼 <b>POWERPOINT 2016 SHABLON VA FON TANLASH OYNASI</b>\n\n"
+        f"📌 Mavzu: <b>{safe_topic}</b>\n\n"
+        "Taqdimotingiz chiroyli, nafis va professional bo'lishi uchun <b>PowerPoint 2016</b> rasmiy shablonlaridan birini tanlang:\n\n"
+        "🏛 <b>PowerPoint 2016 Shablonlari:</b>\n"
+        "• 🟢 <b>Facet</b> — Zumrad yashil, qirrali geometriya va ekologik soflik\n"
+        "• 🔴 <b>Ion</b> — Bordo / sharob tusli nafislik va to'q qizil jilo\n"
+        "• 🔷 <b>Slice</b> — Zamonaviy kesimli burchaklar, kiber havorang va kontrast\n"
+        "• 🌌 <b>Celestial</b> — Tungi osmon moviyligi, yulduzsimon oltin aksent\n"
+        "• 📐 <b>Integral</b> — Muhandislik, po'lat kulrang va terrakota chiziqlar\n"
+        "• 🏺 <b>Retrospect</b> — Tarixiy, iliq oltin qum va terrakota ohanglar\n"
+        "• 💧 <b>Droplet</b> — Akvamarin, toza tomchi shakllari va tibbiy nafislik\n"
+        "• 📜 <b>Savon</b> — Aristokratik shampan, bronza va neytral nafosat\n"
+        "• ⚡️ <b>Circuit</b> — Kiber texno, IT va sun'iy intellekt foni\n"
+        "• 🏢 <b>Office 2016</b> — Klassik rasmiy ko'k va oq dizayn\n\n"
+        "🔀 <b>PPT 2016 Dinamik Mix</b> — Slaydlarda har xil shablonlar uyg'unlashtiriladi!\n\n"
+        "👇 <i>O'zingizga ma'qul shablonni pastdagi oynadan tanlang:</i>"
+    )
+    if edit:
+        try:
+            await target_message.edit_text(window_text, reply_markup=keyboards.get_theme_selection_keyboard(), parse_mode="HTML")
+            return
+        except Exception:
+            pass
+    await target_message.answer(window_text, reply_markup=keyboards.get_theme_selection_keyboard(), parse_mode="HTML")
+
 @router.message(SlideCreation.waiting_for_author, F.text)
 async def process_author_info_message(message: Message, state: FSMContext):
     if await check_menu_navigation(message, state):
@@ -1451,26 +1483,20 @@ async def process_author_info_message(message: Message, state: FSMContext):
     author_info = (message.text or "").strip()
     await state.update_data(author_info=author_info)
     await state.set_state(SlideCreation.waiting_for_theme)
-    await message.answer(
-        "🎨 **Slaydning orqa fonini (dizaynini) tanlang:**\n\n"
-        "Oʻzingizga yoqqan orqa fon rangini tanlang yoki **oʻz fon rasmingizni** yuboring.\n"
-        "Taqdimot aynan siz tanlagan fon asosida tayyorlanadi: 👇",
-        reply_markup=keyboards.get_theme_selection_keyboard(),
-        parse_mode="Markdown"
-    )
+    await send_theme_selection_window(message, state, edit=False)
 
 @router.callback_query(F.data == "skip_author_info", SlideCreation.waiting_for_author)
 async def skip_author_info_callback(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
     await state.update_data(author_info="")
     await state.set_state(SlideCreation.waiting_for_theme)
-    await callback.message.answer(
-        "🎨 **Slaydning orqa fonini (dizaynini) tanlang:**\n\n"
-        "Oʻzingizga yoqqan orqa fon rangini tanlang yoki **oʻz fon rasmingizni** yuboring.\n"
-        "Taqdimot aynan siz tanlagan fon asosida tayyorlanadi: 👇",
-        reply_markup=keyboards.get_theme_selection_keyboard(),
-        parse_mode="Markdown"
-    )
+    await send_theme_selection_window(callback.message, state, edit=True)
+
+@router.callback_query(F.data == "change_theme_btn")
+async def change_theme_btn_callback(callback: CallbackQuery, state: FSMContext):
+    await callback.answer()
+    await state.set_state(SlideCreation.waiting_for_theme)
+    await send_theme_selection_window(callback.message, state, edit=True)
 
 @router.callback_query(F.data == "theme_custom_bg", SlideCreation.waiting_for_theme)
 async def prompt_custom_bg_choice(callback: CallbackQuery, state: FSMContext):
@@ -1489,13 +1515,7 @@ async def prompt_custom_bg_choice(callback: CallbackQuery, state: FSMContext):
 async def back_to_theme_selection(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
     await state.set_state(SlideCreation.waiting_for_theme)
-    await callback.message.answer(
-        "🎨 **Slaydning orqa fonini (dizaynini) tanlang:**\n\n"
-        "Oʻzingizga yoqqan orqa fon rangini tanlang yoki **oʻz fon rasmingizni** yuboring.\n"
-        "Taqdimot aynan siz tanlagan fon asosida tayyorlanadi: 👇",
-        reply_markup=keyboards.get_theme_selection_keyboard(),
-        parse_mode="Markdown"
-    )
+    await send_theme_selection_window(callback.message, state, edit=True)
 
 @router.message(SlideCreation.waiting_for_custom_bg, F.photo)
 @router.message(SlideCreation.waiting_for_theme, F.photo)
@@ -1613,6 +1633,21 @@ async def process_theme_choice(callback: CallbackQuery, state: FSMContext):
     await state.update_data(theme_choice=theme_key, custom_bg=None)
     await show_slide_confirmation(callback.message, state, callback.from_user.id, edit=True)
 
+@router.message(F.web_app_data)
+async def process_web_app_theme(message: Message, state: FSMContext):
+    """Telegram WebApp orqali tanlangan PowerPoint 2016 shablonini qabul qilish."""
+    data_str = (message.web_app_data.data or "").strip()
+    if data_str in generator.THEMES or data_str == "mix":
+        old_data = await state.get_data()
+        old_bg = old_data.get("custom_bg")
+        if old_bg and os.path.exists(old_bg):
+            try:
+                os.remove(old_bg)
+            except Exception:
+                pass
+        await state.update_data(theme_choice=data_str, custom_bg=None)
+        await show_slide_confirmation(message, state, message.from_user.id, edit=False)
+
 async def show_slide_confirmation(target_message: Message, state: FSMContext, user_id: int, edit: bool = False):
     data = await state.get_data()
     topic = data.get("topic", "")
@@ -1626,16 +1661,27 @@ async def show_slide_confirmation(target_message: Message, state: FSMContext, us
     user_lang = user.get("language") or "uz"
 
     THEME_TITLES = {
-        "auto": "✨ PowerPoint AI (Avtomatik mos dizayn)",
-        "gamma": "🪄 Gamma AI (gamma.app taqdimot)",
+        "auto": "✨ PowerPoint AI (Avtomatik mos shablon)",
+        "mix": "🔀 PPT 2016 Dinamik Mix (Xar xil shablon)",
+        "facet": "🟢 Facet 2016 (Geometrik Zumrad)",
+        "ion": "🔴 Ion 2016 (Bordo & To'q qizil)",
+        "slice": "🔷 Slice 2016 (Kesimli Neo Havorang)",
+        "celestial": "🌌 Celestial 2016 (Koinot Tungi Moviy)",
+        "integral": "📐 Integral 2016 (Muhandislik & Terrakota)",
+        "retrospect": "🏺 Retrospect 2016 (Retro Oltin Qum)",
+        "droplet": "💧 Droplet 2016 (Yumshoq Tomchi Akva)",
+        "savon": "📜 Savon 2016 (Aristokrat Shampan)",
+        "circuit": "⚡️ Circuit 2016 (Kiber Texno Dark)",
+        "office": "🏢 Office 2016 (Klassik Moviy)",
         "white": "⚪️ Oq fon (Minimal)",
-        "dark": "⚫️ Qora fon (Premium Dark)",
+        "dark": "🖤 Qora fon (Premium Dark Gold)",
         "navy": "🔵 Toʻq koʻk fon (Royal Navy)",
         "blue": "🔷 Moviy fon (Havorang)",
         "green": "🟢 Zumrad yashil fon",
         "purple": "🟣 Binafsha fon (Kosmik)",
         "canva_pastel": "🌸 Canva Pastel fon",
-        "vintage": "📜 Klassik pergament fon"
+        "vintage": "📜 Klassik pergament fon",
+        "gamma": "🪄 Gamma AI (gamma.app taqdimot)"
     }
 
     if custom_bg:
@@ -2436,16 +2482,7 @@ async def handle_voice_presentation(message: Message, state: FSMContext):
         lang_info = locales.get_slide_lang_info(slide_lang)
         author_display = f"\n👤 **Muallif:** {author_info}" if author_info else ""
         await status_msg.delete()
-        await message.answer(
-            f"🎙 **Ovozli xabaringiz muvaffaqiyatli tushunildi!** 🚀\n\n"
-            f"📌 **Aniqlangan mavzu:** *{topic}*\n"
-            f"🌐 **Slayd tili:** *{lang_info['name']}*\n"
-            f"📊 **Slaydlar soni:** *{slide_count} ta*{author_display}\n\n"
-            f"🎨 **Slaydning orqa fonini (dizaynini) tanlang:**\n"
-            f"Quyidagi ranglardan birini tanlang yoki oʻz fon rasmingizni yuboring: 👇",
-            reply_markup=keyboards.get_theme_selection_keyboard(),
-            parse_mode="Markdown"
-        )
+        await send_theme_selection_window(message, state, edit=False)
     except Exception as e:
         logger.error(f"Voice handling error: {e}")
         await status_msg.edit_text(f"❌ Ovozli xabarni qayta ishlashda xatolik yuz berdi:\n`{e}`")
@@ -2585,15 +2622,7 @@ async def media_to_slides_callback(callback: CallbackQuery, state: FSMContext):
         await state.set_state(SlideCreation.waiting_for_theme)
 
         await status_msg.delete()
-        await callback.message.answer(
-            f"📚 **Materialingiz muvaffaqiyatli tahlil qilindi!** 🎯\n\n"
-            f"📌 **Aniqlangan mavzu:** *{topic}*\n"
-            f"📊 **Tavsiya etilgan slaydlar:** *{suggested_slides} ta*\n"
-            f"📝 **Konspekt:** *Hujjatdagi asosiy gʻoyalar va maʼlumotlar ajratib olindi.*\n\n"
-            f"🎨 **Slaydning orqa fonini (dizaynini) tanlang:**",
-            reply_markup=keyboards.get_theme_selection_keyboard(),
-            parse_mode="Markdown"
-        )
+        await send_theme_selection_window(callback.message, state, edit=False)
     except Exception as e:
         logger.error(f"Media extraction error: {e}")
         await status_msg.edit_text(f"❌ Materialni tahlil qilishda xatolik yuz berdi:\n`{e}`")

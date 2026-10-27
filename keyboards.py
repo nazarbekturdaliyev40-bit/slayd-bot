@@ -213,43 +213,46 @@ def get_skip_author_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
     ])
 
 def get_theme_selection_keyboard() -> InlineKeyboardMarkup:
-    import gamma_service
-    rows = []
-    if gamma_service.is_gamma_available():
-        rows.append([
-            InlineKeyboardButton(text="🪄 Gamma AI (gamma.app taqdimot)", callback_data="theme_gamma")
-        ])
-    else:
-        rows.append([
-            InlineKeyboardButton(text="✨ PowerPoint AI (Avtomatik eng yaxshi dizayn)", callback_data="theme_auto")
-        ])
-
-    rows.extend([
+    """PowerPoint 2016 rasmiy shablonlari va fonlarini tanlash oynasi uchun tugmalar."""
+    rows = [
         [
-            InlineKeyboardButton(text="⚪️ Oq fon (Minimal)", callback_data="theme_white"),
-            InlineKeyboardButton(text="⚫️ Qora fon (Premium Dark)", callback_data="theme_dark")
+            InlineKeyboardButton(text="🔀 PPT 2016 Dinamik Mix (Xar xil shablon)", callback_data="theme_mix")
         ],
         [
-            InlineKeyboardButton(text="🔵 Toʻq koʻk fon (Navy)", callback_data="theme_navy"),
-            InlineKeyboardButton(text="🔷 Moviy fon (Havorang)", callback_data="theme_blue")
+            InlineKeyboardButton(text="🟢 Facet (Zumrad)", callback_data="theme_facet"),
+            InlineKeyboardButton(text="🔴 Ion (To'q Bordo)", callback_data="theme_ion")
         ],
         [
-            InlineKeyboardButton(text="🟢 Zumrad yashil fon", callback_data="theme_green"),
-            InlineKeyboardButton(text="🟣 Binafsha fon (Kosmik)", callback_data="theme_purple")
+            InlineKeyboardButton(text="🔷 Slice (Neo Kesim)", callback_data="theme_slice"),
+            InlineKeyboardButton(text="🌌 Celestial (Koinot)", callback_data="theme_celestial")
         ],
         [
-            InlineKeyboardButton(text="🌸 Canva Pastel fon", callback_data="theme_canva_pastel"),
-            InlineKeyboardButton(text="📜 Klassik pergament fon", callback_data="theme_vintage")
+            InlineKeyboardButton(text="📐 Integral (Muhandislik)", callback_data="theme_integral"),
+            InlineKeyboardButton(text="🏺 Retrospect (Retro Qum)", callback_data="theme_retrospect")
+        ],
+        [
+            InlineKeyboardButton(text="💧 Droplet (Yumshoq Tomchi)", callback_data="theme_droplet"),
+            InlineKeyboardButton(text="📜 Savon (Aristokrat)", callback_data="theme_savon")
+        ],
+        [
+            InlineKeyboardButton(text="⚡️ Circuit (Kiber Texno)", callback_data="theme_circuit"),
+            InlineKeyboardButton(text="🏢 Office 2016 (Klassik)", callback_data="theme_office")
+        ],
+        [
+            InlineKeyboardButton(text="⚪️ Minimal Oq", callback_data="theme_white"),
+            InlineKeyboardButton(text="🖤 Premium Dark", callback_data="theme_dark")
+        ],
+        [
+            InlineKeyboardButton(text="🌸 Canva Pastel", callback_data="theme_canva_pastel"),
+            InlineKeyboardButton(text="📜 Pergament Retro", callback_data="theme_vintage")
+        ],
+        [
+            InlineKeyboardButton(text="🖼 Oʻz fon rasmingizni yuklash", callback_data="theme_custom_bg")
+        ],
+        [
+            InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_generation")
         ]
-    ])
-    if gamma_service.is_gamma_available():
-        rows.append([
-            InlineKeyboardButton(text="🤖 AI Avtomatik (Mavzuga mos fon)", callback_data="theme_auto")
-        ])
-    rows.append([
-        InlineKeyboardButton(text="🖼 Oʻz fon rasmi", callback_data="theme_custom_bg"),
-        InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_generation")
-    ])
+    ]
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 def get_custom_bg_keyboard() -> InlineKeyboardMarkup:
@@ -262,11 +265,13 @@ def get_custom_bg_keyboard() -> InlineKeyboardMarkup:
 
 def get_confirm_generation_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
     """Taqdimot tayyorlashdan oldin barcha ma'lumotlarni ko'rib tasdiqlash tugmalari."""
+    change_theme_txt = "🎨 Fonni o'zgartirish" if lang == "uz" else ("🎨 Сменить фон" if lang == "ru" else "🎨 Change theme")
     return InlineKeyboardMarkup(inline_keyboard=[
         [
             InlineKeyboardButton(text=locales.get_text("confirm_btn", lang), callback_data="confirm_slide_generation")
         ],
         [
+            InlineKeyboardButton(text=change_theme_txt, callback_data="change_theme_btn"),
             InlineKeyboardButton(text=locales.get_text("cancel_btn", lang), callback_data="cancel_generation")
         ]
     ])
