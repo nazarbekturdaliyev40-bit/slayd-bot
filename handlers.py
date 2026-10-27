@@ -1,3 +1,4 @@
+from __future__ import annotations
 import os
 import json
 import tempfile
@@ -7,7 +8,7 @@ import asyncio
 import html
 import re
 import time
-from aiogram import Router, F
+from aiogram import Router, F, Bot, Dispatcher
 from aiogram.filters import CommandStart, Command, CommandObject
 from aiogram.types import Message, CallbackQuery, FSInputFile, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.context import FSMContext
