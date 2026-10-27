@@ -657,19 +657,22 @@ THEMES_HTML = """<!DOCTYPE html>
 
 class HealthHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path.startswith("/themes"):
+        # Render yoki Uptime xizmatlari salomatlik tekshiruvi uchun
+        if self.path.startswith("/health") or self.path.startswith("/ping"):
             self.send_response(200)
-            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Type", "text/plain; charset=utf-8")
             self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
-            self.wfile.write(THEMES_HTML.encode("utf-8"))
+            self.wfile.write(b"Bot is running 24/7!")
             return
 
+        # Barcha so'rovlar (/, /themes, /index.html, /?tgWebApp... va boshqalar)
+        # to'g'ridan-to'g'ri Slayd Fonlari Mini Ilovasini to'liq ko'rsatadi
         self.send_response(200)
-        self.send_header("Content-Type", "text/plain; charset=utf-8")
+        self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
-        self.wfile.write(b"Bot is running 24/7!")
+        self.wfile.write(THEMES_HTML.encode("utf-8"))
 
     def do_POST(self):
         if self.path.startswith("/api/select-theme"):
