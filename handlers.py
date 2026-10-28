@@ -1454,7 +1454,6 @@ THEME_TITLES = {
     "gamma_obsidian": "💼 Gamma Obsidian & Gold Lux (Biznes)",
     "gamma_ocean": "📊 Gamma Ocean & FinTech Analytics",
     "gamma_crimson": "🏆 Gamma Crimson & Executive Lead",
-    "gamma_academic": "🎓 Gamma Royal Academic (OTM & BMI)",
     "gamma_amber": "🏛 Gamma Vintage Amber & Heritage (Tarix)",
     "gamma_solar": "📚 Gamma Solar & Modern Pedagogy (Ta'lim)",
     "gamma_emerald": "🩺 Gamma Emerald & Clean Mind (Tibbiyot)",

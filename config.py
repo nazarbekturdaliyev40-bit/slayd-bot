@@ -39,7 +39,10 @@ WEBAPP_URL = (
     or os.getenv("RENDER_EXTERNAL_URL", "")
     or "https://slayd-bot-2.onrender.com"
 ).rstrip("/")
-THEMES_WEBAPP_URL = f"{WEBAPP_URL}/themes"
+THEMES_WEBAPP_URL = os.getenv(
+    "THEMES_WEBAPP_URL",
+    "https://nazarbekturdaliyev40-bit.github.io/slayd-bot/"
+)
 
 
 
