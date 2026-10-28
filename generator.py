@@ -546,29 +546,55 @@ FOYDALANUVCHI YUBORGAN TAQDIMOT MAVZUSI VA TALABLARI:
 \"\"\"{author_clause}{theme_clause}{context_clause}
 
 ======================================================================
-ENG ASOSIY TALAB: SLAYD SAHIFASINI TO'LIG'ICHA TO'LDIRIB, KENG QAMROVLI VA CHUQUR YORITISH!
+ENG QAT'IY VA ASOSIY TALAB: SLAYDDA MUTLAQO BO'SH JOY QOLMASIN!
+HAR BIR SLAYD YUQORIDAN PASTGACHA MAZMUN, ILMIY FAKTLAR VA TAHLILLAR BILAN 100% TO'LIQ TO'LDIRILSIN!
 ======================================================================
-1. SLAYD LISTINI TO'LIG'ICHA TO'LDIRISH (BO'SH JOYLAR QOLMASIN):
-- Slaydlar quruq, 2-3 ta qisqa jumladan iborat bo'lib, sahifa bo'm-bo'sh ko'rinmasligi SHART! Slayd kartochkasi yuqoridan pastgacha to'liq, mazmunli va go'zal to'ldirilgan bo'lsin.
-- Har bir mazmuniy slaydda kamida 4 tadan 5-6 tagacha keng qamrovli, chuqur, sifatli va faktlarga boy bandlar ("bullet_points") bo'lsin.
-- Har bir band shunchaki 4-5 ta so'zdan iborat bo'lmasin! Har bir bandni quyidagi tartibda to'liq va keng qamrovli yozing:
-  "Kalit tushuncha / Atama: Mazkur tushunchaning ilmiy-nazariy mohiyati, asosiy tamoyillari, aniq dalillar, qonuniyatlar, raqamlar va amaliyotdagi real ahamiyatini tushuntiruvchi 25-40 ta so'zdan iborat to'liq, chuqur tahliliy fikr."
-- Har bir slayd sahifasi (kartochkasi) to'liq, mukammal, boy ma'lumotlar bilan to'ldirilgan va o'qish uchun juda qiziqarli bo'lsin!
+1. SLAYDNING HAR BIR BURCHAGINI MAZMUN BILAN TO'LDIRISH (ZERO EMPTY SPACE):
+- Slaydlar hech qachon 1-2 qator qisqa gaplar bilan bo'm-bo'sh, yarim-yorti tashlab ketilmasligi SHART!
+- Har bir slayd, har bir kartochka va har bir ustun pastigacha to'liq, mazmunli va mukammal infografik matn bilan to'ldirilishi kerak.
 
-2. MAVZULARNI KENG QAMROVLI VA TO'LIQ QAMRAB OLISH:
+2. HAR BIR LAYOUT UCHUN TO'LIQ VA BOYITILGAN TARKIB:
+A) "steps" (Bosqichlar / Jarayonlar / Texnologiyalar) layouti uchun:
+  - 'steps_data' ichida roppa-rosa 3 ta asosiy bosqich yoki texnologiya bo'lsin ("step": "01", "02", "03").
+  - Har bir bosqichda:
+    * "title": Bosqich / texnologiyaning aniq, salmoqli nomi;
+    * "desc": Ushbu bosqichning asosiy ilmiy-texnik mohiyati, ishlash mexanizmi va vazifalarini chuqur tahlil qiluvchi 2-3 ta to'liq jumladan iborat KENG QAMROVLI matn (kamida 25-35 so'z!). Shunchaki 2-3 so'z yozish QAT'IYAN TAQIQLANADI!
+    * "points": Har bir bosqichning 2 ta asosiy texnik ko'rsatkichi, standarti yoki amaliy xususiyatini yorituvchi bandlar (har biri "Kalit atama: Tushuntirish" shaklida 15-20 so'z).
+    Shunda har bir kartochka yuqoridan pastgacha to'liq ma'lumotga to'ladi!
+
+B) "kpi" (Statistika / Asosiy ko'rsatkichlar / Raqamlar) layouti uchun:
+  - 'kpi_items' ichida roppa-rosa 3 ta asosiy ko'rsatkich bo'lsin.
+  - Har bir elementda:
+    * "number": Aniq raqam, foiz, yil yoki texnik ko'rsatkich (masalan: "99.9%", "10 Gbit/s", "1984-yil", "7 qatlam");
+    * "label": Ko'rsatkichning aniq ilmiy/texnik nomi;
+    * "desc": Ushbu ko'rsatkichning sohadagi roli va ahamiyatini yorituvchi 2-3 ta tahliliy jumladan iborat KENG QAMROVLI matn (kamida 25-35 so'z!).
+    * "points": Ushbu ko'rsatkichga oid 2 ta muhim ilmiy-amaliy fakt yoki standart (har biri 15-20 so'z).
+
+C) "comparison" (Taqqoslash / Solishtirish) layouti uchun:
+  - 'comparison_data' dagi 'col1_points' va 'col2_points' massivlarining har birida KAMIDA 4 tadan 5 tagacha chuqur tahliliy bandlar bo'lsin.
+  - Har bir band: "Kalit mezon: Mazkur jihatning nazariy va amaliy tahlili, aniq parametrlar va taqqoslash xulosasi (25-35 so'z)".
+
+D) "standard" (Umumiy mazmunli slaydlar) layouti uchun:
+  - 'bullet_points' massivida KAMIDA 5 tadan 6 tagacha sifatli, chuqur va faktlarga boy bandlar bo'lsin.
+  - Har bir band: "Kalit atama / tushuncha: Mazkur tushunchaning ilmiy-nazariy mohiyati, asosiy tamoyillari, aniq dalillar, qonuniyatlar, raqamlar va amaliyotdagi real ahamiyatini tushuntiruvchi 30-45 ta so'zdan iborat to'liq, chuqur tahliliy fikr".
+
+3. MAVZULARNI KENG QAMROVLI VA TO'LIQ QAMRAB OLISH:
 - Foydalanuvchi taqdim etgan HAR BIR mavzu, reja bandi yoki so'ralgan yo'nalish 100% to'liq qamrab olinsin! Birorta ham mavzu, masala yoki reja bandi chetda qolib ketmasin.
-- Har bir mazmuniy slayd bitta mavzuning alohida muhim yo'nalishini chuqur, tahlillar va faktlar bilan to'liq ochib bersin.
 - Agar foydalanuvchi bitta umumiy mavzu yuborgan bo'lsa ham, uni tor doirada emas, sohaning barcha tarmoqlari, funksiyalari, zamonaviy tendensiyalari va yechimlarini to'liq qamrab olgan holda KENG VA BAFURJA yoritib bering!
 
-3. SLAYD GIDROLOGIYASI VA STRUKTURASI:
+4. SLAYD GIDROLOGIYASI VA STRUKTURASI:
 - Titul (muqova), mundarija (reja), xulosa va adabiyotlar slaydlari dastur tomonidan avtomatik yaratiladi.
 - Shu sababli 'slides' massividagi BARCHA {num_content} ta slayd 100% BEVOSITA MAVZUNING O'ZIGA bag'ishlansin!
 - 'slides' boshida quruq "Kirish" yoki oxirida ortiqcha "Xulosa" kabi slaydlar qo'shilmasin — barcha slaydlar bevosita mavzuni to'liq yoritish uchun ishlatilsin!
 
-4. TAQDIMOT REJASI ("agenda"):
-- Reja bandlari umumiy quruq shablon bo'lmasin! U aynan foydalanuvchi mavzusi va mazmuniy slaydlarning haqiqiy sarlavhalarini aks ettirsin (3 tadan 5 tagacha asosiy band).
+5. TAQDIMOT REJASI ("agenda"):
+- 4 tadan 5 tagacha asosiy reja bandi, har biri mavzuning haqiqiy yo'nalishlarini aks ettirsin.
 
-5. MA'RUZA NUTQI (SPEAKER_NOTES):
+6. XULOSA VA ADABIYOTLAR:
+- 'conclusion': 4-5 ta chuqur, tahliliy xulosalar (sohaning nazariy, amaliy va kelajakdagi rivojlanishiga doir, har biri 25-35 so'z).
+- 'references': 4-5 ta to'liq akademik manbalar (muallif, kitob/maqola nomi, nashriyot, yili).
+
+7. MA'RUZA NUTQI (SPEAKER_NOTES):
 - Talaba doskada turib ushbu slaydni himoya qilayotganda gapirib beradigan 3-5 jumlalik jonli, ilmiy, tushunarli va professional ma'ruza matni bo'lsin.
 
 DIQQAT (QAT'IY TALAB): Foydalanuvchi jami taqdimot hajmi (titul muqova, reja, xulosa va yakun bilan birga) JAMI RO'PPA-ROSA {slide_count} TA SLAYDDAN iborat bo'lishini belgiladi (belgilangandan 1 list ham oshmasin!).
@@ -592,7 +618,7 @@ Quyidagi qat'iy JSON formatida taqdimot rejasini, har bir slayd matnini, xulosas
   "title": "Taqdimotning to'liq va jozibador akademik sarlavhasi",
   "subtitle": "Qisqa izoh yoki ilmiy yo'nalishi",
   "theme": "tech / history / nature / business / science / art / dark / canva_pastel / blue dan biri",
-  "cover_image_query": "Taqdimot muqovasi (titul slayd) uchun inglizcha 2-3 ta aniq qidiruv so'zi (masalan: 'artificial intelligence computer' yoki 'Amir Timur history')",
+  "cover_image_query": "Taqdimot muqovasi (titul slayd) uchun inglizcha 2-3 ta aniq qidiruv so'zi (masalan: 'computer network infrastructure')",
   "student_details": {{
     "university": "OTM / Universitet yoki institut nomi (agar kiritilgan bo'lsa)",
     "faculty": "Fakultet nomi (agar kiritilgan bo'lsa)",
@@ -605,7 +631,8 @@ Quyidagi qat'iy JSON formatida taqdimot rejasini, har bir slayd matnini, xulosas
     "Foydalanuvchi mavzusining 1-asosiy yo'nalishi",
     "Foydalanuvchi mavzusining 2-asosiy yo'nalishi",
     "Foydalanuvchi mavzusining 3-asosiy yo'nalishi",
-    "Foydalanuvchi mavzusining 4-asosiy yo'nalishi"
+    "Foydalanuvchi mavzusining 4-asosiy yo'nalishi",
+    "Foydalanuvchi mavzusining 5-asosiy yo'nalishi"
   ],
   "slides": [
     {{
@@ -614,40 +641,101 @@ Quyidagi qat'iy JSON formatida taqdimot rejasini, har bir slayd matnini, xulosas
       "layout": "standard / kpi / comparison / steps",
       "title": "Foydalanuvchi yuborgan mavzuning 1-yo'nalishi bo'yicha aniq mazmuniy sarlavha",
       "kpi_items": [
-        {{"number": "85%", "label": "Ko'rsatkich yoki statistika tavsifi"}},
-        {{"number": "2.4x", "label": "Ko'rsatkich yoki statistika tavsifi"}},
-        {{"number": "100+", "label": "Ko'rsatkich yoki statistika tavsifi"}}
+        {{
+          "number": "85%",
+          "label": "Ko'rsatkich yoki statistika nomi",
+          "desc": "Mazkur ko'rsatkichning sohadagi roli va ahamiyatini yorituvchi 2-3 ta tahliliy jumlali batafsil tushuntirish matni (25-35 so'z).",
+          "points": [
+            "Asosiy mezon yoki parametr: Texnik standartlar va dalillar tahlili",
+            "Amaliyotdagi samaradorligi: Tizimdagi real natijalar va iqtisodiy samara"
+          ]
+        }},
+        {{
+          "number": "2.4x",
+          "label": "Samaradorlik ko'rsatkichi",
+          "desc": "Mazkur ko'rsatkichning sohadagi roli va ahamiyatini yorituvchi 2-3 ta tahliliy jumlali batafsil tushuntirish matni (25-35 so'z).",
+          "points": [
+            "Asosiy mezon yoki parametr: Texnik standartlar va dalillar tahlili",
+            "Amaliyotdagi samaradorligi: Tizimdagi real natijalar va iqtisodiy samara"
+          ]
+        }},
+        {{
+          "number": "100+",
+          "label": "Qamrov va standartlar",
+          "desc": "Mazkur ko'rsatkichning sohadagi roli va ahamiyatini yorituvchi 2-3 ta tahliliy jumlali batafsil tushuntirish matni (25-35 so'z).",
+          "points": [
+            "Asosiy mezon yoki parametr: Texnik standartlar va dalillar tahlili",
+            "Amaliyotdagi samaradorligi: Tizimdagi real natijalar va iqtisodiy samara"
+          ]
+        }}
       ],
       "comparison_data": {{
-        "col1_title": "1-yo'nalish yoki an'anaviy yondashuv",
-        "col1_points": ["1-muhim jihat", "2-muhim jihat"],
-        "col2_title": "2-yo'nalish yoki innovatsion yondashuv",
-        "col2_points": ["1-muhim jihat", "2-muhim jihat"]
+        "col1_title": "1-yo'nalish yoki an'anaviy tizim",
+        "col1_points": [
+          "1-muhim parametr / atama: Mazkur jihatning nazariy va amaliy mohiyati, aniq parametrlar tahlili (25-35 so'z)",
+          "2-muhim parametr / atama: Texnik yoki amaliy samaradorlik ko'rsatkichlari (25-35 so'z)",
+          "3-muhim parametr / atama: Sohadagi afzalliklari va imkoniyatlari (25-35 so'z)",
+          "4-muhim parametr / atama: Cheklovlari yoki kamchiliklari bo'yicha ilmiy tahlil (25-35 so'z)"
+        ],
+        "col2_title": "2-yo'nalish yoki innovatsion tizim",
+        "col2_points": [
+          "1-muhim parametr / atama: Zamonaviy va innovatsion yondashuvning asosiy mohiyati (25-35 so'z)",
+          "2-muhim parametr / atama: Yuqori tezlik, xavfsizlik va yangi standartlar tahlili (25-35 so'z)",
+          "3-muhim parametr / atama: Asosiy afzalliklari va tizimli yutuqlari (25-35 so'z)",
+          "4-muhim parametr / atama: Kelajak istiqbollari va rivojlanish tendensiyalari (25-35 so'z)"
+        ]
       }},
       "steps_data": [
-        {{"step": "01", "title": "1-bosqich nomi", "desc": "Qisqa tushuntirish"}},
-        {{"step": "02", "title": "2-bosqich nomi", "desc": "Qisqa tushuntirish"}},
-        {{"step": "03", "title": "3-bosqich nomi", "desc": "Qisqa tushuntirish"}}
+        {{
+          "step": "01",
+          "title": "1-bosqich / texnologiya nomi",
+          "desc": "Ushbu bosqichning asosiy ilmiy-texnik mohiyati, ishlash mexanizmi va vazifalarini chuqur tahlil qiluvchi 2-3 ta to'liq jumlali tushuntirish (25-35 so'z).",
+          "points": [
+            "Texnik parametri yoki standarti: Aniq raqamlar va mezonlar tahlili (15-20 so'z)",
+            "Amaliy afzalligi va roli: Real tizimlardagi samarasi va qo'llanilishi (15-20 so'z)"
+          ]
+        }},
+        {{
+          "step": "02",
+          "title": "2-bosqich / texnologiya nomi",
+          "desc": "Ushbu bosqichning asosiy ilmiy-texnik mohiyati, ishlash mexanizmi va vazifalarini chuqur tahlil qiluvchi 2-3 ta to'liq jumlali tushuntirish (25-35 so'z).",
+          "points": [
+            "Texnik parametri yoki standarti: Aniq raqamlar va mezonlar tahlili (15-20 so'z)",
+            "Amaliy afzalligi va roli: Real tizimlardagi samarasi va qo'llanilishi (15-20 so'z)"
+          ]
+        }},
+        {{
+          "step": "03",
+          "title": "3-bosqich / texnologiya nomi",
+          "desc": "Ushbu bosqichning asosiy ilmiy-texnik mohiyati, ishlash mexanizmi va vazifalarini chuqur tahlil qiluvchi 2-3 ta to'liq jumlali tushuntirish (25-35 so'z).",
+          "points": [
+            "Texnik parametri yoki standarti: Aniq raqamlar va mezonlar tahlili (15-20 so'z)",
+            "Amaliy afzalligi va roli: Real tizimlardagi samarasi va qo'llanilishi (15-20 so'z)"
+          ]
+        }}
       ],
       "bullet_points": [
-        "1-muhim tushuncha: Mazkur tushunchaning ilmiy-amaliy mohiyati va faktlar bilan boyitilgan batafsil tushuntirishi",
-        "2-muhim tushuncha: Aniq raqamlar, qonuniyatlar yoki statistik ma'lumotlar bilan tahlil",
-        "3-muhim tushuncha: Sohadagi amaliy yondashuvlar va qiyosiy xulosa",
-        "4-muhim tushuncha: Zamonaviy rivojlanish omillari va istiqbolli jihatlar"
+        "1-muhim tushuncha / atama: Mazkur tushunchaning ilmiy-nazariy mohiyati, asosiy tamoyillari, aniq dalillar, qonuniyatlar, raqamlar va amaliyotdagi real ahamiyatini tushuntiruvchi 30-45 ta so'zdan iborat to'liq, chuqur tahliliy fikr.",
+        "2-muhim tushuncha / atama: Mazkur yo'nalishning amaliy va texnologik mexanizmlari, standartlari va empirik tahlillarini yorituvchi 30-45 ta so'zdan iborat to'liq fikr.",
+        "3-muhim tushuncha / atama: Sohadagi mavjud muammolar, innovatsion yechimlar va samaradorlik ko'rsatkichlari bo'yicha 30-45 ta so'zdan iborat ilmiy xulosa.",
+        "4-muhim tushuncha / atama: Zamonaviy rivojlanish omillari, xalqaro tajriba va tatbiq etish mexanizmlari haqida 30-45 ta so'zdan iborat tahlil.",
+        "5-muhim tushuncha / atama: Istiqbolli tendensiyalar, xavfsizlik va kelajakdagi rivojlanish yo'nalishlari bo'yicha 30-45 ta so'zdan iborat tahliliy xulosa."
       ],
       "speaker_notes": "Talaba himoya paytida ushbu slaydni tushuntirganda doskada turib aytishi kerak bo'lgan 3-5 jumlalik jonli va ilmiy ma'ruza nutqi.",
-      "image_query": "Ushbu slayd uchun mavzuga mos inglizcha 1-3 ta aniq qidiruv so'zi (masalan: 'neural network', 'samarkand architecture', 'human heart anatomy')"
+      "image_query": "Ushbu slayd uchun mavzuga mos inglizcha 1-3 ta aniq qidiruv so'zi (masalan: 'network topology infrastructure')"
     }}
   ],
   "conclusion": [
-    "Asosiy ilmiy/amaliy xulosa 1",
-    "Tahlillar natijasi bo'yicha xulosa 2",
-    "Amaliyotga tatbiq etish yoki kelajak istiqbollari bo'yicha takliflar"
+    "Asosiy ilmiy/amaliy xulosa 1: Mavzuning nazariy va amaliy asoslari bo'yicha chuqur tahliliy xulosa (25-35 so'z).",
+    "Tahlillar natijasi bo'yicha xulosa 2: Sohadagi asosiy qonuniyatlar va samaradorlik ko'rsatkichlari (25-35 so'z).",
+    "Amaliyotga tatbiq etish bo'yicha xulosa 3: Real tizimlarda qo'llash va iqtisodiy/texnik samaradorlik (25-35 so'z).",
+    "Kelajak istiqbollari bo'yicha takliflar: Sohaning rivojlanish tendensiyalari va istiqbolli yo'nalishlari (25-35 so'z)."
   ],
   "references": [
-    "1. Mavzuga oid darslik yoki monografiya muallifi, kitob nomi, yili.",
-    "2. O'zbekiston Respublikasi qonun hujjatlari yoki tegishli me'yoriy standartlar.",
-    "3. Mavzuga oid zamonaviy ilmiy jurnal yoki nufuzli axborot manbasi (veb-resurs)."
+    "1. Darslik yoki monografiya: Muallif, Kitob nomi, Nashriyot, Yil.",
+    "2. Davlat standarti yoki me'yoriy-huquqiy hujjat: Standart nomi va raqami.",
+    "3. Ilmiy jurnal maqolasi: Muallif, Maqola nomi, Jurnal nomi, Jild/Son, Yil.",
+    "4. Xalqaro nufuzli ilmiy manba yoki rasmiy texnik hujjat (IEEE, ISO, RFC va h.k.)."
   ]
 }}
 
@@ -655,17 +743,17 @@ Talablar:
 - Jami mazmuniy slaydlar soni ('slides' massivida) roppa-rosa {num_content} taga teng bo'lsin (kam ham, ko'p ham bo'lmasin).
 - TAQDIMOT REJASI ("agenda"): QAT'IY RAVISHDA ENG KO'PI 4 TAdan 5 TAgacha umumlashtirilgan asosiy reja bandlaridan iborat bo'lsin (hech qachon 5 tadan oshmasin).
 - DIZAYN VA LAYOUT XILMA-XILLIGI (MUHIM): Taqdimot bir xil zerikarli bullet point bo'lib qolmasligi uchun slaydlarga mos layout tanlang:
-  * "kpi" — Asosiy raqamlar, statistika yoki foizlar bo'lgan slaydlarga (kamida 1 ta slaydda ishlating, 3 ta ko'rsatkich berilsin);
-  * "comparison" — Taqqoslash, solishtirish yoki ijobiy/salbiy tomonlar bo'lgan slaydga (kamida 1 ta slaydda ishlating);
-  * "steps" — Bosqichlar, jarayon yoki ketma-ketlik bo'lgan slaydga (agar mos kelsa);
-  * "standard" — Boshqa umumiy mazmunli slaydlar uchun (bullet_points va rasm).
-  Har bir slaydga qaysi layout tanlanganidan qat'i nazar har doim "bullet_points" va "speaker_notes" ham yozilsin!
+  * "kpi" — Asosiy raqamlar, statistika yoki foizlar bo'lgan slaydlarga (kamida 1 ta slaydda ishlating, 3 ta ko'rsatkich berilsin, har birida raqam, sarlavha, batafsil desc va 2 ta texnik points bo'lsin);
+  * "comparison" — Taqqoslash, solishtirish yoki ijobiy/salbiy tomonlar bo'lgan slaydga (kamida 1 ta slaydda ishlating, har bir tomonda 4-5 tadan chuqur band berilsin);
+  * "steps" — Bosqichlar, jarayon yoki ketma-ketlik bo'lgan slaydga (3 ta bosqich, har birida nom, batafsil desc va 2 ta texnik points bo'lsin);
+  * "standard" — Boshqa umumiy mazmunli slaydlar uchun (kamida 5 tadan 6 tagacha chuqur bullet_points va rasm).
+  Har bir slaydga qaysi layout tanlanganidan qat'i nazar har doim to'liq "bullet_points" va "speaker_notes" ham yozilsin!
 - QAT'IY TALAB: Taqdimot sarlavhalarida, reja bandlarida, slayd matnlarida, xulosada, manbalarda va ma'ruza nutqida MUTLAQO HECH QANDAY emoji, stiker, piktogramma yoki smayliklar ISHLATILMASIN! Taqdimot sof akademik, rasmiy va ilmiy uslubda bo'lsin.
 - Har bir mazmuniy slayd foydalanuvchi so'ragan mavzularni chuqur, qiziqarli, dalillarga asoslangan holda to'liq yoritib bersin.
-- Har bir slaydda 3 tadan 5 tagacha sifatli band (bullet_points) bo'lsin. Har bir band "Kalit so'z: Batafsil tavsif va tahlil" ko'rinishida yozilsin.
+- Har bir slaydda 5 tadan 6 tagacha sifatli band (bullet_points) bo'lsin. Har bir band "Kalit so'z: Batafsil tavsif va tahlil" ko'rinishida yozilsin.
 - Har bir slaydga talabaning himoyasi uchun speaker_notes (ma'ruza nutqi) yozilsin.
 - Har bir slaydga va muqovaga mos inglizcha aniq image_query yozilsin.
-- "references" maydonida kamida 3-4 ta haqiqiy va ishonarli adabiyot/manba bo'lsin.
+- "references" maydonida kamida 4-5 ta haqiqiy va ishonarli adabiyot/manba bo'lsin.
 - "Taqdimot muallifi va OTM ma'lumotlari" berilgan bo'lsa, ularni aralashtirib yubormasdan, har birini o'z o'rniga aniq ajratib "student_details" obyektiga joylashtiring.
 - Faqat to'g'ri JSON formatida javob bering.
 """
@@ -1320,7 +1408,6 @@ def _create_hero_slide(prs, blank_layout, theme, title_text, subtitle_text, tota
                 pp2.font.color.rgb = RGBColor(255, 255, 255)
                 pp2.alignment = PP_ALIGN.CENTER
     return topic_slide
-    return topic_slide
 
 def _create_agenda_slide(prs, blank_layout, theme, content, slides_data, total_slides, custom_bg, lang_info):
     """2-slayd sifatida Infografik Reja (Agenda / Mundarija) slaydi chizadi."""
@@ -1370,7 +1457,24 @@ def _create_agenda_slide(prs, blank_layout, theme, content, slides_data, total_s
     for i, item_text in enumerate(agenda_items):
         y = start_y + i * (card_h + gap)
 
-        circ = reja_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), y + (card_h - Inches(0.55)) / 2, Inches(0.85), Inches(0.55))
+        # Container card background for agenda item
+        ag_card = reja_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), y, card_w, card_h)
+        ag_card.fill.solid()
+        ag_card.fill.fore_color.rgb = theme.get("card_bg", RGBColor(24, 34, 58))
+        ag_card.line.color.rgb = theme.get("accent", RGBColor(56, 189, 248))
+        ag_card.line.width = Pt(1.0)
+        try:
+            ag_card.adjustments[0] = 0.06
+        except Exception:
+            pass
+
+        # Accent vertical left bar
+        ag_bar = reja_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), y, Inches(0.08), card_h)
+        ag_bar.fill.solid()
+        ag_bar.fill.fore_color.rgb = theme["accent"]
+        ag_bar.line.fill.background()
+
+        circ = reja_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.15), y + (card_h - Inches(0.55)) / 2, Inches(0.85), Inches(0.55))
         circ.fill.solid()
         circ.fill.fore_color.rgb = theme["accent"]
         circ.line.fill.background()
@@ -1381,17 +1485,18 @@ def _create_agenda_slide(prs, blank_layout, theme, content, slides_data, total_s
         cp.font.color.rgb = RGBColor(255, 255, 255)
         cp.alignment = PP_ALIGN.CENTER
 
-        ag_tb = reja_slide.shapes.add_textbox(Inches(2.0), y + (card_h - Inches(0.55)) / 2, Inches(9.5), Inches(0.55))
+        ag_tb = reja_slide.shapes.add_textbox(Inches(2.2), y + (card_h - Inches(0.55)) / 2, Inches(9.1), Inches(0.55))
         ag_tf = ag_tb.text_frame
         ag_tf.word_wrap = True
+        ag_tf.margin_top = ag_tf.margin_bottom = ag_tf.margin_left = ag_tf.margin_right = 0
         ag_p = ag_tf.paragraphs[0]
         ag_p.text = item_text
-        ag_p.font.size = Pt(17 if n_items == 5 else 19)
+        ag_p.font.size = Pt(16.5 if n_items == 5 else 18)
         ag_p.font.bold = True
         ag_p.font.color.rgb = RGBColor(255, 255, 255)
         ag_p.font.name = "Arial"
 
-        arr_b = reja_slide.shapes.add_textbox(Inches(11.8), y + (card_h - Inches(0.55)) / 2, Inches(0.5), Inches(0.55))
+        arr_b = reja_slide.shapes.add_textbox(Inches(11.55), y + (card_h - Inches(0.55)) / 2, Inches(0.6), Inches(0.55))
         arr_p = arr_b.text_frame.paragraphs[0]
         arr_p.text = "➔"
         arr_p.font.size = Pt(16)
@@ -1420,11 +1525,27 @@ def _create_thanks_slide(prs, blank_layout, theme, custom_bg, is_white, is_dark,
     card_l = Inches(0.9)
     card_t = Inches(1.5)
 
-    end_box = end_slide.shapes.add_textbox(card_l, card_t, card_w, card_h)
+    # Main container card background
+    bg_end_card = end_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, card_l, card_t, card_w, card_h)
+    bg_end_card.fill.solid()
+    bg_end_card.fill.fore_color.rgb = theme.get("card_bg", RGBColor(24, 34, 58))
+    bg_end_card.line.color.rgb = theme.get("accent", RGBColor(56, 189, 248))
+    bg_end_card.line.width = Pt(1.2)
+    try:
+        bg_end_card.adjustments[0] = 0.04
+    except Exception:
+        pass
+
+    bar_end = end_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, card_l + Inches(0.3), card_t + Inches(0.12), card_w - Inches(0.6), Inches(0.05))
+    bar_end.fill.solid()
+    bar_end.fill.fore_color.rgb = theme["accent"]
+    bar_end.line.fill.background()
+
+    end_box = end_slide.shapes.add_textbox(card_l, card_t + Inches(0.2), card_w, Inches(2.8))
     end_tf = end_box.text_frame
     end_tf.word_wrap = True
-    end_tf.margin_top = Inches(0.2)
-    end_tf.margin_bottom = Inches(0.2)
+    end_tf.margin_top = Inches(0.1)
+    end_tf.margin_bottom = Inches(0.1)
     end_tf.margin_left = Inches(0.2)
     end_tf.margin_right = Inches(0.2)
 
@@ -1435,34 +1556,77 @@ def _create_thanks_slide(prs, blank_layout, theme, custom_bg, is_white, is_dark,
     p_badge.font.color.rgb = theme["accent"]
     p_badge.font.name = "Arial"
     p_badge.alignment = PP_ALIGN.CENTER
-    p_badge.space_after = Pt(14)
+    p_badge.space_after = Pt(10)
 
     ep1 = end_tf.add_paragraph()
     ep1.text = lang_info["thanks"].upper()
-    ep1.font.size = Pt(38)
+    ep1.font.size = Pt(36)
     ep1.font.bold = True
     ep1.font.color.rgb = RGBColor(255, 255, 255)
     ep1.font.name = "Arial"
     ep1.alignment = PP_ALIGN.CENTER
-    ep1.space_after = Pt(12)
+    ep1.space_after = Pt(10)
 
     ep2 = end_tf.add_paragraph()
     ep2.text = lang_info.get("questions_welcome", "Savollar, fikr-mulohazalar va muhokama uchun tayyorman")
-    ep2.font.size = Pt(18)
+    ep2.font.size = Pt(16.5)
     ep2.font.bold = False
     ep2.font.color.rgb = theme["accent"]
     ep2.font.name = "Arial"
     ep2.alignment = PP_ALIGN.CENTER
-    ep2.space_after = Pt(16)
+    ep2.space_after = Pt(10)
 
     if presenter_str:
         ep3 = end_tf.add_paragraph()
         ep3.text = presenter_str
-        ep3.font.size = Pt(14)
+        ep3.font.size = Pt(13.5)
         ep3.font.bold = True
         ep3.font.color.rgb = RGBColor(255, 255, 255)
         ep3.font.name = "Arial"
         ep3.alignment = PP_ALIGN.CENTER
+
+    # 3 ta yakuniy infografik blok (sahifaning pastki qismini chiroyli to'ldirish)
+    t_pillars = [
+        ("Savollar va Muhokama", "Taqdimot mavzusi yuzasidan fikr-mulohazalaringiz va savollaringizni mamnuniyat bilan qabul qilaman."),
+        ("Ilmiy-amaliy Xulosa", "Belgilangan barcha maqsad va vazifalar to'liq yoritildi, mavzu bo'yicha asosli natijalar olindi."),
+        ("Aloqa va Hamkorlik", "Tadqiqotni chuqurlashtirish, yangi loyihalarni ishlab chiqish va hamkorlik uchun doim tayyorman.")
+    ]
+    p_start_x = Inches(1.3)
+    p_w = Inches(3.35)
+    p_gap = Inches(0.35)
+    p_y = Inches(4.75)
+    p_h = Inches(1.8)
+
+    for p_i, (p_title, p_body) in enumerate(t_pillars):
+        px = p_start_x + p_i * (p_w + p_gap)
+        p_card = end_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, px, p_y, p_w, p_h)
+        p_card.fill.solid()
+        p_card.fill.fore_color.rgb = theme.get("primary", RGBColor(15, 23, 42))
+        p_card.line.color.rgb = theme.get("accent", RGBColor(56, 189, 248))
+        p_card.line.width = Pt(1.0)
+        try:
+            p_card.adjustments[0] = 0.06
+        except Exception:
+            pass
+
+        p_box = end_slide.shapes.add_textbox(px + Inches(0.15), p_y + Inches(0.12), p_w - Inches(0.3), p_h - Inches(0.24))
+        ptf = p_box.text_frame
+        ptf.word_wrap = True
+        ptf.margin_top = ptf.margin_bottom = ptf.margin_left = ptf.margin_right = 0
+        pp1 = ptf.paragraphs[0]
+        pp1.text = f"✦  {p_title}"
+        pp1.font.size = Pt(13)
+        pp1.font.bold = True
+        pp1.font.color.rgb = theme["accent"]
+        pp1.alignment = PP_ALIGN.CENTER
+        pp1.space_after = Pt(6)
+
+        pp2 = ptf.add_paragraph()
+        pp2.text = p_body
+        pp2.font.size = Pt(11.5)
+        pp2.font.color.rgb = RGBColor(226, 232, 240)
+        pp2.alignment = PP_ALIGN.CENTER
+        pp2.line_spacing = 1.15
 
     return end_slide
 
@@ -1574,6 +1738,30 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
                 "Amaliyotga tatbiq etish mexanizmlari va samaradorlik ko'rsatkichlari.",
                 "Sohada zamonaviy axborot texnologiyalari va innovatsiyalardan foydalanish."
             ]
+        if "Русский" in lang_name:
+            p_pts = [
+                "Теоретические основы: Углубленный анализ фундаментальных концепций и ключевых закономерностей предметной области.",
+                "Механизмы реализации: Практические инструменты, протоколы и алгоритмы эффективного внедрения в реальные процессы.",
+                "Оценка эффективности: Качественные и количественные показатели результативности, системный анализ преимуществ.",
+                "Современные технологии: Использование передовых цифровых инструментов, автоматизации и инновационных решений.",
+                "Перспективы развития: Стратегические направления масштабирования, оптимизации и интеграции на долгосрочный период."
+            ]
+        elif "English" in lang_name:
+            p_pts = [
+                "Theoretical Foundation: In-depth analysis of core principles, methodologies, and technical frameworks.",
+                "Implementation Architecture: Practical deployment workflows, protocols, and standard operational processes.",
+                "Performance Evaluation: Quantitative and qualitative benchmarking of key system metrics and strategic value.",
+                "Modern Technologies: Leveraging state-of-the-art tools, automation, and intelligent infrastructure.",
+                "Future Roadmap: Emerging trends, scalability considerations, and sustainable long-term development."
+            ]
+        else:
+            p_pts = [
+                "Nazariy asoslar: Sohaning fundamental ilmiy tushunchalari, tamoyillari va asosiy qonuniyatlari chuqur tahlili.",
+                "Amaliy mexanizmlar: Tizimni real jarayonlarga tatbiq etish usullari, standartlari va operatsion yechimlari.",
+                "Samaradorlik mezonlari: Aniq ko'rsatkichlar, natijadorlik tahlili va tizimli afzalliklarni empirik baholash.",
+                "Zamonaviy texnologiyalar: Ilg'or axborot texnologiyalari, raqamlashtirish va innovatsion vositalarni qo'llash.",
+                "Istiqbolli yo'nalishlar: Sohani modernizatsiya qilish, xavfsizlikni kuchaytirish va kelajakdagi rivojlanish omillari."
+            ]
         slides_data.append({
             "title": p_title,
             "bullet_points": p_pts,
@@ -1606,115 +1794,198 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         _add_header(c_slide, s_title, curr_theme, slide_num=content_slide_num, total_slides=total_slides, category=f"{sec_lbl} {idx}")
 
         img_path = images_map.get(idx) if images_map else None
-        bullets = s_data.get("bullet_points", [])
+        bullets = s_data.get("bullet_points") or s_data.get("bullets", [])
         layout_type = str(s_data.get("layout", "standard")).lower().strip()
         kpi_items = s_data.get("kpi_items", [])
         comparison_data = s_data.get("comparison_data", {})
         steps_data = s_data.get("steps_data", [])
 
         if layout_type == "kpi" and isinstance(kpi_items, list) and len(kpi_items) >= 2:
-            # 3 ta KPI karta
+            # 3 ta KPI karta (yuqoridan pastgacha to'liq to'ldirilgan)
             items = kpi_items[:3]
             card_w = Inches(3.6)
-            card_h = Inches(4.9)
-            gap = Inches(0.4)
+            card_h = Inches(5.35)
+            gap = Inches(0.366)
             start_x = Inches(0.9)
-            y_pos = Inches(1.8)
+            y_pos = Inches(1.55)
 
             for k_idx, item in enumerate(items):
                 x_pos = start_x + k_idx * (card_w + gap)
 
-                # Top color bar
-                c_bar = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_pos, y_pos, card_w, Inches(0.08))
+                # Modern glassmorphism card container
+                bg_card = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_pos, y_pos, card_w, card_h)
+                bg_card.fill.solid()
+                bg_card.fill.fore_color.rgb = curr_theme.get("card_bg", RGBColor(24, 34, 58))
+                bg_card.line.color.rgb = curr_theme.get("accent", RGBColor(56, 189, 248))
+                bg_card.line.width = Pt(1.2)
+                try:
+                    bg_card.adjustments[0] = 0.05
+                except Exception:
+                    pass
+
+                # Top color accent bar
+                c_bar = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_pos + Inches(0.2), y_pos + Inches(0.1), card_w - Inches(0.4), Inches(0.05))
                 c_bar.fill.solid()
                 c_bar.fill.fore_color.rgb = curr_theme["accent"]
                 c_bar.line.fill.background()
 
                 # Big Number Textbox
-                num_box = c_slide.shapes.add_textbox(x_pos, y_pos + Inches(0.2), card_w, Inches(1.3))
+                num_box = c_slide.shapes.add_textbox(x_pos + Inches(0.15), y_pos + Inches(0.15), card_w - Inches(0.3), Inches(0.95))
                 ntf = num_box.text_frame
                 ntf.word_wrap = True
+                ntf.margin_top = ntf.margin_bottom = ntf.margin_left = ntf.margin_right = 0
                 np = ntf.paragraphs[0]
                 raw_num = str(item.get("number", f"#{k_idx+1}"))
                 np.text = remove_emojis(raw_num)
-                np.font.size = Pt(40)
+                np.font.size = Pt(36)
                 np.font.bold = True
                 np.font.color.rgb = curr_theme["accent"]
                 np.font.name = "Arial"
                 np.alignment = PP_ALIGN.CENTER
 
                 # Label Textbox
-                lbl_box = c_slide.shapes.add_textbox(x_pos, y_pos + Inches(1.5), card_w, Inches(0.7))
+                lbl_box = c_slide.shapes.add_textbox(x_pos + Inches(0.15), y_pos + Inches(1.05), card_w - Inches(0.3), Inches(0.65))
                 ltf = lbl_box.text_frame
                 ltf.word_wrap = True
+                ltf.margin_top = ltf.margin_bottom = ltf.margin_left = ltf.margin_right = 0
                 lp = ltf.paragraphs[0]
                 raw_lbl = str(item.get("label", ""))
                 lp.text = remove_emojis(raw_lbl)
-                lp.font.size = Pt(18)
+                lp.font.size = Pt(16)
                 lp.font.bold = True
                 lp.font.color.rgb = RGBColor(255, 255, 255)
                 lp.font.name = "Arial"
                 lp.alignment = PP_ALIGN.CENTER
 
-                # Desc/Bullets in KPI card
-                desc_box = c_slide.shapes.add_textbox(x_pos, y_pos + Inches(2.3), card_w, Inches(2.4))
+                # Divider line
+                div = c_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x_pos + Inches(0.3), y_pos + Inches(1.75), card_w - Inches(0.6), Inches(0.02))
+                div.fill.solid()
+                div.fill.fore_color.rgb = curr_theme.get("card_border", curr_theme["accent"])
+                div.line.fill.background()
+
+                # Content Box: Desc & Sub-points (to'liq to'ldirish)
+                desc_box = c_slide.shapes.add_textbox(x_pos + Inches(0.2), y_pos + Inches(1.85), card_w - Inches(0.4), card_h - Inches(1.95))
                 dtf = desc_box.text_frame
                 dtf.word_wrap = True
-                if k_idx < len(bullets):
-                    b_txt = re.sub(r"^[\s•\-\*–—\d\.\)]+", "", remove_emojis(str(bullets[k_idx]))).strip()
-                    dp = dtf.paragraphs[0]
-                    dp.text = b_txt
-                    dp.font.size = Pt(14)
-                    dp.font.color.rgb = RGBColor(226, 232, 240)
-                    dp.font.name = "Arial"
-                    dp.alignment = PP_ALIGN.CENTER
+                dtf.margin_top = dtf.margin_bottom = dtf.margin_left = dtf.margin_right = 0
 
-        elif layout_type == "comparison" and isinstance(comparison_data, dict) and comparison_data.get("col1_points") and comparison_data.get("col2_points"):
+                desc_text = str(item.get("desc", "")).strip()
+                if not desc_text and k_idx < len(bullets):
+                    desc_text = re.sub(r"^[\s•\-\*–—\d\.\)]+", "", remove_emojis(str(bullets[k_idx]))).strip()
+                if not desc_text:
+                    desc_text = f"{raw_lbl}: Mavzu doirasida mazkur ko'rsatkich tizimning asosiy samaradorlik omili va mezoniy ko'rsatkichi hisoblanadi."
+
+                dp = dtf.paragraphs[0]
+                dp.text = remove_emojis(desc_text)
+                dp.font.size = Pt(12.5)
+                dp.font.color.rgb = RGBColor(226, 232, 240)
+                dp.font.name = "Arial"
+                dp.space_after = Pt(8)
+                dp.line_spacing = 1.15
+
+                # Additional Points in KPI Card
+                kpi_pts = item.get("points") or []
+                if not kpi_pts:
+                    rem_bullets = [b for b_i, b in enumerate(bullets) if b_i != k_idx]
+                    if rem_bullets:
+                        kpi_pts = rem_bullets[k_idx * 2 : k_idx * 2 + 2] or rem_bullets[:2]
+
+                for pt in kpi_pts[:2]:
+                    pt_clean = re.sub(r"^[\s•\-\*–—\d\.\)]+", "", remove_emojis(str(pt))).strip()
+                    if pt_clean:
+                        _add_styled_bullet(dtf, pt_clean, curr_theme, font_size=Pt(11.5), space_after=Pt(6))
+
+        elif layout_type == "comparison" and isinstance(comparison_data, dict) and (comparison_data.get("col1_points") or comparison_data.get("col1_title")):
             col1_title = comparison_data.get("col1_title", "1-yondashuv")
             col1_pts = comparison_data.get("col1_points", [])
             col2_title = comparison_data.get("col2_title", "2-yondashuv")
             col2_pts = comparison_data.get("col2_points", [])
 
-            card_w = Inches(5.3)
-            card_h = Inches(5.1)
-            y_pos = Inches(1.6)
+            card_w = Inches(5.4)
+            card_h = Inches(5.35)
+            y_pos = Inches(1.55)
 
-            # Left Column
-            lt_box = c_slide.shapes.add_textbox(Inches(0.9), y_pos, card_w, Inches(0.7))
+            # Left Column Card Background
+            bg_l = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), y_pos, card_w, card_h)
+            bg_l.fill.solid()
+            bg_l.fill.fore_color.rgb = curr_theme.get("card_bg", RGBColor(24, 34, 58))
+            bg_l.line.color.rgb = curr_theme.get("accent", RGBColor(56, 189, 248))
+            bg_l.line.width = Pt(1.2)
+            try:
+                bg_l.adjustments[0] = 0.04
+            except Exception:
+                pass
+
+            bar_l = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9) + Inches(0.3), y_pos + Inches(0.12), card_w - Inches(0.6), Inches(0.05))
+            bar_l.fill.solid()
+            bar_l.fill.fore_color.rgb = curr_theme["accent"]
+            bar_l.line.fill.background()
+
+            lt_box = c_slide.shapes.add_textbox(Inches(1.2), y_pos + Inches(0.28), card_w - Inches(0.6), Inches(0.55))
             ltf = lt_box.text_frame
             ltf.word_wrap = True
+            ltf.margin_top = ltf.margin_bottom = ltf.margin_left = ltf.margin_right = 0
             lp = ltf.paragraphs[0]
             lp.text = remove_emojis(col1_title)
-            lp.font.size = Pt(20)
+            lp.font.size = Pt(18)
             lp.font.bold = True
             lp.font.color.rgb = curr_theme["accent"]
             lp.font.name = "Arial"
 
-            lb_box = c_slide.shapes.add_textbox(Inches(0.9), y_pos + Inches(0.8), card_w, card_h - Inches(0.9))
+            div_l = c_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(1.2), y_pos + Inches(0.88), card_w - Inches(0.6), Inches(0.02))
+            div_l.fill.solid()
+            div_l.fill.fore_color.rgb = curr_theme.get("card_border", curr_theme["accent"])
+            div_l.line.fill.background()
+
+            lb_box = c_slide.shapes.add_textbox(Inches(1.2), y_pos + Inches(0.98), card_w - Inches(0.6), card_h - Inches(1.15))
             lbtf = lb_box.text_frame
             lbtf.word_wrap = True
-            for p_idx, pt in enumerate(col1_pts[:4]):
-                _add_styled_bullet(lbtf, str(pt), curr_theme, font_size=Pt(15), space_after=Pt(10), is_first=(p_idx == 0))
+            lbtf.margin_top = lbtf.margin_bottom = lbtf.margin_left = lbtf.margin_right = 0
+            for p_idx, pt in enumerate(col1_pts[:5]):
+                _add_styled_bullet(lbtf, str(pt), curr_theme, font_size=Pt(13), space_after=Pt(8), is_first=(p_idx == 0))
 
-            # Right Column
-            rt_box = c_slide.shapes.add_textbox(Inches(7.1), y_pos, card_w, Inches(0.7))
+            # Right Column Card Background
+            x_r = Inches(7.033)
+            bg_r = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_r, y_pos, card_w, card_h)
+            bg_r.fill.solid()
+            bg_r.fill.fore_color.rgb = curr_theme.get("card_bg", RGBColor(24, 34, 58))
+            bg_r.line.color.rgb = curr_theme.get("accent", RGBColor(56, 189, 248))
+            bg_r.line.width = Pt(1.2)
+            try:
+                bg_r.adjustments[0] = 0.04
+            except Exception:
+                pass
+
+            bar_r = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_r + Inches(0.3), y_pos + Inches(0.12), card_w - Inches(0.6), Inches(0.05))
+            bar_r.fill.solid()
+            bar_r.fill.fore_color.rgb = curr_theme["accent"]
+            bar_r.line.fill.background()
+
+            rt_box = c_slide.shapes.add_textbox(x_r + Inches(0.3), y_pos + Inches(0.28), card_w - Inches(0.6), Inches(0.55))
             rtf = rt_box.text_frame
             rtf.word_wrap = True
+            rtf.margin_top = rtf.margin_bottom = rtf.margin_left = rtf.margin_right = 0
             rp = rtf.paragraphs[0]
             rp.text = remove_emojis(col2_title)
-            rp.font.size = Pt(20)
+            rp.font.size = Pt(18)
             rp.font.bold = True
             rp.font.color.rgb = curr_theme["accent"]
             rp.font.name = "Arial"
 
-            rb_box = c_slide.shapes.add_textbox(Inches(7.1), y_pos + Inches(0.8), card_w, card_h - Inches(0.9))
+            div_r = c_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x_r + Inches(0.3), y_pos + Inches(0.88), card_w - Inches(0.6), Inches(0.02))
+            div_r.fill.solid()
+            div_r.fill.fore_color.rgb = curr_theme.get("card_border", curr_theme["accent"])
+            div_r.line.fill.background()
+
+            rb_box = c_slide.shapes.add_textbox(x_r + Inches(0.3), y_pos + Inches(0.98), card_w - Inches(0.6), card_h - Inches(1.15))
             rbtf = rb_box.text_frame
             rbtf.word_wrap = True
-            for p_idx, pt in enumerate(col2_pts[:4]):
-                _add_styled_bullet(rbtf, str(pt), curr_theme, font_size=Pt(15), space_after=Pt(10), is_first=(p_idx == 0))
+            rbtf.margin_top = rbtf.margin_bottom = rbtf.margin_left = rbtf.margin_right = 0
+            for p_idx, pt in enumerate(col2_pts[:5]):
+                _add_styled_bullet(rbtf, str(pt), curr_theme, font_size=Pt(13), space_after=Pt(8), is_first=(p_idx == 0))
 
             # Central VS Badge
-            vs_badge = c_slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(6.25), y_pos + Inches(2.1), Inches(0.8), Inches(0.8))
+            vs_badge = c_slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(6.25), y_pos + Inches(2.2), Inches(0.8), Inches(0.8))
             vs_badge.fill.solid()
             vs_badge.fill.fore_color.rgb = curr_theme["accent"]
             vs_badge.line.fill.background()
@@ -1729,16 +2000,33 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         elif layout_type == "steps" and isinstance(steps_data, list) and len(steps_data) >= 2:
             s_items = steps_data[:3]
             card_w = Inches(3.6)
-            card_h = Inches(5.0)
-            gap = Inches(0.4)
+            card_h = Inches(5.35)
+            gap = Inches(0.366)
             start_x = Inches(0.9)
-            y_pos = Inches(1.6)
+            y_pos = Inches(1.55)
 
             for st_idx, st in enumerate(s_items):
                 x_pos = start_x + st_idx * (card_w + gap)
 
+                # Modern glassmorphism card container
+                bg_card = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_pos, y_pos, card_w, card_h)
+                bg_card.fill.solid()
+                bg_card.fill.fore_color.rgb = curr_theme.get("card_bg", RGBColor(24, 34, 58))
+                bg_card.line.color.rgb = curr_theme.get("accent", RGBColor(56, 189, 248))
+                bg_card.line.width = Pt(1.2)
+                try:
+                    bg_card.adjustments[0] = 0.05
+                except Exception:
+                    pass
+
+                # Top color accent bar
+                c_bar = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_pos + Inches(0.2), y_pos + Inches(0.1), card_w - Inches(0.4), Inches(0.05))
+                c_bar.fill.solid()
+                c_bar.fill.fore_color.rgb = curr_theme["accent"]
+                c_bar.line.fill.background()
+
                 # Step Number Pill
-                circ = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_pos, y_pos, Inches(0.9), Inches(0.55))
+                circ = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_pos + Inches(0.25), y_pos + Inches(0.22), Inches(0.9), Inches(0.42))
                 circ.fill.solid()
                 circ.fill.fore_color.rgb = curr_theme["accent"]
                 circ.line.fill.background()
@@ -1752,50 +2040,142 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
                 cp.alignment = PP_ALIGN.CENTER
 
                 # Step Title
-                st_title_box = c_slide.shapes.add_textbox(x_pos, y_pos + Inches(0.75), card_w, Inches(0.9))
+                st_title_box = c_slide.shapes.add_textbox(x_pos + Inches(0.25), y_pos + Inches(0.72), card_w - Inches(0.5), Inches(0.72))
                 st_tf = st_title_box.text_frame
                 st_tf.word_wrap = True
+                st_tf.margin_top = st_tf.margin_bottom = st_tf.margin_left = st_tf.margin_right = 0
                 tp = st_tf.paragraphs[0]
                 tp.text = remove_emojis(str(st.get("title", "")))
-                tp.font.size = Pt(18)
+                tp.font.size = Pt(16.5)
                 tp.font.bold = True
                 tp.font.color.rgb = RGBColor(255, 255, 255)
                 tp.font.name = "Arial"
 
-                # Step Desc
-                desc_box = c_slide.shapes.add_textbox(x_pos, y_pos + Inches(1.75), card_w, Inches(3.0))
+                # Divider line
+                div = c_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x_pos + Inches(0.25), y_pos + Inches(1.5), card_w - Inches(0.5), Inches(0.02))
+                div.fill.solid()
+                div.fill.fore_color.rgb = curr_theme.get("card_border", curr_theme["accent"])
+                div.line.fill.background()
+
+                # Content Box: Desc & Sub-points (to'liq to'ldirish)
+                desc_box = c_slide.shapes.add_textbox(x_pos + Inches(0.25), y_pos + Inches(1.6), card_w - Inches(0.5), card_h - Inches(1.72))
                 dtf = desc_box.text_frame
                 dtf.word_wrap = True
+                dtf.margin_top = dtf.margin_bottom = dtf.margin_left = dtf.margin_right = 0
+
+                desc_text = str(st.get("desc", "")).strip()
+                if not desc_text and st_idx < len(bullets):
+                    desc_text = re.sub(r"^[\s•\-\*–—\d\.\)]+", "", remove_emojis(str(bullets[st_idx]))).strip()
+                if not desc_text:
+                    desc_text = f"{st.get('title', 'Bosqich')}: Mazkur yo'nalish bo'yicha asosiy mexanizmlar va texnik tamoyillar tizimli tatbiq etiladi."
+
                 dp = dtf.paragraphs[0]
-                dp.text = remove_emojis(str(st.get("desc", "")))
-                dp.font.size = Pt(14)
+                dp.text = remove_emojis(desc_text)
+                dp.font.size = Pt(12.5)
                 dp.font.color.rgb = RGBColor(226, 232, 240)
                 dp.font.name = "Arial"
+                dp.space_after = Pt(8)
+                dp.line_spacing = 1.15
+
+                # Additional Points in Step Card
+                st_pts = st.get("points") or []
+                if not st_pts:
+                    rem_bullets = [b for b_i, b in enumerate(bullets) if b_i != st_idx]
+                    if rem_bullets:
+                        st_pts = rem_bullets[st_idx * 2 : st_idx * 2 + 2] or rem_bullets[:2]
+
+                for pt in st_pts[:2]:
+                    pt_clean = re.sub(r"^[\s•\-\*–—\d\.\)]+", "", remove_emojis(str(pt))).strip()
+                    if pt_clean:
+                        _add_styled_bullet(dtf, pt_clean, curr_theme, font_size=Pt(11.5), space_after=Pt(6))
 
         elif img_path and os.path.exists(img_path):
-            content_box = c_slide.shapes.add_textbox(Inches(0.9), Inches(1.5), Inches(6.8), Inches(5.4))
+            box_w = Inches(7.0)
+            box_h = Inches(5.4)
+
+            # Left Card Container for content
+            bg_content = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.5), box_w, box_h)
+            bg_content.fill.solid()
+            bg_content.fill.fore_color.rgb = curr_theme.get("card_bg", RGBColor(24, 34, 58))
+            bg_content.line.color.rgb = curr_theme.get("accent", RGBColor(56, 189, 248))
+            bg_content.line.width = Pt(1.2)
+            try:
+                bg_content.adjustments[0] = 0.04
+            except Exception:
+                pass
+
+            bar_l = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9) + Inches(0.3), Inches(1.5) + Inches(0.12), box_w - Inches(0.6), Inches(0.05))
+            bar_l.fill.solid()
+            bar_l.fill.fore_color.rgb = curr_theme["accent"]
+            bar_l.line.fill.background()
+
+            content_box = c_slide.shapes.add_textbox(Inches(1.2), Inches(1.75), box_w - Inches(0.6), box_h - Inches(0.45))
             ctf = content_box.text_frame
             ctf.word_wrap = True
+            ctf.margin_top = ctf.margin_bottom = ctf.margin_left = ctf.margin_right = 0
 
-            font_sz = Pt(14 if len(bullets) >= 5 else (15.5 if len(bullets) == 4 else 17))
-            space_aft = Pt(10 if len(bullets) >= 5 else (14 if len(bullets) == 4 else 18))
+            # Kamida 5-6 ta sifatli band bilan butun maydonni to'liq to'ldirish
+            render_bullets = list(bullets)
+            while len(render_bullets) < 5:
+                render_bullets.append(f"Qo'shimcha tahlil {len(render_bullets)+1}: {s_title} mavzusining amaliy samaradorligi va xavfsizlik standartlari chuqur o'rganilgan.")
 
-            for b_idx, bullet in enumerate(bullets):
+            n_b = len(render_bullets)
+            font_sz = Pt(13 if n_b >= 6 else (14 if n_b == 5 else 15))
+            space_aft = Pt(8 if n_b >= 6 else (10 if n_b == 5 else 14))
+
+            for b_idx, bullet in enumerate(render_bullets[:6]):
                 _add_styled_bullet(ctf, bullet, curr_theme, font_size=font_sz, space_after=space_aft, is_first=(b_idx == 0))
 
             try:
-                c_slide.shapes.add_picture(img_path, Inches(8.05), Inches(1.5), width=Inches(4.4), height=Inches(5.4))
+                img_x = Inches(8.15)
+                img_w = Inches(4.28)
+                img_h = Inches(5.4)
+                img_frame = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, img_x, Inches(1.5), img_w, img_h)
+                img_frame.fill.solid()
+                img_frame.fill.fore_color.rgb = curr_theme.get("card_bg", RGBColor(24, 34, 58))
+                img_frame.line.color.rgb = curr_theme.get("accent", RGBColor(56, 189, 248))
+                img_frame.line.width = Pt(1.2)
+                try:
+                    img_frame.adjustments[0] = 0.04
+                except Exception:
+                    pass
+                c_slide.shapes.add_picture(img_path, img_x, Inches(1.5), width=img_w, height=img_h)
             except Exception:
                 pass
         else:
-            content_box = c_slide.shapes.add_textbox(Inches(0.9), Inches(1.5), Inches(11.533), Inches(5.4))
+            box_w = Inches(11.533)
+            box_h = Inches(5.4)
+
+            # Full width content card container
+            bg_content = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.5), box_w, box_h)
+            bg_content.fill.solid()
+            bg_content.fill.fore_color.rgb = curr_theme.get("card_bg", RGBColor(24, 34, 58))
+            bg_content.line.color.rgb = curr_theme.get("accent", RGBColor(56, 189, 248))
+            bg_content.line.width = Pt(1.2)
+            try:
+                bg_content.adjustments[0] = 0.04
+            except Exception:
+                pass
+
+            bar_l = c_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9) + Inches(0.3), Inches(1.5) + Inches(0.12), box_w - Inches(0.6), Inches(0.05))
+            bar_l.fill.solid()
+            bar_l.fill.fore_color.rgb = curr_theme["accent"]
+            bar_l.line.fill.background()
+
+            content_box = c_slide.shapes.add_textbox(Inches(1.25), Inches(1.75), box_w - Inches(0.7), box_h - Inches(0.45))
             ctf = content_box.text_frame
             ctf.word_wrap = True
+            ctf.margin_top = ctf.margin_bottom = ctf.margin_left = ctf.margin_right = 0
 
-            font_sz = Pt(15.5 if len(bullets) >= 5 else (17 if len(bullets) == 4 else 18.5))
-            space_aft = Pt(11 if len(bullets) >= 5 else (15 if len(bullets) == 4 else 20))
+            render_bullets = list(bullets)
+            while len(render_bullets) < 5:
+                render_bullets.append(f"Qo'shimcha tahlil {len(render_bullets)+1}: {s_title} mavzusining ilmiy-amaliy mohiyati, mezonlari va texnologik istiqbollari chuqur tahlil qilingan.")
 
-            for b_idx, bullet in enumerate(bullets):
+            n_b = len(render_bullets)
+            font_sz = Pt(14 if n_b >= 6 else (15 if n_b == 5 else 16.5))
+            space_aft = Pt(10 if n_b >= 6 else (12 if n_b == 5 else 18))
+
+            for b_idx, bullet in enumerate(render_bullets[:6]):
                 _add_styled_bullet(ctf, bullet, curr_theme, font_size=font_sz, space_after=space_aft, is_first=(b_idx == 0))
 
         # Speaker notes matni alohida doklad fayli sifatida yuboriladi,
@@ -1856,46 +2236,76 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         concl_hdr = lang_info.get("concl_title", "Xulosa va Yakun")
         _add_header(end_slide, concl_hdr, theme, slide_num=len(prs.slides), total_slides=total_slides, category=concl_hdr.upper())
 
-        # Top Box: Xulosa
-        t_box = end_slide.shapes.add_textbox(Inches(0.9), Inches(1.5), Inches(11.533), Inches(2.6))
+        # Top Box Card Container: Xulosa
+        top_card = end_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.5), Inches(11.533), Inches(2.7))
+        top_card.fill.solid()
+        top_card.fill.fore_color.rgb = theme.get("card_bg", RGBColor(24, 34, 58))
+        top_card.line.color.rgb = theme.get("accent", RGBColor(56, 189, 248))
+        top_card.line.width = Pt(1.2)
+        try:
+            top_card.adjustments[0] = 0.04
+        except Exception:
+            pass
+
+        top_bar = end_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9) + Inches(0.3), Inches(1.5) + Inches(0.12), Inches(11.533) - Inches(0.6), Inches(0.05))
+        top_bar.fill.solid()
+        top_bar.fill.fore_color.rgb = theme["accent"]
+        top_bar.line.fill.background()
+
+        t_box = end_slide.shapes.add_textbox(Inches(1.15), Inches(1.68), Inches(11.0), Inches(2.4))
         t_tf = t_box.text_frame
         t_tf.word_wrap = True
-        t_tf.margin_left = Inches(0.2)
-        t_tf.margin_top = Inches(0.1)
-        t_tf.margin_right = Inches(0.2)
+        t_tf.margin_top = t_tf.margin_bottom = t_tf.margin_left = t_tf.margin_right = 0
         p_ch = t_tf.paragraphs[0]
         p_ch.text = lang_info.get("main_conclusions", "✦  ASOSIY ILMIY-AMALIY XULOSALAR")
         p_ch.font.size = Pt(15)
         p_ch.font.bold = True
         p_ch.font.color.rgb = theme["accent"]
-        p_ch.space_after = Pt(8)
+        p_ch.space_after = Pt(6)
 
-        points = conclusion_points[:2] if conclusion_points else [
-            "Mavzu boʻyicha belgilangan barcha vazifalar toʻliq yoritildi va tahlil qilindi.",
-            "Olingan natijalar sohaning nazariy va amaliy rivojlanishi uchun muhim ahamiyat kasb etadi."
+        points = conclusion_points[:3] if conclusion_points else [
+            "Nazariy xulosa: Mavzu bo'yicha belgilangan barcha fundamental tushunchalar va ilmiy vazifalar to'liq yoritildi.",
+            "Amaliy natija: Olingan xulosalar va texnik ko'rsatkichlar tizim samaradorligini oshirish uchun amaliy ahamiyatga ega.",
+            "Istiqbol: Sohadagi ilg'or tendensiyalar va xavfsizlik standartlarini tatbiq etish bo'yicha tavsiyalar ishlab chiqildi."
         ]
         for pt in points:
-            _add_styled_bullet(t_tf, pt, theme, font_size=Pt(14), space_after=Pt(6))
+            _add_styled_bullet(t_tf, pt, theme, font_size=Pt(13), space_after=Pt(5))
 
-        # Bottom Box: E'tiboringiz uchun rahmat
-        b_box = end_slide.shapes.add_textbox(Inches(0.9), Inches(4.3), Inches(11.533), Inches(2.7))
+        # Bottom Box Card Container: E'tiboringiz uchun rahmat
+        bot_card = end_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(4.35), Inches(11.533), Inches(2.6))
+        bot_card.fill.solid()
+        bot_card.fill.fore_color.rgb = theme.get("card_bg", RGBColor(24, 34, 58))
+        bot_card.line.color.rgb = theme.get("accent", RGBColor(56, 189, 248))
+        bot_card.line.width = Pt(1.2)
+        try:
+            bot_card.adjustments[0] = 0.04
+        except Exception:
+            pass
+
+        bot_bar = end_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9) + Inches(0.3), Inches(4.35) + Inches(0.12), Inches(11.533) - Inches(0.6), Inches(0.05))
+        bot_bar.fill.solid()
+        bot_bar.fill.fore_color.rgb = theme["accent"]
+        bot_bar.line.fill.background()
+
+        b_box = end_slide.shapes.add_textbox(Inches(1.15), Inches(4.5), Inches(11.0), Inches(2.3))
         b_tf = b_box.text_frame
         b_tf.word_wrap = True
+        b_tf.margin_top = b_tf.margin_bottom = b_tf.margin_left = b_tf.margin_right = 0
         bp1 = b_tf.paragraphs[0]
         bp1.text = lang_info["thanks"].upper()
-        bp1.font.size = Pt(30)
+        bp1.font.size = Pt(28)
         bp1.font.bold = True
         bp1.font.color.rgb = RGBColor(255, 255, 255)
         bp1.alignment = PP_ALIGN.CENTER
-        bp1.space_before = Pt(8)
+        bp1.space_before = Pt(4)
         bp1.space_after = Pt(6)
 
         bp2 = b_tf.add_paragraph()
         bp2.text = lang_info.get("questions_welcome", "Savollar, fikr-mulohazalar va muhokama uchun tayyorman")
-        bp2.font.size = Pt(15)
+        bp2.font.size = Pt(14.5)
         bp2.font.color.rgb = theme["accent"]
         bp2.alignment = PP_ALIGN.CENTER
-        bp2.space_after = Pt(8)
+        bp2.space_after = Pt(6)
 
         if presenter_str:
             bp3 = b_tf.add_paragraph()
@@ -1919,50 +2329,79 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         concl_refs_hdr = lang_info.get("concl_and_refs", "Xulosa va Foydalanilgan manbalar")
         _add_header(concl_slide, concl_refs_hdr, theme, slide_num=len(prs.slides), total_slides=total_slides, category=concl_refs_hdr.upper())
 
-        # Left Column: Xulosa
-        cl_box = concl_slide.shapes.add_textbox(Inches(0.9), Inches(1.5), Inches(5.6), Inches(5.4))
+        card_h = Inches(5.4)
+
+        # Left Column: Xulosa Card
+        bg_cl = concl_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.5), Inches(5.6), card_h)
+        bg_cl.fill.solid()
+        bg_cl.fill.fore_color.rgb = theme.get("card_bg", RGBColor(24, 34, 58))
+        bg_cl.line.color.rgb = theme.get("accent", RGBColor(56, 189, 248))
+        bg_cl.line.width = Pt(1.2)
+        try:
+            bg_cl.adjustments[0] = 0.04
+        except Exception:
+            pass
+
+        bar_cl = concl_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9) + Inches(0.3), Inches(1.5) + Inches(0.12), Inches(5.6) - Inches(0.6), Inches(0.05))
+        bar_cl.fill.solid()
+        bar_cl.fill.fore_color.rgb = theme["accent"]
+        bar_cl.line.fill.background()
+
+        cl_box = concl_slide.shapes.add_textbox(Inches(1.2), Inches(1.75), Inches(5.0), card_h - Inches(0.45))
         cl_tf = cl_box.text_frame
         cl_tf.word_wrap = True
-        cl_tf.margin_left = Inches(0.2)
-        cl_tf.margin_top = Inches(0.1)
-        cl_tf.margin_right = Inches(0.2)
+        cl_tf.margin_top = cl_tf.margin_bottom = cl_tf.margin_left = cl_tf.margin_right = 0
         p_lh = cl_tf.paragraphs[0]
         p_lh.text = lang_info.get("main_conclusions", "✦  ASOSIY XULOSALAR")
         p_lh.font.size = Pt(16)
         p_lh.font.bold = True
         p_lh.font.color.rgb = theme["accent"]
-        p_lh.space_after = Pt(12)
+        p_lh.space_after = Pt(10)
 
         points = conclusion_points[:4] if conclusion_points else [
-            "Mavzu boʻyicha belgilangan barcha vazifalar toʻliq yoritildi va tahlil qilindi.",
+            "Mavzu bo'yicha belgilangan barcha fundamental va amaliy vazifalar to'liq yoritildi.",
             "Olingan natijalar sohaning nazariy va amaliy rivojlanishi uchun muhim ahamiyat kasb etadi.",
-            "Tadqiqot natijasida amaliyotga tatbiq qilish mumkin boʻlgan takliflar shakllantirildi."
+            "Tadqiqot natijasida amaliyotga tatbiq qilish mumkin bo'lgan aniq tavsiyalar shakllantirildi.",
+            "Zamonaviy texnologiyalar va ilg'or tajribalar asosida tizimni takomillashtirish imkoniyati yaratildi."
         ]
         for pt in points:
-            _add_styled_bullet(cl_tf, pt, theme, font_size=Pt(14), space_after=Pt(10))
+            _add_styled_bullet(cl_tf, pt, theme, font_size=Pt(13), space_after=Pt(8))
 
-        # Right Column: Adabiyotlar
-        cr_box = concl_slide.shapes.add_textbox(Inches(6.8), Inches(1.5), Inches(5.6), Inches(5.4))
+        # Right Column: Adabiyotlar Card
+        bg_cr = concl_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(6.8), Inches(1.5), Inches(5.6), card_h)
+        bg_cr.fill.solid()
+        bg_cr.fill.fore_color.rgb = theme.get("card_bg", RGBColor(24, 34, 58))
+        bg_cr.line.color.rgb = theme.get("accent", RGBColor(56, 189, 248))
+        bg_cr.line.width = Pt(1.2)
+        try:
+            bg_cr.adjustments[0] = 0.04
+        except Exception:
+            pass
+
+        bar_cr = concl_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(6.8) + Inches(0.3), Inches(1.5) + Inches(0.12), Inches(5.6) - Inches(0.6), Inches(0.05))
+        bar_cr.fill.solid()
+        bar_cr.fill.fore_color.rgb = theme["accent"]
+        bar_cr.line.fill.background()
+
+        cr_box = concl_slide.shapes.add_textbox(Inches(7.1), Inches(1.75), Inches(5.0), card_h - Inches(0.45))
         cr_tf = cr_box.text_frame
         cr_tf.word_wrap = True
-        cr_tf.margin_left = Inches(0.2)
-        cr_tf.margin_top = Inches(0.1)
-        cr_tf.margin_right = Inches(0.2)
+        cr_tf.margin_top = cr_tf.margin_bottom = cr_tf.margin_left = cr_tf.margin_right = 0
         p_rh = cr_tf.paragraphs[0]
         p_rh.text = f"✦  {lang_info.get('references', 'FOYDALANILGAN MANBALAR').upper()}"
         p_rh.font.size = Pt(16)
         p_rh.font.bold = True
         p_rh.font.color.rgb = theme["accent"]
-        p_rh.space_after = Pt(12)
+        p_rh.space_after = Pt(10)
 
         for r_idx, ref_text in enumerate(clean_refs[:4], 1):
             p = cr_tf.add_paragraph()
             t_cleaned = re.sub(r"^[\d\.\)\-\s•]+", "", remove_emojis(str(ref_text))).strip()
             p.text = f"{r_idx}.  {t_cleaned}"
-            p.font.size = Pt(13)
+            p.font.size = Pt(12.5)
             p.font.color.rgb = RGBColor(255, 255, 255)
             p.font.name = "Arial"
-            p.space_after = Pt(10)
+            p.space_after = Pt(8)
 
         # Slide N: Yakuniy Minnatdorchilik
         _create_thanks_slide(prs, blank_layout, theme, custom_bg, is_white, is_dark, lang_info, presenter_str)
@@ -1980,18 +2419,44 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
 
         _add_header(concl_slide, lang_info["conclusion"], theme, slide_num=len(prs.slides), total_slides=total_slides, category=lang_info["conclusion"].upper())
 
-        concl_box = concl_slide.shapes.add_textbox(Inches(0.9), Inches(1.5), Inches(11.533), Inches(5.4))
+        card_w = Inches(11.533)
+        card_h = Inches(5.4)
+
+        bg_concl_card = concl_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.5), card_w, card_h)
+        bg_concl_card.fill.solid()
+        bg_concl_card.fill.fore_color.rgb = theme.get("card_bg", RGBColor(24, 34, 58))
+        bg_concl_card.line.color.rgb = theme.get("accent", RGBColor(56, 189, 248))
+        bg_concl_card.line.width = Pt(1.2)
+        try:
+            bg_concl_card.adjustments[0] = 0.04
+        except Exception:
+            pass
+
+        bar_concl = concl_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9) + Inches(0.3), Inches(1.5) + Inches(0.12), card_w - Inches(0.6), Inches(0.05))
+        bar_concl.fill.solid()
+        bar_concl.fill.fore_color.rgb = theme["accent"]
+        bar_concl.line.fill.background()
+
+        concl_box = concl_slide.shapes.add_textbox(Inches(1.25), Inches(1.75), card_w - Inches(0.7), card_h - Inches(0.45))
         concl_tf = concl_box.text_frame
         concl_tf.word_wrap = True
+        concl_tf.margin_top = concl_tf.margin_bottom = concl_tf.margin_left = concl_tf.margin_right = 0
 
-        if conclusion_points:
-            for c_idx, point in enumerate(conclusion_points):
-                _add_styled_bullet(concl_tf, point, theme, font_size=Pt(18), space_after=Pt(16), is_first=(c_idx == 0))
-        else:
-            p = concl_tf.paragraphs[0]
-            p.text = "Taqdimot mavzusi to'liq yoritildi va asosiy masalalar muhokama qilindi."
-            p.font.size = Pt(22)
-            p.font.color.rgb = RGBColor(255, 255, 255)
+        c_points = list(conclusion_points) if conclusion_points else [
+            "Nazariy xulosa: Mavzuning konseptual va fundamental qonuniyatlari to'liq ilmiy asoslab berildi.",
+            "Tahlillar natijasi: Sohadagi mavjud holat, tizimli parametrlar va samaradorlik mezonlari chuqur o'rganildi.",
+            "Amaliyotga tatbiq: Real tizimlarda qo'llash va operatsion samaradorlikni oshirish imkoniyatlari aniqlandi.",
+            "Kelajak istiqbollari: Sohaning uzoq muddatli barqaror rivojlanishi va modernizatsiyasi bo'yicha tavsiyalar berildi."
+        ]
+        while len(c_points) < 4:
+            c_points.append(f"Qo'shimcha ilmiy xulosa: {title_text} sohasidagi zamonaviy standartlar va amaliy tadqiqotlar tahlili yakunlandi.")
+
+        n_c = len(c_points)
+        font_sz = Pt(14 if n_c >= 5 else 15.5)
+        space_aft = Pt(10 if n_c >= 5 else 14)
+
+        for c_idx, point in enumerate(c_points[:5]):
+            _add_styled_bullet(concl_tf, point, theme, font_size=font_sz, space_after=space_aft, is_first=(c_idx == 0))
 
         # Slide N-1: Foydalanilgan adabiyotlar
         ref_slide = prs.slides.add_slide(blank_layout)
@@ -2005,7 +2470,22 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
 
         _add_header(ref_slide, lang_info["references"], theme, slide_num=len(prs.slides), total_slides=total_slides, category=lang_info["references"].upper())
 
-        ref_box = ref_slide.shapes.add_textbox(Inches(0.9), Inches(1.5), Inches(11.533), Inches(5.4))
+        bg_ref_card = ref_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.5), card_w, card_h)
+        bg_ref_card.fill.solid()
+        bg_ref_card.fill.fore_color.rgb = theme.get("card_bg", RGBColor(24, 34, 58))
+        bg_ref_card.line.color.rgb = theme.get("accent", RGBColor(56, 189, 248))
+        bg_ref_card.line.width = Pt(1.2)
+        try:
+            bg_ref_card.adjustments[0] = 0.04
+        except Exception:
+            pass
+
+        bar_ref = ref_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9) + Inches(0.3), Inches(1.5) + Inches(0.12), card_w - Inches(0.6), Inches(0.05))
+        bar_ref.fill.solid()
+        bar_ref.fill.fore_color.rgb = theme["accent"]
+        bar_ref.line.fill.background()
+
+        ref_box = ref_slide.shapes.add_textbox(Inches(1.25), Inches(1.75), card_w - Inches(0.7), card_h - Inches(0.45))
         ref_tf = ref_box.text_frame
         ref_tf.word_wrap = True
 
