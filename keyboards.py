@@ -39,13 +39,13 @@ def get_slide_language_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
 
 def get_main_menu(is_admin: bool = False, lang: str = "uz") -> ReplyKeyboardMarkup:
     """Foydalanuvchi tanlagan tildagi chiroyli va qulay tartiblangan asosiy menyu."""
-    webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot.onrender.com/themes")
+    webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot-2.onrender.com/themes")
     if lang == "ru":
-        mini_app_title = "📱 Темы и фоны (Мини-апп)"
+        mini_app_title = "🖼 Выбор фона слайда"
     elif lang == "en":
-        mini_app_title = "📱 Themes & Backgrounds (Mini App)"
+        mini_app_title = "🖼 Choose Slide Background"
     else:
-        mini_app_title = "📱 Fanlar va fonlar (Mini ilova)"
+        mini_app_title = "🖼 Fon rasmini tanlash"
 
     buttons = [
         # Asosiy: Telegram Mini ilovani ochish tugmasi
@@ -226,61 +226,36 @@ def get_skip_author_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
     ])
 
 def get_theme_selection_keyboard() -> InlineKeyboardMarkup:
-    """Hamma qurilmalarda 100% ishlaydigan fanlar tugmalari va Telegram Mini Ilova."""
-    webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot.onrender.com/themes")
+    """Asosiy tugmalar: Mini ilova orqali Gamma shablonlarini tanlash, Tezkor Gamma AI, O'z fonini yuklash, Bekor qilish."""
+    webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot-2.onrender.com/themes")
     return InlineKeyboardMarkup(inline_keyboard=[
-        # 1-qator: Mini ilovani ochish (Qo'llab-quvvatlaydigan qurilmalar uchun)
+        # 1. Gamma shablonlarini tanlash (Mini ilova)
         [
             InlineKeyboardButton(
-                text="📱 Mini Ilovani ochish (Vizual ko'rish)",
+                text="🪄 Gamma AI Shablonlari (Mini ilova)",
                 web_app=WebAppInfo(url=webapp_url)
             )
         ],
-        # 2-qator: Barcha fanlar uchun universal Dinamik Mix
+        # 2. Tezkor Gamma AI tugmasi
         [
-            InlineKeyboardButton(text="🔀 Barcha fanlar uchun (Dinamik Mix)", callback_data="theme_mix")
+            InlineKeyboardButton(text="✨ Tezkor Gamma AI (Avtomatik)", callback_data="theme_gamma")
         ],
-        # 3-qator: IT va Tibbiyot
+        # 3. O'z fon rasmini yuklash
         [
-            InlineKeyboardButton(text="💻 IT & Dasturlash (Circuit)", callback_data="theme_circuit"),
-            InlineKeyboardButton(text="🩺 Tibbiyot (Droplet)", callback_data="theme_droplet")
+            InlineKeyboardButton(text="📤 Oʻz fon rasmingizni yuklash", callback_data="theme_custom_bg")
         ],
-        # 4-qator: Iqtisodiyot va Fizika
-        [
-            InlineKeyboardButton(text="💼 Biznes & Moliya (Office)", callback_data="theme_office"),
-            InlineKeyboardButton(text="📐 Fizika & Texnika (Integral)", callback_data="theme_integral")
-        ],
-        # 5-qator: Tabiat va Tarix
-        [
-            InlineKeyboardButton(text="🌿 Tabiat & Eko (Facet)", callback_data="theme_facet"),
-            InlineKeyboardButton(text="🏛 Tarix & Meros (Retrospect)", callback_data="theme_retrospect")
-        ],
-        # 6-qator: Adabiyot va Ta'lim
-        [
-            InlineKeyboardButton(text="📚 Adabiyot & Til (Savon)", callback_data="theme_savon"),
-            InlineKeyboardButton(text="🔴 Ta'lim & Psixologiya (Ion)", callback_data="theme_ion")
-        ],
-        # 7-qator: San'at va Koinot
-        [
-            InlineKeyboardButton(text="🌸 San'at & Dizayn (Pastel)", callback_data="theme_canva_pastel"),
-            InlineKeyboardButton(text="🌌 Koinot & Astronomiya (Celestial)", callback_data="theme_celestial")
-        ],
-        # 8-qator: Maxsus rasm
-        [
-            InlineKeyboardButton(text="🖼 Oʻz fon rasmingizni yuklash", callback_data="theme_custom_bg")
-        ],
-        # 9-qator: Bekor qilish
+        # 4. Bekor qilish
         [
             InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_generation")
         ]
     ])
 
 def get_theme_reply_keyboard() -> ReplyKeyboardMarkup:
-    """Telegram pastki panelida Mini ilovaga kirish tugmasi."""
-    webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot.onrender.com/themes")
+    """Telegram pastki panelida fon tanlash tugmasi."""
+    webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot-2.onrender.com/themes")
     return ReplyKeyboardMarkup(
         keyboard=[
-            [KeyboardButton(text="📱 Mini Ilovani ochish (Fanlar bo'yicha)", web_app=WebAppInfo(url=webapp_url))],
+            [KeyboardButton(text="🪄 Gamma AI Shablonlari", web_app=WebAppInfo(url=webapp_url))],
             [KeyboardButton(text="❌ Bekor qilish")]
         ],
         resize_keyboard=True,

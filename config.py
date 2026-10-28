@@ -37,8 +37,9 @@ def is_unlimited(user_id: int) -> bool:
 WEBAPP_URL = (
     os.getenv("WEBAPP_URL", "")
     or os.getenv("RENDER_EXTERNAL_URL", "")
-    or "https://slayd-bot.onrender.com"
+    or "https://slayd-bot-2.onrender.com"
 ).rstrip("/")
 THEMES_WEBAPP_URL = f"{WEBAPP_URL}/themes"
+
 
 
