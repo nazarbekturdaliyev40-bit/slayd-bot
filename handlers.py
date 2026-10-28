@@ -1446,56 +1446,67 @@ async def process_slide_count_invalid(message: Message, state: FSMContext):
 
 
 THEME_TITLES = {
-    "auto": "✨ PowerPoint AI (Avtomatik mos shablon)",
-    "mix": "🔀 PPT 2016 Dinamik Mix (Barcha fanlar aralash)",
-    "circuit": "💻 IT, Dasturlash va Kiberxavfsizlik (Circuit 2016)",
-    "slice": "🔷 Axborot Texnologiyalari & Startaplar (Slice 2016)",
-    "droplet": "🩺 Tibbiyot, Farmatsevtika va Salomatlik (Droplet 2016)",
-    "blue": "🔷 Tibbiy Diagnostika va Klinika (Moviy)",
-    "facet": "🌿 Biologiya, Ekologiya va Qishloq xo'jaligi (Facet 2016)",
-    "green": "🟢 Tabiatshunoslik va Atrof-muhit (Eko Zumrad)",
-    "office": "💼 Iqtisodiyot, Moliya va Bank ishi (Office 2016)",
-    "dark": "🖤 Biznes, Menejment va Investitsiyalar (Dark Gold)",
-    "integral": "📐 Fizika, Matematika va Muhandislik (Integral 2016)",
-    "celestial": "🌌 Astronomiya, Fizika va Kosmos (Celestial 2016)",
-    "retrospect": "🏛 O'zbekiston va Jahon Tarixi (Retrospect 2016)",
-    "vintage": "📜 Arxeologiya, Sharqshunoslik va Falsafa (Pergament)",
-    "savon": "📚 O'zbek tili, Adabiyot va Tilshunoslik (Savon 2016)",
-    "ion": "🔴 Pedagogika, Ta'lim va Psixologiya (Ion 2016)",
-    "canva_pastel": "🌸 San'at, Tasviriy san'at va Dizayn (Canva Pastel)",
-    "white": "⚪️ Arxitektura, Galereya va Minimalizm (Minimal Oq)",
-    "navy": "🔵 Davlat boshqaruvi va Huquq (Royal Navy)",
-    "purple": "🟣 Innovatsiyalar va Ijodiyot (Kosmik Binafsha)",
+    "auto": "🪄 Gamma AI (Universal Auto)",
     "gamma": "🪄 Gamma AI (Universal Auto)",
     "gamma_auto": "🪄 Gamma AI (Universal Auto)",
-    "gamma_cyber": "🪄 Gamma AI (Cyber & Dark Neon)",
-    "gamma_obsidian": "🪄 Gamma AI (Obsidian & Gold Lux)",
-    "gamma_emerald": "🪄 Gamma AI (Emerald & Clean Mind)",
-    "gamma_academic": "🪄 Gamma AI (Royal Academic)",
-    "gamma_pastel": "🪄 Gamma AI (Pastel & Sunset Prism)"
+    "gamma_cyber": "⚡️ Gamma Cyber & Dark Neon (IT & Kiber)",
+    "gamma_violet": "🤖 Gamma Neon Violet & AI Future",
+    "gamma_obsidian": "💼 Gamma Obsidian & Gold Lux (Biznes)",
+    "gamma_ocean": "📊 Gamma Ocean & FinTech Analytics",
+    "gamma_crimson": "🏆 Gamma Crimson & Executive Lead",
+    "gamma_academic": "🎓 Gamma Royal Academic (OTM & BMI)",
+    "gamma_amber": "🏛 Gamma Vintage Amber & Heritage (Tarix)",
+    "gamma_solar": "📚 Gamma Solar & Modern Pedagogy (Ta'lim)",
+    "gamma_emerald": "🩺 Gamma Emerald & Clean Mind (Tibbiyot)",
+    "gamma_nordic": "🔬 Gamma Nordic Glacier & Bio (Laboratoriya)",
+    "gamma_pastel": "🎨 Gamma Pastel & Sunset Prism (Dizayn)",
+    "gamma_mono": "✨ Gamma Platinum Mono & Type (Minimalist)",
+    "gamma_forest": "🌿 Gamma Deep Forest & Nature (Ekologiya)",
+    "gamma_space": "🌌 Gamma Deep Cosmos & Physics (Kosmos)",
+    "gamma_blueprint": "📐 Gamma Blueprint & Math (Muhandislik)",
+    # Legacy fallbacks (barcha shablonlar Gamma ga moslashtirilgan)
+    "mix": "🪄 Gamma AI (Universal Auto)",
+    "circuit": "⚡️ Gamma Cyber & Dark Neon (IT)",
+    "slice": "⚡️ Gamma Cyber & Dark Neon (IT)",
+    "droplet": "🩺 Gamma Emerald & Clean Mind (Tibbiyot)",
+    "blue": "🩺 Gamma Emerald & Clean Mind (Tibbiyot)",
+    "facet": "🌿 Gamma Deep Forest & Nature (Ekologiya)",
+    "green": "🌿 Gamma Deep Forest & Nature (Ekologiya)",
+    "office": "💼 Gamma Obsidian & Gold Lux (Biznes)",
+    "dark": "💼 Gamma Obsidian & Gold Lux (Biznes)",
+    "integral": "📐 Gamma Blueprint & Math (Muhandislik)",
+    "celestial": "🌌 Gamma Deep Cosmos & Physics (Kosmos)",
+    "retrospect": "🏛 Gamma Vintage Amber & Heritage (Tarix)",
+    "vintage": "🏛 Gamma Vintage Amber & Heritage (Tarix)",
+    "savon": "🎓 Gamma Royal Academic (OTM & Fan)",
+    "ion": "📚 Gamma Solar & Modern Pedagogy (Ta'lim)",
+    "canva_pastel": "🎨 Gamma Pastel & Sunset Prism (Dizayn)",
+    "white": "✨ Gamma Platinum Mono & Type (Minimalist)",
+    "navy": "📊 Gamma Ocean & FinTech Analytics",
+    "purple": "🤖 Gamma Neon Violet & AI Future"
 }
 
 def is_valid_theme(t: str) -> bool:
     if not t:
         return False
-    return t.startswith("gamma") or t in generator.THEMES or t in THEME_TITLES or t == "mix"
+    return t.startswith("gamma") or t in THEME_TITLES or t in generator.THEMES
 
 
 async def send_theme_selection_window(target_message: Message, state: FSMContext, edit: bool = False):
-    """Slayd orqa fonini tanlash oynasi (Fon tanlash, O'z fonini yuklash, Bekor qilish)."""
+    """Slayd orqa fonini tanlash oynasi (Mini ilova, Tezkor Gamma AI, O'z fonini yuklash)."""
     data = await state.get_data()
     topic = data.get("topic", "")
     slide_count = data.get("slide_count", 8)
     safe_topic = html.escape(topic[:80]) + ("..." if len(topic) > 80 else "")
 
     window_text = (
-        "🎨 <b>SLAYD ORQA FONINI TANLASH</b>\n\n"
+        "🪄 <b>GAMMA AI TAQDIMOT SHABLONLARI</b>\n\n"
         f"📌 Mavzu: <b>{safe_topic}</b>\n"
         f"📄 Slaydlar soni: <b>{slide_count} ta</b>\n\n"
-        "Taqdimotingiz fanning mazmuniga toʻliq mos va chiroyli chiqishi uchun quyidagilardan birini tanlang:\n\n"
-        "1️⃣ <b>Fon rasmini tanlash</b> — Mini ilova orqali <b>Gamma AI</b> va fan shablonlarini tanlash\n"
-        "2️⃣ <b>Tezkor Gamma AI</b> — Neyrotarmoq orqali avtomatik premium dizayn\n"
-        "3️⃣ <b>Oʻz fon rasmingizni yuklash</b> — Oʻzingiz xohlagan maxsus rasmni yuborish"
+        "Barcha shablonlar to'liq <b>Gamma AI</b> neyrotarmog'i orqali yuqori sifatli infografika va zamonaviy uslubda shakllantiriladi:\n\n"
+        "1️⃣ <b>🪄 Gamma AI Shablonlari (Mini ilova)</b> — IT, Tibbiyot, Biznes, OTM va barcha fanlar uchun professional Gamma shablonlari\n"
+        "2️⃣ <b>✨ Tezkor Gamma AI (Avtomatik)</b> — Neyrotarmoq mavzuga mos dizaynni o'zi tanlaydi\n"
+        "3️⃣ <b>📤 Oʻz fon rasmingizni yuklash</b> — Oʻzingiz xohlagan maxsus rasmni yuborish"
     )
     reply_markup = keyboards.get_theme_selection_keyboard()
     collage_path = os.path.join(os.path.dirname(__file__), "previews", "all_themes_collage.jpg")
@@ -1949,15 +1960,16 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
     temp_dir = None
 
     try:
-        if theme_choice.startswith("gamma"):
+        use_gamma = theme_choice.startswith("gamma") or gamma_service.is_gamma_available()
+        if use_gamma:
             if not gamma_service.is_gamma_available():
                 await status_msg.edit_text(
                     f"⚠️ <b>Gamma API kaliti hali kiritilmagan.</b>\n"
                     f"Admin <code>/set_gamma YOUR_KEY</code> orqali Gamma API kalitini sozlashi mumkin.\n\n"
-                    f"🔄 <i>Bot avtomatik ravishda PowerPoint generatoriga ulanmoqda...</i> ⏳",
+                    f"🔄 <i>Hozircha bot avtomatik ravishda zamonaviy generatorga ulanmoqda...</i> ⏳",
                     parse_mode="HTML"
                 )
-                theme_choice = "blue"
+                theme_choice = "white"
             else:
                 async def update_gamma_status(status_text: str):
                     try:

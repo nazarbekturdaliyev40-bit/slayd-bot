@@ -16,7 +16,61 @@ GAMMA_THEME_PROMPTS = {
     "gamma_obsidian": "Premium hashamatli qora obsidian, oltin aksentlar va professional biznes pitch-deck uslubida (Obsidian & Gold Lux).",
     "gamma_emerald": "Toza zumrad yashil, ochiq tibbiyot, biologiya, ekologiya va salomatlik uslubida (Fresh Emerald & Clean Health).",
     "gamma_academic": "Klassik nufuzli universitet, OTM ilmiy anjumani, akademik, ilmiy va tahliliy uslubda (Royal Academic Editorial).",
-    "gamma_pastel": "Yumshoq pastel ranglar, zamonaviy dizayn, san'at va marketing infografikasi uslubida (Pastel Prism & Creative Art)."
+    "gamma_pastel": "Yumshoq pastel ranglar, zamonaviy dizayn, san'at va marketing infografikasi uslubida (Pastel Prism & Creative Art).",
+    "gamma_space": "Chuqur kosmik qorong'ulik, binafsha neon, yulduzli tumanliklar, kvant fizikasi va astronomiya (Deep Cosmos & Astro Science).",
+    "gamma_ocean": "To'q moviy okean, firuza neon, bulutli hisoblash, moliya va tahliliy diagrammalar (Ocean Teal & FinTech Analytics).",
+    "gamma_mono": "Minimalist oq-qora monoxrom, zamonaviy tipografika, yuridik va nufuzli rasmiy uslub (Platinum Monochrome & Clean Typography).",
+    "gamma_crimson": "Kuchli liderlik, to'q qizil rubin aksentlar, strategik boshqaruv va biznes marketing (Crimson Bold & Strategic Impact).",
+    "gamma_amber": "Qadimiy pergament, iliq oltin-bronza, tarix, arxeologiya, falsafa va madaniy meros (Vintage Amber & Heritage).",
+    "gamma_violet": "Kelajak texnologiyalari, neon binafsha, sun'iy intellekt, robototexnika va startaplar (Neon Violet & Future AI).",
+    "gamma_forest": "Zich o'rmon yashilligi, ekologiya, agrar soha, bio-xilma-xillik va tabiatni muhofaza qilish (Deep Forest & Sustainable Nature).",
+    "gamma_nordic": "Skandinaviya minimalizmi, muz moviy va toza po'lat, aniq statistika va zamonaviy ta'lim (Nordic Glacier & Modern Slate).",
+    "gamma_solar": "Quyoshli yorqin to'q sariq va sariq energiya, zamonaviy pedagogika, motivatsiya va sport (Solar Citrus & Dynamic Edu).",
+    "gamma_blueprint": "Muhandislik chizmalari, geometrik to'rlar, oliy matematika, arxitektura va loyihalash (Geometric Blueprint & Engineering)."
+}
+
+LEGACY_TO_GAMMA = {
+    "circuit": "gamma_cyber",
+    "slice": "gamma_cyber",
+    "tech_neon": "gamma_cyber",
+    "it_dark_code": "gamma_cyber",
+    "cyber_matrix": "gamma_cyber",
+    "it": "gamma_cyber",
+    "office": "gamma_obsidian",
+    "dark": "gamma_obsidian",
+    "econ_emerald": "gamma_obsidian",
+    "economy": "gamma_obsidian",
+    "droplet": "gamma_emerald",
+    "blue": "gamma_emerald",
+    "medical_teal": "gamma_emerald",
+    "medical_clean": "gamma_emerald",
+    "medicine": "gamma_emerald",
+    "facet": "gamma_forest",
+    "green": "gamma_forest",
+    "eco_forest": "gamma_forest",
+    "biology": "gamma_forest",
+    "academic_gold": "gamma_academic",
+    "academic_navy": "gamma_academic",
+    "history": "gamma_amber",
+    "vintage": "gamma_amber",
+    "retrospect": "gamma_amber",
+    "integral": "gamma_blueprint",
+    "math_slate": "gamma_blueprint",
+    "math": "gamma_blueprint",
+    "physics": "gamma_space",
+    "celestial": "gamma_space",
+    "purple": "gamma_violet",
+    "canva_pastel": "gamma_pastel",
+    "art": "gamma_pastel",
+    "white": "gamma_mono",
+    "navy": "gamma_ocean",
+    "savon": "gamma_academic",
+    "ion": "gamma_solar",
+    "pedagogy_warm": "gamma_solar",
+    "law_burgundy": "gamma_crimson",
+    "modern_crimson": "gamma_crimson",
+    "mix": "gamma",
+    "auto": "gamma"
 }
 
 def is_gamma_available() -> bool:
@@ -106,6 +160,8 @@ async def generate_gamma_presentation(
 
     # Maxsus vizual uslub va dizayn tavsifi
     clean_choice = theme_choice.split(":")[0] if ":" in theme_choice else theme_choice
+    if clean_choice in LEGACY_TO_GAMMA:
+        clean_choice = LEGACY_TO_GAMMA[clean_choice]
     visual_style = GAMMA_THEME_PROMPTS.get(
         clean_choice,
         "Zamonaviy, yuqori sifatli va professional korporativ infografika dizayni."

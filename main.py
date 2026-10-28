@@ -293,12 +293,12 @@ THEMES_HTML = """<!DOCTYPE html>
 </head>
 <body>
   <header>
-    <h1>🎨 Fanlar bo'yicha fonlar</h1>
-    <p class="subtitle">Mavzuingizga mos fan kategoriyasini tanlang.<br>Tanlashingiz bilanoq bot sizga slayd tayyorlaydi!</p>
+    <h1>🪄 Gamma AI — Barcha Shablonlar</h1>
+    <p class="subtitle">Barcha taqdimot shablonlari to'liq Gamma AI neyrotarmog'i orqali shakllantiriladi.<br>O'zingizga yoqqan Gamma uslubini tanlang!</p>
   </header>
 
   <div class="search-box">
-    <input type="text" id="searchInput" placeholder="🔍 Qidirish (masalan: IT, Tibbiyot, Fizika, Tarix)..." oninput="filterThemes()">
+    <input type="text" id="searchInput" placeholder="🔍 Gamma shablonlarini qidirish (IT, Tibbiyot, Biznes, OTM)..." oninput="filterThemes()">
   </div>
 
   <div class="categories-bar" id="categoriesBar"></div>
@@ -306,8 +306,8 @@ THEMES_HTML = """<!DOCTYPE html>
 
   <div id="loadingOverlay" class="overlay hidden">
     <div class="spinner"></div>
-    <div class="overlay-title" id="overlayTitle">Fon tanlandi!</div>
-    <div class="overlay-sub">🚀 Taqdimotingiz tayyorlanmoqda...</div>
+    <div class="overlay-title" id="overlayTitle">Gamma Shablon Tanlandi!</div>
+    <div class="overlay-sub">🪄 Gamma AI taqdimotingizni shakllantirmoqda...</div>
   </div>
 
   <script>
@@ -319,38 +319,36 @@ THEMES_HTML = """<!DOCTYPE html>
     }
 
     const categories = [
-      { id: "all", name: "🔀 Barchasi" },
-      { id: "gamma", name: "🪄 Gamma AI Uslublari" },
-      { id: "it", name: "💻 IT & Axborot" },
-      { id: "med", name: "🩺 Tibbiyot" },
-      { id: "eco", name: "🌿 Tabiat & Eko" },
-      { id: "business", name: "💼 Biznes & Iqtisod" },
-      { id: "math_eng", name: "📐 Fizika & Texnika" },
-      { id: "history", name: "🏛 Tarix & Meros" },
-      { id: "edu", name: "📚 Adabiyot & Ta'lim" },
-      { id: "art", name: "🎨 San'at & Dizayn" },
-      { id: "mix", name: "🔀 Dinamik Mix" }
+      { id: "all", name: "🪄 Barcha Gamma Shablonlari" },
+      { id: "tech", name: "⚡️ IT & Sun'iy Intellekt" },
+      { id: "business", name: "💼 Biznes & Startaplar" },
+      { id: "academic", name: "🎓 OTM & Ilmiy Ishlar" },
+      { id: "med", name: "🩺 Tibbiyot & Salomatlik" },
+      { id: "creative", name: "🎨 Dizayn & San'at" },
+      { id: "nature", name: "🌿 Tabiat & Ekologiya" },
+      { id: "minimal", name: "✨ Minimalist & Tipografika" },
+      { id: "engineering", name: "📐 Muhandislik & Aniq Fanlar" }
     ];
 
     const themes = [
       {
         id: "gamma",
-        category: "gamma",
+        category: "all",
         categoryTitle: "🪄 Gamma AI — Universal & Intellektual",
         title: "Gamma AI (Universal Auto)",
-        badge: "🪄 Gamma AI",
+        badge: "🪄 Gamma Smart",
         desc: "Gamma neyrotarmog'i mavzuni tahlil qilib, eng optimal infografika, kartalar va premium dizaynni o'zi tanlaydi.",
-        tags: ["#GammaAI", "#AutoDesign", "#Premium", "#Infografika"],
+        tags: ["#GammaAI", "#AutoDesign", "#Universal", "#Infografika"],
         bg: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%)",
         accent: "#c084fc",
         isGamma: true
       },
       {
         id: "gamma_cyber",
-        category: "gamma",
-        categoryTitle: "🪄 Gamma AI — IT, Kiber & Dasturlash",
+        category: "tech",
+        categoryTitle: "⚡️ IT, Kiberxavfsizlik & Dasturlash",
         title: "Gamma Cyber & Dark Neon",
-        badge: "🪄 Gamma IT",
+        badge: "⚡️ IT & Kiber",
         desc: "IT dasturlash tillari, kiberxavfsizlik, AI va startap texnologiyalar uchun qorong'u kiber-neon Gamma dizayni.",
         tags: ["#Gamma", "#Cyber", "#DarkNeon", "#IT", "#AI"],
         bg: "linear-gradient(135deg, #020617 0%, #0891b2 50%, #0284c7 100%)",
@@ -358,23 +356,95 @@ THEMES_HTML = """<!DOCTYPE html>
         isGamma: true
       },
       {
+        id: "gamma_violet",
+        category: "tech",
+        categoryTitle: "⚡️ Sun'iy Intellekt & Robototexnika",
+        title: "Gamma Neon Violet & AI Future",
+        badge: "🤖 AI Future",
+        desc: "Mashinaviy o'rganish, neyrotarmoqlar, robototexnika va kelajak texnologiyalari uchun neon binafsha Gamma uslubi.",
+        tags: ["#AI", "#Robotics", "#NeonViolet", "#MachineLearning", "#Gamma"],
+        bg: "linear-gradient(135deg, #2e1065 0%, #581c87 50%, #7e22ce 100%)",
+        accent: "#a855f7",
+        isGamma: true
+      },
+      {
         id: "gamma_obsidian",
-        category: "gamma",
-        categoryTitle: "🪄 Gamma AI — Biznes, Moliya & Startap",
+        category: "business",
+        categoryTitle: "💼 Biznes, Moliya & Startap",
         title: "Gamma Obsidian & Gold Lux",
-        badge: "🪄 Gamma Biznes",
-        desc: "Biznes reja, startap pitch deck, investitsiya va iqtisodiy hisobotlar uchun nufuzli qora-oltin obsidian foni.",
+        badge: "💼 Biznes & Moliya",
+        desc: "Biznes reja, startap pitch deck, investitsiya va iqtisodiy hisobotlar uchun nufuzli qora-oltin obsidian Gamma foni.",
         tags: ["#Gamma", "#Obsidian", "#Startap", "#Biznes", "#PitchDeck"],
         bg: "linear-gradient(135deg, #18181b 0%, #27272a 50%, #ca8a04 100%)",
         accent: "#eab308",
         isGamma: true
       },
       {
+        id: "gamma_ocean",
+        category: "business",
+        categoryTitle: "💼 FinTech, Bank & Analitika",
+        title: "Gamma Ocean & FinTech Analytics",
+        badge: "📊 FinTech",
+        desc: "Bank ishi, moliya bozori, audit, katta ma'lumotlar va korporativ analitika uchun chuqur okean Gamma foni.",
+        tags: ["#FinTech", "#Analitika", "#Bank", "#Audit", "#Ocean"],
+        bg: "linear-gradient(135deg, #0c4a6e 0%, #0369a1 50%, #0284c7 100%)",
+        accent: "#38bdf8",
+        isGamma: true
+      },
+      {
+        id: "gamma_crimson",
+        category: "business",
+        categoryTitle: "💼 Boshqaruv & Strategik Liderlik",
+        title: "Gamma Crimson & Executive Lead",
+        badge: "🏆 Boshqaruv",
+        desc: "Strategik boshqaruv, marketing, inqirozga qarshi menejment va yuqori darajadagi hisobotlar uchun qizil rubin uslub.",
+        tags: ["#Liderlik", "#Menejment", "#Strategiya", "#Crimson"],
+        bg: "linear-gradient(135deg, #450a0a 0%, #7f1d1d 50%, #991b1b 100%)",
+        accent: "#f87171",
+        isGamma: true
+      },
+      {
+        id: "gamma_academic",
+        category: "academic",
+        categoryTitle: "🎓 OTM, Fan & Dissertatsiya",
+        title: "Gamma Royal Academic",
+        badge: "🎓 OTM & BMI",
+        desc: "OTM talabalari, kurs ishlari, BMI, dissertatsiya va nufuzli ilmiy konferensiyalar uchun jiddiy akademik Gamma shablon.",
+        tags: ["#Gamma", "#Akademik", "#OTM", "#Tadqiqot", "#BMI"],
+        bg: "linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%)",
+        accent: "#818cf8",
+        isGamma: true
+      },
+      {
+        id: "gamma_amber",
+        category: "academic",
+        categoryTitle: "🎓 Tarix, Falsafa & Madaniy Meros",
+        title: "Gamma Vintage Amber & Heritage",
+        badge: "🏛 Tarix & Meros",
+        desc: "O'zbekiston tarixi, sharqshunoslik, adabiyot, falsafa va qadimiy sivilizatsiyalar merosi uchun iliq pergament foni.",
+        tags: ["#Tarix", "#Falsafa", "#Meros", "#Sharqshunoslik", "#Adabiyot"],
+        bg: "linear-gradient(135deg, #451a03 0%, #78350f 50%, #92400e 100%)",
+        accent: "#fbbf24",
+        isGamma: true
+      },
+      {
+        id: "gamma_solar",
+        category: "academic",
+        categoryTitle: "🎓 Pedagogika & Interaktiv Ta'lim",
+        title: "Gamma Solar & Modern Pedagogy",
+        badge: "📚 Zamonaviy Ta'lim",
+        desc: "Interaktiv ta'lim, pedagogika, psixologiya, innovatsion maktab metodikasi va yoshlar loyihalari uchun yorqin energiya.",
+        tags: ["#Pedagogika", "#Talim", "#Psixologiya", "#Metodika"],
+        bg: "linear-gradient(135deg, #7c2d12 0%, #c2410c 50%, #ea580c 100%)",
+        accent: "#f97316",
+        isGamma: true
+      },
+      {
         id: "gamma_emerald",
-        category: "gamma",
-        categoryTitle: "🪄 Gamma AI — Tibbiyot, Anatomiya & Eko",
+        category: "med",
+        categoryTitle: "🩺 Tibbiyot, Anatomiya & Eko",
         title: "Gamma Emerald & Clean Mind",
-        badge: "🪄 Gamma Eko/Med",
+        badge: "🩺 Tibbiyot & Eko",
         desc: "Tibbiyot, anatomiya, farmatsevtika, biologiya va ekologiya uchun toza zumrad yashil va yangi g'oyalar uslubi.",
         tags: ["#Gamma", "#Emerald", "#Tibbiyot", "#Ekologiya", "#Salomatlik"],
         bg: "linear-gradient(135deg, #064e3b 0%, #059669 50%, #10b981 100%)",
@@ -382,23 +452,23 @@ THEMES_HTML = """<!DOCTYPE html>
         isGamma: true
       },
       {
-        id: "gamma_academic",
-        category: "gamma",
-        categoryTitle: "🪄 Gamma AI — OTM, Fan & Dissertatsiya",
-        title: "Gamma Royal Academic",
-        badge: "🪄 Gamma Akademik",
-        desc: "OTM talabalari, kurs ishlari, BMI, dissertatsiya va nufuzli ilmiy konferensiyalar uchun jiddiy akademik shablon.",
-        tags: ["#Gamma", "#Akademik", "#OTM", "#Tadqiqot", "#BMI"],
-        bg: "linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%)",
-        accent: "#818cf8",
+        id: "gamma_nordic",
+        category: "med",
+        categoryTitle: "🩺 Laboratoriya & Biotexnologiya",
+        title: "Gamma Nordic Glacier & Bio",
+        badge: "🔬 Bio Laboratoriya",
+        desc: "Klinik laboratoriyalar, genetika, stomatologiya, biotexnologiya va yuqori aniqlikdagi tibbiy tadqiqotlar.",
+        tags: ["#Laboratoriya", "#Genetika", "#Biotexnologiya", "#Klinika"],
+        bg: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0284c7 100%)",
+        accent: "#38bdf8",
         isGamma: true
       },
       {
         id: "gamma_pastel",
-        category: "gamma",
-        categoryTitle: "🪄 Gamma AI — San'at, Madaniyat & Dizayn",
+        category: "creative",
+        categoryTitle: "🎨 San'at, Madaniyat & Dizayn",
         title: "Gamma Pastel & Sunset Prism",
-        badge: "🪄 Gamma San'at",
+        badge: "🎨 Dizayn & San'at",
         desc: "Grafik dizayn, arxitektura, madaniyat, marketing va ijodiy taqdimotlar uchun zamonaviy pastel gradyent.",
         tags: ["#Gamma", "#Pastel", "#Dizayn", "#Marketing", "#Prism"],
         bg: "linear-gradient(135deg, #e11d48 0%, #f43f5e 50%, #f59e0b 100%)",
@@ -406,191 +476,52 @@ THEMES_HTML = """<!DOCTYPE html>
         isGamma: true
       },
       {
-        id: "mix",
-        category: "mix",
-        categoryTitle: "🔀 Barcha Fanlar Uchun",
-        title: "PPT 2016 Dinamik Mix",
-        badge: "Barcha Fanlar",
-        desc: "Har bir slaydda turli fan va shablonlar aralash, boy va dinamik uyg'unlikda shakllantiriladi.",
-        tags: ["#Universal", "#BarchaFanlar", "#Mix", "#Taqdimot"],
-        bg: "linear-gradient(135deg, #1f4e79 0%, #104b3c 50%, #721c34 100%)",
-        accent: "#38bdf8"
+        id: "gamma_mono",
+        category: "minimal",
+        categoryTitle: "✨ Tipografika & Rasmiy Huquq",
+        title: "Gamma Platinum Mono & Type",
+        badge: "✨ Toza Tipografika",
+        desc: "Yuridik huquq, qonunchilik, arxitektura va minimalist zamonaviy taqdimotlar uchun toza tipografika.",
+        tags: ["#Minimalizm", "#Yuridik", "#Tipografika", "#Arxitektura"],
+        bg: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)",
+        accent: "#f8fafc",
+        isGamma: true
       },
       {
-        id: "circuit",
-        category: "it",
-        categoryTitle: "💻 Axborot Texnologiyalari & IT",
-        title: "Circuit 2016 (Kiber Texno)",
-        badge: "Dasturlash & IT",
-        desc: "Dasturlash tillari, Axborot xavfsizligi, AI, Kompyuter ilmlari va IT tizimlari uchun to'q kiber dizayn.",
-        tags: ["#Python", "#Dasturlash", "#AI", "#Kiberxavfsizlik", "#IT"],
-        bg: "linear-gradient(135deg, #0f172a 0%, #083344 100%)",
-        accent: "#06b6d4"
+        id: "gamma_forest",
+        category: "nature",
+        categoryTitle: "🌿 Tabiat, Agrar & Ekologiya",
+        title: "Gamma Deep Forest & Nature",
+        badge: "🌿 Ekologiya & Agrar",
+        desc: "Ekologiya, agrar soha, qishloq xo'jaligi, o'rmonchilik, bio-xilma-xillik va tabiatni muhofaza qilish.",
+        tags: ["#Ekologiya", "#Agrar", "#Tabiat", "#QishloqXojaligi"],
+        bg: "linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%)",
+        accent: "#34d399",
+        isGamma: true
       },
       {
-        id: "slice",
-        category: "it",
-        categoryTitle: "💻 Dasturlash & Startaplar",
-        title: "Slice 2016 (Neo Kesim)",
-        badge: "Web, Mobile & Texno",
-        desc: "Web va Mobile dasturlar, Startaplar, Robototexnika va innovatsion texnologik taqdimotlar.",
-        tags: ["#Startap", "#WebDev", "#Frontend", "#Backend", "#Innovatsiya"],
-        bg: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
-        accent: "#38bdf8"
+        id: "gamma_space",
+        category: "engineering",
+        categoryTitle: "📐 Koinot, Fizika & Optika",
+        title: "Gamma Deep Cosmos & Physics",
+        badge: "🌌 Kosmos & Fizika",
+        desc: "Fizika, astronomiya, aerokosmik texnika, optika, kvant mexanikasi va fundamental ilm-fan.",
+        tags: ["#Fizika", "#Astronomiya", "#Kosmos", "#Kvant"],
+        bg: "linear-gradient(135deg, #030712 0%, #111827 50%, #312e81 100%)",
+        accent: "#6366f1",
+        isGamma: true
       },
       {
-        id: "droplet",
-        category: "med",
-        categoryTitle: "🩺 Tibbiyot & Salomatlik",
-        title: "Droplet 2016 (Akvamarin)",
-        badge: "Tibbiyot & Farmatsevtika",
-        desc: "Tibbiyot, Anatomiya, Farmatsevtika, Stomatologiya, Terapiya va sog'lom turmush tarzi.",
-        tags: ["#Tibbiyot", "#Salomatlik", "#Farmatsevtika", "#Anatomiya", "#Kasalxona"],
-        bg: "linear-gradient(135deg, #0f766e 0%, #14b8a6 100%)",
-        accent: "#2dd4bf"
-      },
-      {
-        id: "blue",
-        category: "med",
-        categoryTitle: "🩺 Tibbiy Diagnostika & Klinika",
-        title: "Klassik Havorang (Moviy)",
-        badge: "Klinik Tibbiyot",
-        desc: "Davolash ishi, Hamshiralik, Laboratoriya tahlillari va xalqaro tibbiyot standartlari.",
-        tags: ["#Davolash", "#Diagnostika", "#Laboratoriya", "#Klinika", "#Shifokor"],
-        bg: "linear-gradient(135deg, #0369a1 0%, #38bdf8 100%)",
-        accent: "#0ea5e9"
-      },
-      {
-        id: "facet",
-        category: "eco",
-        categoryTitle: "🌿 Biologiya & Ekologiya",
-        title: "Facet 2016 (Zumrad Eko)",
-        badge: "Biologiya & Ekologiya",
-        desc: "Ekologiya, Biologiya, Botanika, Qishloq xo'jaligi, Yashil iqtisodiyot va tabiatni asrash.",
-        tags: ["#Ekologiya", "#Biologiya", "#Botanika", "#Tabiat", "#YashilEko"],
-        bg: "linear-gradient(135deg, #064e3b 0%, #059669 100%)",
-        accent: "#10b981"
-      },
-      {
-        id: "green",
-        category: "eco",
-        categoryTitle: "🌿 Tabiatshunoslik & Atrof-muhit",
-        title: "Tabiat Zumrad (Eko Yashil)",
-        badge: "Zoologiya & Geografiya",
-        desc: "Zoologiya, Geografiya, Tabiat boyliklari, O'rmon xo'jaligi va suv resurslari taqdimotlari.",
-        tags: ["#Zoologiya", "#Geografiya", "#Tabiatshunoslik", "#Ekotizim"],
-        bg: "linear-gradient(135deg, #065f46 0%, #34d399 100%)",
-        accent: "#34d399"
-      },
-      {
-        id: "office",
-        category: "business",
-        categoryTitle: "💼 Iqtisodiyot & Moliya",
-        title: "Office 2016 (Korporativ)",
-        badge: "Iqtisodiyot & Biznes",
-        desc: "Iqtisodiyot nazariyasi, Moliya, Bank ishi, Buxgalteriya, Menejment, Savdo va Audit.",
-        tags: ["#Iqtisodiyot", "#Moliya", "#Bank", "#Biznes", "#Boshqaruv"],
-        bg: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
-        accent: "#60a5fa"
-      },
-      {
-        id: "dark",
-        category: "business",
-        categoryTitle: "💼 Biznes & Investitsiyalar",
-        title: "Premium Dark Gold",
-        badge: "Investitsiyalar & VIP",
-        desc: "Katta biznes, Investitsiya loyihalari, Kripto moliya, Startap pitch va VIP hisobotlar.",
-        tags: ["#Investitsiya", "#PitchDeck", "#Kripto", "#Premium", "#Menejment"],
-        bg: "linear-gradient(135deg, #18181b 0%, #27272a 100%)",
-        accent: "#f59e0b"
-      },
-      {
-        id: "integral",
-        category: "math_eng",
-        categoryTitle: "📐 Fizika & Muhandislik",
-        title: "Integral 2016 (Muhandislik)",
-        badge: "Muhandislik & Texnika",
-        desc: "Oliy matematika, Mashinasozlik, Qurilish, Arxitektura, Mexanika va hisoblash texnikasi.",
-        tags: ["#Muhandislik", "#Matematika", "#Mexanika", "#Qurilish", "#Texnika"],
-        bg: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
-        accent: "#eb5e3c"
-      },
-      {
-        id: "celestial",
-        category: "math_eng",
-        categoryTitle: "📐 Astronomiya & Koinot",
-        title: "Celestial 2016 (Koinot Moviy)",
-        badge: "Fizika & Kosmos",
-        desc: "Fizika qonuniyatlari, Astronomiya, Kosmik parvozlar, Optika va Kvant fizikasi.",
-        tags: ["#Fizika", "#Astronomiya", "#Kosmos", "#Kvant", "#IlmFan"],
-        bg: "linear-gradient(135deg, #0a193c 0%, #1e1b4b 100%)",
-        accent: "#eab308"
-      },
-      {
-        id: "retrospect",
-        category: "history",
-        categoryTitle: "🏛 Tarix & Madaniyat",
-        title: "Retrospect 2016 (Retro Oltin)",
-        badge: "O'zbekiston & Jahon Tarixi",
-        desc: "O'zbekiston tarixi, Jahon tarixi, Qadimgi sivilizatsiyalar, Temuriylar va madaniy meros.",
-        tags: ["#Tarix", "#Madaniyat", "#Temuriylar", "#Sivilizatsiya", "#Meros"],
-        bg: "linear-gradient(135deg, #451a03 0%, #78350f 100%)",
-        accent: "#d97706"
-      },
-      {
-        id: "vintage",
-        category: "history",
-        categoryTitle: "🏛 Falsafa & Sharqshunoslik",
-        title: "Pergament Retro (Qo'lyozma)",
-        badge: "Arxeologiya & Qo'lyozmalar",
-        desc: "Arxeologiya, Sharqshunoslik, Qo'lyozmalar, Falsafa, Etnografiya va qadimgi manbalar.",
-        tags: ["#Qolyozma", "#Sharqshunoslik", "#Arxeologiya", "#Falsafa"],
-        bg: "linear-gradient(135deg, #3f2e18 0%, #5c4028 100%)",
-        accent: "#c2892c"
-      },
-      {
-        id: "savon",
-        category: "edu",
-        categoryTitle: "📚 Adabiyot & Tilshunoslik",
-        title: "Savon 2016 (Aristokrat Shampan)",
-        badge: "Ona tili & Adabiyot",
-        desc: "O'zbek tili va adabiyoti, Jahon adabiyoti, Xorijiy tillar, Tilshunoslik va Kitobxonlik.",
-        tags: ["#OnaTili", "#Adabiyot", "#Tilshunoslik", "#InglizTili", "#Kitob"],
-        bg: "linear-gradient(135deg, #292524 0%, #44403c 100%)",
-        accent: "#d97706"
-      },
-      {
-        id: "ion",
-        category: "edu",
-        categoryTitle: "📚 Pedagogika & Ta'lim",
-        title: "Ion 2016 (Bordo Nafis)",
-        badge: "Pedagogika & Psixologiya",
-        desc: "Pedagogika nazariyasi, O'qitish metodikasi, Psixologiya va Ta'lim menejmenti.",
-        tags: ["#Pedagogika", "#Talim", "#Psixologiya", "#Metodika", "#Maktab"],
-        bg: "linear-gradient(135deg, #4c0519 0%, #881337 100%)",
-        accent: "#f43f5e"
-      },
-      {
-        id: "canva_pastel",
-        category: "art",
-        categoryTitle: "🎨 San'at & Ijodiyot",
-        title: "Canva Pastel (Ijodiy)",
-        badge: "San'at & Tasviriy San'at",
-        desc: "Tasviriy san'at, Musiqa, Dizayn, Moda, Ijodiy san'at, Teatr va Estrada san'ati.",
-        tags: ["#Sanat", "#Dizayn", "#Musiqa", "#Ijod", "#Moda"],
-        bg: "linear-gradient(135deg, #4f46e5 0%, #ec4899 100%)",
-        accent: "#f472b6"
-      },
-      {
-        id: "white",
-        category: "art",
-        categoryTitle: "🎨 Arxitektura & Minimalizm",
-        title: "Minimalist Oq (Galereya)",
-        badge: "Arxitektura & Galereya",
-        desc: "Arxitektura dizayni, Fotografiya, Zamonaviy san'at, Ko'rgazmalar va toza minimalizm.",
-        tags: ["#Minimalizm", "#Arxitektura", "#Fotografiya", "#Galereya"],
-        bg: "linear-gradient(135deg, #f1f5f9 0%, #ffffff 100%)",
-        accent: "#2563eb"
+        id: "gamma_blueprint",
+        category: "engineering",
+        categoryTitle: "📐 Muhandislik & Matematika",
+        title: "Gamma Blueprint & Math Model",
+        badge: "📐 Oliy Matematika",
+        desc: "Oliy matematika, mashinasozlik, mexanika, axborot modellari va qurilish muhandisligi.",
+        tags: ["#Matematika", "#Muhandislik", "#Chizma", "#Mexanika"],
+        bg: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%)",
+        accent: "#60a5fa",
+        isGamma: true
       }
     ];
 
@@ -716,12 +647,16 @@ THEMES_HTML = """<!DOCTYPE html>
         if (!resp.ok) return;
         const data = await resp.json();
         if (data.themes && Array.isArray(data.themes) && data.themes.length > 0) {
+          if (!categories.some(c => c.id === "workspace")) {
+            categories.splice(1, 0, { id: "workspace", name: "🪄 Mening Gamma Temalarim" });
+            renderCategories();
+          }
           data.themes.forEach(gt => {
             const customId = `gamma:${gt.id}`;
             if (!themes.some(x => x.id === customId)) {
-              themes.push({
+              themes.unshift({
                 id: customId,
-                category: "gamma",
+                category: "workspace",
                 categoryTitle: `🪄 Gamma Workspace — ${gt.type === "custom" ? "Maxsus Tema" : "Standart"}`,
                 title: gt.name || "Gamma Custom Theme",
                 badge: "🪄 Gamma Theme",

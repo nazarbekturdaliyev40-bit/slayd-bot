@@ -226,19 +226,19 @@ def get_skip_author_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
     ])
 
 def get_theme_selection_keyboard() -> InlineKeyboardMarkup:
-    """Asosiy tugmalar: Mini ilova orqali fon tanlash, Gamma AI, O'z fonini yuklash, Bekor qilish."""
+    """Asosiy tugmalar: Mini ilova orqali Gamma shablonlarini tanlash, Tezkor Gamma AI, O'z fonini yuklash, Bekor qilish."""
     webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot-2.onrender.com/themes")
     return InlineKeyboardMarkup(inline_keyboard=[
-        # 1. Fon rasmini tanlash (Mini ilova orqali Gamma AI va fanlar bo'yicha shablonlar)
+        # 1. Gamma shablonlarini tanlash (Mini ilova)
         [
             InlineKeyboardButton(
-                text="🎨 Fon rasmini tanlash (Mini ilova)",
+                text="🪄 Gamma AI Shablonlari (Mini ilova)",
                 web_app=WebAppInfo(url=webapp_url)
             )
         ],
         # 2. Tezkor Gamma AI tugmasi
         [
-            InlineKeyboardButton(text="🪄 Gamma AI (Avtomatik dizayn)", callback_data="theme_gamma")
+            InlineKeyboardButton(text="✨ Tezkor Gamma AI (Avtomatik)", callback_data="theme_gamma")
         ],
         # 3. O'z fon rasmini yuklash
         [
@@ -255,7 +255,7 @@ def get_theme_reply_keyboard() -> ReplyKeyboardMarkup:
     webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot-2.onrender.com/themes")
     return ReplyKeyboardMarkup(
         keyboard=[
-            [KeyboardButton(text="🖼 Fon rasmini tanlash", web_app=WebAppInfo(url=webapp_url))],
+            [KeyboardButton(text="🪄 Gamma AI Shablonlari", web_app=WebAppInfo(url=webapp_url))],
             [KeyboardButton(text="❌ Bekor qilish")]
         ],
         resize_keyboard=True,
