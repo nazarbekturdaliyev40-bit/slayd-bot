@@ -25,116 +25,116 @@ import locales
 
 logger = logging.getLogger(__name__)
 
-# Slayd orqa foni va dizayn mavzulari (Canva uslubida)
+# Slayd orqa foni va dizayn mavzulari (Zamonaviy Dark Glass uslubida, oq matnlar bilan)
 THEMES = {
     "white": {
-        "name": "⚪️ Oq fon (Minimal)",
-        "primary": RGBColor(26, 54, 93),          # Deep Navy banner
-        "accent": RGBColor(37, 99, 235),          # Royal Blue
-        "accent_secondary": RGBColor(59, 130, 246),
-        "bg_slide": RGBColor(255, 255, 255),      # Pure White
-        "card_bg": RGBColor(248, 250, 252),       # Light Slate
-        "card_border": RGBColor(203, 213, 225),   # Slate Border
-        "text_dark": RGBColor(15, 23, 42),        # Slate 900
-        "text_muted": RGBColor(100, 116, 139),
+        "name": "⚪️ Minimalist Dark Slate",
+        "primary": RGBColor(15, 23, 42),          # Deep Navy/Slate banner
+        "accent": RGBColor(56, 189, 248),         # Sky Cyan
+        "accent_secondary": RGBColor(129, 140, 248),
+        "bg_slide": RGBColor(15, 23, 42),         # Deep Canvas (Hech qachon daftar varog'i emas)
+        "card_bg": RGBColor(24, 34, 56),          # Dark Glass Card
+        "card_border": RGBColor(56, 189, 248),    # Luminous Border
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),    # Bright Silver-White
         "white": RGBColor(255, 255, 255),
-        "bullet_icon": "•",
-        "tag": "MINIMALIST OQ"
+        "bullet_icon": "✦",
+        "tag": "MINIMALIST SLATE"
     },
     "dark": {
         "name": "🖤 Qora fon (Premium Dark)",
         "primary": RGBColor(18, 18, 18),          # OLED Black
         "accent": RGBColor(245, 158, 11),         # Luxury Gold / Amber
         "accent_secondary": RGBColor(234, 179, 8),
-        "bg_slide": RGBColor(24, 24, 27),         # Dark Zinc
-        "card_bg": RGBColor(39, 39, 42),          # Zinc Card
+        "bg_slide": RGBColor(20, 20, 24),         # Dark Zinc
+        "card_bg": RGBColor(34, 34, 40),          # Zinc Card
         "card_border": RGBColor(245, 158, 11),
-        "text_dark": RGBColor(255, 255, 255),     # 100% Crisp White (Never dark on black)
-        "text_muted": RGBColor(212, 212, 216),    # Bright Zinc 300 (Clear silver, never black)
+        "text_dark": RGBColor(255, 255, 255),     # 100% Crisp White
+        "text_muted": RGBColor(226, 232, 240),    # Bright Silver-White
         "white": RGBColor(255, 255, 255),
-        "bullet_icon": "•",
+        "bullet_icon": "✦",
         "tag": "PREMIUM DARK"
     },
     "navy": {
         "name": "🔵 Toʻq koʻk fon (Royal Navy)",
-        "primary": RGBColor(15, 23, 60),          # Royal Navy
-        "accent": RGBColor(217, 119, 6),          # Luxury Gold
-        "accent_secondary": RGBColor(245, 158, 11),
-        "bg_slide": RGBColor(241, 245, 249),      # Cool Slate
-        "card_bg": RGBColor(255, 255, 255),
-        "card_border": RGBColor(217, 119, 6),
-        "text_dark": RGBColor(15, 23, 42),
-        "text_muted": RGBColor(71, 85, 105),
+        "primary": RGBColor(10, 25, 47),          # Royal Navy
+        "accent": RGBColor(245, 158, 11),         # Luxury Gold
+        "accent_secondary": RGBColor(56, 189, 248),
+        "bg_slide": RGBColor(10, 25, 47),         # Deep Navy Canvas
+        "card_bg": RGBColor(17, 38, 70),          # Navy Glass Card
+        "card_border": RGBColor(245, 158, 11),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
-        "bullet_icon": "•",
+        "bullet_icon": "✦",
         "tag": "ROYAL NAVY"
     },
     "blue": {
         "name": "🔷 Moviy fon (Havorang)",
-        "primary": RGBColor(26, 54, 93),          # Deep Navy
+        "primary": RGBColor(12, 36, 68),          # Deep Navy
         "accent": RGBColor(14, 165, 233),         # Sky Blue
-        "accent_secondary": RGBColor(2, 132, 199),
-        "bg_slide": RGBColor(240, 249, 255),      # Soft Sky Pale
-        "card_bg": RGBColor(255, 255, 255),
+        "accent_secondary": RGBColor(56, 189, 248),
+        "bg_slide": RGBColor(12, 36, 68),         # Deep Ocean
+        "card_bg": RGBColor(18, 50, 94),          # Deep Blue Card
         "card_border": RGBColor(14, 165, 233),
-        "text_dark": RGBColor(15, 23, 42),
-        "text_muted": RGBColor(71, 85, 105),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
-        "bullet_icon": "•",
+        "bullet_icon": "✦",
         "tag": "MOVIY KLASSIK"
     },
     "green": {
         "name": "🟢 Zumrad yashil fon",
-        "primary": RGBColor(6, 78, 59),           # Forest Emerald
+        "primary": RGBColor(6, 44, 34),           # Forest Emerald
         "accent": RGBColor(16, 185, 129),         # Fresh Mint
-        "accent_secondary": RGBColor(13, 148, 136),# Teal
-        "bg_slide": RGBColor(240, 253, 244),      # Mint White
-        "card_bg": RGBColor(255, 255, 255),
-        "card_border": RGBColor(52, 211, 153),
-        "text_dark": RGBColor(6, 78, 59),
-        "text_muted": RGBColor(55, 65, 81),
+        "accent_secondary": RGBColor(45, 212, 191),# Teal
+        "bg_slide": RGBColor(6, 44, 34),          # Deep Emerald
+        "card_bg": RGBColor(10, 64, 50),          # Emerald Card
+        "card_border": RGBColor(16, 185, 129),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
-        "bullet_icon": "•",
+        "bullet_icon": "✦",
         "tag": "ZUMRAD YASHIL"
     },
     "purple": {
         "name": "🟣 Binafsha fon (Kosmik)",
-        "primary": RGBColor(46, 16, 101),         # Deep Violet
-        "accent": RGBColor(139, 92, 246),         # Neon Purple
-        "accent_secondary": RGBColor(168, 85, 247),
-        "bg_slide": RGBColor(245, 243, 255),      # Lavender Pale
-        "card_bg": RGBColor(255, 255, 255),
-        "card_border": RGBColor(167, 139, 250),
-        "text_dark": RGBColor(30, 27, 75),
-        "text_muted": RGBColor(75, 85, 99),
+        "primary": RGBColor(30, 16, 56),          # Deep Violet
+        "accent": RGBColor(168, 85, 247),         # Neon Purple
+        "accent_secondary": RGBColor(216, 70, 239),
+        "bg_slide": RGBColor(30, 16, 56),         # Deep Violet Space
+        "card_bg": RGBColor(46, 24, 84),          # Cosmic Card
+        "card_border": RGBColor(168, 85, 247),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
-        "bullet_icon": "•",
+        "bullet_icon": "✦",
         "tag": "KOSMIK BINAFSHA"
     },
     "canva_pastel": {
         "name": "🌸 Canva Pastel fon (Nafis)",
-        "primary": RGBColor(79, 70, 229),         # Canva Indigo
-        "accent": RGBColor(236, 72, 153),         # Hot Pink / Magenta
-        "accent_secondary": RGBColor(168, 85, 247),
-        "bg_slide": RGBColor(253, 242, 248),      # Soft Pink / Rose Pale
-        "card_bg": RGBColor(255, 255, 255),
+        "primary": RGBColor(46, 18, 42),          # Deep Twilight Plum
+        "accent": RGBColor(244, 114, 182),        # Rose Pink
+        "accent_secondary": RGBColor(251, 146, 60),
+        "bg_slide": RGBColor(46, 18, 42),         # Deep Twilight Plum
+        "card_bg": RGBColor(68, 28, 62),          # Velvet Plum Card
         "card_border": RGBColor(244, 114, 182),
-        "text_dark": RGBColor(30, 27, 75),
-        "text_muted": RGBColor(107, 114, 128),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
-        "bullet_icon": "•",
+        "bullet_icon": "✦",
         "tag": "CANVA PASTEL"
     },
     "vintage": {
         "name": "📜 Klassik pergament fon",
-        "primary": RGBColor(67, 40, 24),          # Antique Mahogany
-        "accent": RGBColor(194, 137, 44),         # Antique Gold
-        "accent_secondary": RGBColor(146, 64, 14),# Warm Amber
-        "bg_slide": RGBColor(250, 246, 238),      # Parchment / Pergament fon
-        "card_bg": RGBColor(255, 253, 249),       # Antique Ivory
-        "card_border": RGBColor(217, 169, 90),    # Vintage Gold Border
-        "text_dark": RGBColor(55, 30, 16),        # Espresso
-        "text_muted": RGBColor(107, 79, 61),
+        "primary": RGBColor(44, 28, 18),          # Deep Antique Espresso
+        "accent": RGBColor(217, 169, 90),         # Antique Gold
+        "accent_secondary": RGBColor(234, 179, 8),# Warm Amber
+        "bg_slide": RGBColor(44, 28, 18),         # Deep Bronze
+        "card_bg": RGBColor(64, 40, 26),          # Antique Card
+        "card_border": RGBColor(217, 169, 90),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
         "bullet_icon": "✦",
         "tag": "KLASSIK RETRO"
@@ -142,112 +142,112 @@ THEMES = {
     # ================= POWERPOINT 2016 RASMIY SHABLONLARI =================
     "facet": {
         "name": "🟢 Facet 2016 (Geometrik Zumrad)",
-        "primary": RGBColor(16, 75, 60),          # Deep Forest Pine
+        "primary": RGBColor(8, 42, 34),           # Deep Forest Pine
         "accent": RGBColor(16, 185, 129),         # Bright Emerald / Mint
         "accent_secondary": RGBColor(45, 212, 191),# Teal
-        "bg_slide": RGBColor(240, 253, 244),      # Mint Tint
-        "card_bg": RGBColor(255, 255, 255),
-        "card_border": RGBColor(52, 211, 153),
-        "text_dark": RGBColor(6, 78, 59),
-        "text_muted": RGBColor(75, 85, 99),
+        "bg_slide": RGBColor(8, 42, 34),          # Deep Facet Pine
+        "card_bg": RGBColor(12, 60, 48),          # Facet Card
+        "card_border": RGBColor(45, 212, 191),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
         "bullet_icon": "✦",
         "tag": "PPT 2016 FACET"
     },
     "ion": {
         "name": "🔴 Ion 2016 (Bordo & To'q qizil)",
-        "primary": RGBColor(114, 28, 52),         # Deep Burgundy
+        "primary": RGBColor(52, 14, 26),          # Deep Burgundy Wine
         "accent": RGBColor(249, 115, 22),         # Radiant Orange / Amber
-        "accent_secondary": RGBColor(225, 29, 72),# Crimson
-        "bg_slide": RGBColor(255, 245, 247),      # Warm Rose Tint
-        "card_bg": RGBColor(255, 255, 255),
-        "card_border": RGBColor(225, 29, 72),
-        "text_dark": RGBColor(76, 5, 25),
-        "text_muted": RGBColor(100, 116, 139),
+        "accent_secondary": RGBColor(244, 63, 94),# Crimson
+        "bg_slide": RGBColor(52, 14, 26),         # Deep Wine Canvas
+        "card_bg": RGBColor(74, 20, 36),          # Wine Card
+        "card_border": RGBColor(249, 115, 22),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
         "bullet_icon": "✦",
         "tag": "PPT 2016 ION"
     },
     "slice": {
         "name": "🔷 Slice 2016 (Kesimli Neo Havorang)",
-        "primary": RGBColor(30, 41, 59),          # Deep Slate
+        "primary": RGBColor(15, 23, 42),          # Deep Slate
         "accent": RGBColor(6, 182, 212),          # Electric Cyan
-        "accent_secondary": RGBColor(249, 115, 22),# Tangerine
-        "bg_slide": RGBColor(248, 250, 252),      # Modern Slate Tint
-        "card_bg": RGBColor(255, 255, 255),
+        "accent_secondary": RGBColor(56, 189, 248),# Sky
+        "bg_slide": RGBColor(15, 23, 42),         # Modern Deep Slate
+        "card_bg": RGBColor(24, 34, 58),          # Slate Card
         "card_border": RGBColor(6, 182, 212),
-        "text_dark": RGBColor(15, 23, 42),
-        "text_muted": RGBColor(100, 116, 139),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
         "bullet_icon": "✦",
         "tag": "PPT 2016 SLICE"
     },
     "celestial": {
         "name": "🌌 Celestial 2016 (Koinot Tungi Moviy)",
-        "primary": RGBColor(10, 25, 60),          # Midnight Space Blue
+        "primary": RGBColor(10, 20, 50),          # Midnight Space Blue
         "accent": RGBColor(234, 179, 8),          # Starlight Gold
         "accent_secondary": RGBColor(56, 189, 248),# Celestial Blue
-        "bg_slide": RGBColor(241, 245, 255),      # Soft Ice Tint
-        "card_bg": RGBColor(255, 255, 255),
+        "bg_slide": RGBColor(10, 20, 50),         # Deep Celestial Blue
+        "card_bg": RGBColor(16, 32, 76),          # Deep Sky Card
         "card_border": RGBColor(234, 179, 8),
-        "text_dark": RGBColor(15, 23, 42),
-        "text_muted": RGBColor(71, 85, 105),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
         "bullet_icon": "✦",
         "tag": "PPT 2016 CELESTIAL"
     },
     "integral": {
         "name": "📐 Integral 2016 (Muhandislik & Terrakota)",
-        "primary": RGBColor(33, 64, 95),          # Steel Navy
+        "primary": RGBColor(22, 38, 58),          # Steel Navy
         "accent": RGBColor(235, 94, 60),          # Terracotta Coral
-        "accent_secondary": RGBColor(217, 119, 6),# Warm Amber
-        "bg_slide": RGBColor(244, 247, 250),      # Clean Mist
-        "card_bg": RGBColor(255, 255, 255),
+        "accent_secondary": RGBColor(245, 158, 11),# Warm Amber
+        "bg_slide": RGBColor(22, 38, 58),         # Deep Steel Mist
+        "card_bg": RGBColor(32, 54, 82),          # Steel Card
         "card_border": RGBColor(235, 94, 60),
-        "text_dark": RGBColor(24, 38, 54),
-        "text_muted": RGBColor(100, 116, 139),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
         "bullet_icon": "✦",
         "tag": "PPT 2016 INTEGRAL"
     },
     "retrospect": {
         "name": "🏺 Retrospect 2016 (Retro Oltin Qum)",
-        "primary": RGBColor(88, 47, 23),          # Mahogany Earth
+        "primary": RGBColor(48, 26, 14),          # Mahogany Earth
         "accent": RGBColor(217, 119, 6),          # Rich Amber Gold
-        "accent_secondary": RGBColor(180, 83, 9), # Warm Copper
-        "bg_slide": RGBColor(253, 250, 243),      # Warm Sand
-        "card_bg": RGBColor(255, 255, 255),
+        "accent_secondary": RGBColor(234, 179, 8), # Warm Copper
+        "bg_slide": RGBColor(48, 26, 14),         # Deep Warm Earth
+        "card_bg": RGBColor(68, 38, 20),          # Earth Card
         "card_border": RGBColor(217, 119, 6),
-        "text_dark": RGBColor(60, 30, 10),
-        "text_muted": RGBColor(120, 80, 50),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
         "bullet_icon": "✦",
         "tag": "PPT 2016 RETROSPECT"
     },
     "droplet": {
         "name": "💧 Droplet 2016 (Yumshoq Tomchi Akva)",
-        "primary": RGBColor(13, 92, 99),          # Deep Ocean Teal
+        "primary": RGBColor(10, 46, 52),          # Deep Ocean Teal
         "accent": RGBColor(20, 184, 166),         # Aquamarine
         "accent_secondary": RGBColor(56, 189, 248),# Soft Sky
-        "bg_slide": RGBColor(240, 253, 250),      # Fresh Aqua Pale
-        "card_bg": RGBColor(255, 255, 255),
+        "bg_slide": RGBColor(10, 46, 52),         # Deep Aqua
+        "card_bg": RGBColor(16, 68, 76),          # Aqua Card
         "card_border": RGBColor(20, 184, 166),
-        "text_dark": RGBColor(17, 49, 53),
-        "text_muted": RGBColor(71, 85, 105),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
         "bullet_icon": "✦",
         "tag": "PPT 2016 DROPLET"
     },
     "savon": {
         "name": "📜 Savon 2016 (Aristokrat Shampan)",
-        "primary": RGBColor(68, 64, 60),          # Muted Bronze
+        "primary": RGBColor(36, 32, 30),          # Muted Deep Bronze
         "accent": RGBColor(217, 119, 6),          # Champagne Gold
-        "accent_secondary": RGBColor(168, 85, 247),
-        "bg_slide": RGBColor(250, 249, 246),      # Warm Linen
-        "card_bg": RGBColor(255, 255, 255),
-        "card_border": RGBColor(214, 180, 140),
-        "text_dark": RGBColor(41, 37, 36),
-        "text_muted": RGBColor(120, 113, 108),
+        "accent_secondary": RGBColor(245, 158, 11),
+        "bg_slide": RGBColor(36, 32, 30),         # Deep Linen Charcoal
+        "card_bg": RGBColor(52, 46, 44),          # Bronze Card
+        "card_border": RGBColor(217, 119, 6),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
         "bullet_icon": "✦",
         "tag": "PPT 2016 SAVON"
@@ -257,39 +257,39 @@ THEMES = {
         "primary": RGBColor(15, 23, 42),          # Cyber Black
         "accent": RGBColor(6, 182, 212),          # Neon Cyan
         "accent_secondary": RGBColor(139, 92, 246),# Neon Violet
-        "bg_slide": RGBColor(20, 26, 42),         # Dark Circuit Canvas
-        "card_bg": RGBColor(30, 41, 59),          # Dark Card
+        "bg_slide": RGBColor(15, 23, 42),         # Dark Circuit Canvas
+        "card_bg": RGBColor(24, 34, 58),          # Dark Card
         "card_border": RGBColor(6, 182, 212),
-        "text_dark": RGBColor(255, 255, 255),
-        "text_muted": RGBColor(203, 213, 225),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
         "bullet_icon": "✦",
         "tag": "PPT 2016 CIRCUIT"
     },
     "office": {
         "name": "🏢 Office 2016 (Klassik Moviy)",
-        "primary": RGBColor(31, 78, 121),         # Official Office Blue
-        "accent": RGBColor(47, 117, 181),         # Steel Vivid Blue
-        "accent_secondary": RGBColor(217, 119, 6),# Warm Accent
-        "bg_slide": RGBColor(242, 247, 252),      # Office Light Slate
-        "card_bg": RGBColor(255, 255, 255),
-        "card_border": RGBColor(47, 117, 181),
-        "text_dark": RGBColor(15, 23, 42),
-        "text_muted": RGBColor(71, 85, 105),
+        "primary": RGBColor(15, 28, 52),          # Official Office Blue
+        "accent": RGBColor(56, 189, 248),         # Steel Vivid Blue
+        "accent_secondary": RGBColor(245, 158, 11),# Warm Accent
+        "bg_slide": RGBColor(15, 28, 52),         # Deep Executive Slate
+        "card_bg": RGBColor(22, 42, 78),          # Executive Card
+        "card_border": RGBColor(56, 189, 248),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
         "bullet_icon": "✦",
         "tag": "PPT 2016 OFFICE"
     },
     "mix": {
         "name": "🔀 PPT 2016 Dinamik Mix",
-        "primary": RGBColor(31, 78, 121),
+        "primary": RGBColor(15, 23, 42),
         "accent": RGBColor(234, 179, 8),
-        "accent_secondary": RGBColor(6, 182, 212),
-        "bg_slide": RGBColor(242, 247, 252),
-        "card_bg": RGBColor(255, 255, 255),
-        "card_border": RGBColor(47, 117, 181),
-        "text_dark": RGBColor(15, 23, 42),
-        "text_muted": RGBColor(71, 85, 105),
+        "accent_secondary": RGBColor(56, 189, 248),
+        "bg_slide": RGBColor(15, 23, 42),
+        "card_bg": RGBColor(24, 34, 58),
+        "card_border": RGBColor(234, 179, 8),
+        "text_dark": RGBColor(255, 255, 255),     # 100% Oq rang
+        "text_muted": RGBColor(226, 232, 240),
         "white": RGBColor(255, 255, 255),
         "bullet_icon": "✦",
         "tag": "PPT 2016 MIX"
@@ -980,14 +980,9 @@ def _add_styled_bullet(text_frame, bullet_text: str, theme: dict, font_size: Pt,
     if not clean_txt:
         return
 
-    is_dark = (
-        theme.get("tag") == "PREMIUM DARK" or
-        theme.get("bg_slide") == RGBColor(24, 24, 27) or
-        "qora" in theme.get("name", "").lower()
-    )
-
-    lead_color = theme["accent"] if is_dark else theme.get("primary", theme["text_dark"])
-    body_color = theme["white"] if is_dark else theme["text_dark"]
+    # Har doim 100% tiniq oq rang va yorqin aksentlar (qora harflar butunlay chiqarib tashlangan)
+    lead_color = theme.get("accent", RGBColor(255, 255, 255))
+    body_color = RGBColor(255, 255, 255)
 
     # Bullet ikonkasi
     r_icon = p.add_run()
@@ -1147,7 +1142,7 @@ def _create_hero_slide(prs, blank_layout, theme, title_text, subtitle_text, tota
         p_t.text = remove_emojis(title_text)
         p_t.font.size = Pt(26 if len(title_text) > 40 else 30)
         p_t.font.bold = True
-        p_t.font.color.rgb = theme["primary"] if not is_dark else theme["accent"]
+        p_t.font.color.rgb = theme["accent"]
         p_t.font.name = "Arial"
 
         if subtitle_text:
@@ -1188,13 +1183,13 @@ def _create_hero_slide(prs, blank_layout, theme, title_text, subtitle_text, tota
             r_lbl.text = f"{p_label} "
             r_lbl.font.bold = True
             r_lbl.font.size = Pt(13)
-            r_lbl.font.color.rgb = theme["primary"] if not is_dark else theme["accent"]
+            r_lbl.font.color.rgb = theme["accent"]
 
             r_txt = p.add_run()
             r_txt.text = p_desc
             r_txt.font.bold = False
             r_txt.font.size = Pt(13)
-            r_txt.font.color.rgb = theme["text_dark"]
+            r_txt.font.color.rgb = RGBColor(255, 255, 255)
 
         try:
             topic_slide.shapes.add_picture(cover_img, Inches(8.3), Inches(1.3), width=Inches(4.1), height=Inches(5.75))
@@ -1215,7 +1210,7 @@ def _create_hero_slide(prs, blank_layout, theme, title_text, subtitle_text, tota
         p_t.text = remove_emojis(title_text)
         p_t.font.size = Pt(32 if len(title_text) > 40 else 36)
         p_t.font.bold = True
-        p_t.font.color.rgb = theme["primary"] if not is_dark else theme["accent"]
+        p_t.font.color.rgb = theme["accent"]
         p_t.font.name = "Arial"
         p_t.alignment = PP_ALIGN.CENTER
 
@@ -1244,7 +1239,7 @@ def _create_hero_slide(prs, blank_layout, theme, title_text, subtitle_text, tota
             px = p_start_x + p_i * (p_w + p_gap)
             p_card = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, px, p_y, p_w, p_h)
             p_card.fill.solid()
-            p_card.fill.fore_color.rgb = theme["bg_slide"]
+            p_card.fill.fore_color.rgb = theme["card_bg"]
             p_card.line.color.rgb = theme["accent"] if p_i == 0 else theme["card_border"]
             p_card.line.width = Pt(1.5)
 
@@ -1255,14 +1250,14 @@ def _create_hero_slide(prs, blank_layout, theme, title_text, subtitle_text, tota
             pp1.text = f"✦  {p_title}"
             pp1.font.size = Pt(14)
             pp1.font.bold = True
-            pp1.font.color.rgb = theme["accent"] if not is_dark else theme["white"]
+            pp1.font.color.rgb = theme["accent"]
             pp1.alignment = PP_ALIGN.CENTER
             pp1.space_after = Pt(8)
 
             pp2 = ptf.add_paragraph()
             pp2.text = p_body
             pp2.font.size = Pt(13)
-            pp2.font.color.rgb = theme["text_dark"]
+            pp2.font.color.rgb = RGBColor(255, 255, 255)
             pp2.alignment = PP_ALIGN.CENTER
     return topic_slide
 
@@ -1337,7 +1332,7 @@ def _create_agenda_slide(prs, blank_layout, theme, content, slides_data, total_s
         ag_p.text = item_text
         ag_p.font.size = Pt(17 if n_items == 5 else 19)
         ag_p.font.bold = True
-        ag_p.font.color.rgb = theme["text_dark"]
+        ag_p.font.color.rgb = RGBColor(255, 255, 255)
         ag_p.font.name = "Arial"
 
         arr_b = reja_slide.shapes.add_textbox(Inches(11.8), y + (card_h - Inches(0.55)) / 2, Inches(0.5), Inches(0.55))
@@ -1356,10 +1351,7 @@ def _create_thanks_slide(prs, blank_layout, theme, custom_bg, is_white, is_dark,
     else:
         bg_end = end_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5))
         bg_end.fill.solid()
-        if is_white:
-            bg_end.fill.fore_color.rgb = RGBColor(248, 250, 252)
-        else:
-            bg_end.fill.fore_color.rgb = theme["primary"]
+        bg_end.fill.fore_color.rgb = theme["bg_slide"]
         bg_end.line.fill.background()
 
     end_bar = end_slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(0.35))
@@ -1399,7 +1391,7 @@ def _create_thanks_slide(prs, blank_layout, theme, custom_bg, is_white, is_dark,
     ep1.text = lang_info["thanks"].upper()
     ep1.font.size = Pt(38)
     ep1.font.bold = True
-    ep1.font.color.rgb = theme["accent"] if is_dark else theme["primary"]
+    ep1.font.color.rgb = RGBColor(255, 255, 255)
     ep1.font.name = "Arial"
     ep1.alignment = PP_ALIGN.CENTER
     ep1.space_after = Pt(12)
@@ -1408,7 +1400,7 @@ def _create_thanks_slide(prs, blank_layout, theme, custom_bg, is_white, is_dark,
     ep2.text = lang_info.get("questions_welcome", "Savollar, fikr-mulohazalar va muhokama uchun tayyorman")
     ep2.font.size = Pt(18)
     ep2.font.bold = False
-    ep2.font.color.rgb = theme["accent"] if is_dark else theme.get("accent_secondary", theme["accent"])
+    ep2.font.color.rgb = theme["accent"]
     ep2.font.name = "Arial"
     ep2.alignment = PP_ALIGN.CENTER
     ep2.space_after = Pt(16)
@@ -1418,7 +1410,7 @@ def _create_thanks_slide(prs, blank_layout, theme, custom_bg, is_white, is_dark,
         ep3.text = presenter_str
         ep3.font.size = Pt(14)
         ep3.font.bold = True
-        ep3.font.color.rgb = theme["text_dark"] if not is_dark else theme["white"]
+        ep3.font.color.rgb = RGBColor(255, 255, 255)
         ep3.font.name = "Arial"
         ep3.alignment = PP_ALIGN.CENTER
 
@@ -1432,8 +1424,8 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
     if not theme_name or theme_name not in THEMES:
         theme_name = content.get("theme", "blue")
     theme = THEMES.get(theme_name, THEMES["blue"])
-    is_dark = (theme_name == "dark")
-    is_white = (theme_name == "white")
+    is_dark = True
+    is_white = False
     is_mix_theme = (theme_name == "mix")
 
     prs = Presentation()
@@ -1494,10 +1486,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         else:
             bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5))
             bg.fill.solid()
-            if is_white:
-                bg.fill.fore_color.rgb = RGBColor(248, 250, 252)
-            else:
-                bg.fill.fore_color.rgb = theme["primary"]
+            bg.fill.fore_color.rgb = theme["bg_slide"]
             bg.line.fill.background()
 
         # Decorative top bar
@@ -1514,7 +1503,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         p_min.text = lang_info.get("ministry", "OʻZBEKISTON RESPUBLIKASI OLIY TAʼLIM, FAN VA INNOVATSIYALAR VAZIRLIGI")
         p_min.font.size = Pt(13)
         p_min.font.bold = True
-        p_min.font.color.rgb = theme["primary"] if is_white else theme["accent"]
+        p_min.font.color.rgb = theme["accent"]
         p_min.font.name = "Arial"
         p_min.alignment = PP_ALIGN.CENTER
 
@@ -1525,7 +1514,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         num_p.text = f"01 / {total_slides:02d}"
         num_p.font.size = Pt(14)
         num_p.font.bold = True
-        num_p.font.color.rgb = theme["primary"] if is_white else theme["accent"]
+        num_p.font.color.rgb = theme["accent"]
         num_p.alignment = PP_ALIGN.RIGHT
 
         # Centered Academic Title Card on Slide 1
@@ -1536,15 +1525,8 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
 
         titul_card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, card_left, card_top, card_w, card_h)
         titul_card.fill.solid()
-        if is_dark:
-            titul_card.fill.fore_color.rgb = RGBColor(30, 30, 35)
-            titul_card.line.color.rgb = theme["accent"]
-        elif custom_bg:
-            titul_card.fill.fore_color.rgb = RGBColor(255, 255, 255)
-            titul_card.line.color.rgb = theme["accent"]
-        else:
-            titul_card.fill.fore_color.rgb = theme.get("card_bg", RGBColor(255, 255, 255))
-            titul_card.line.color.rgb = theme.get("card_border", theme["accent"])
+        titul_card.fill.fore_color.rgb = theme["card_bg"]
+        titul_card.line.color.rgb = theme["accent"]
         titul_card.line.width = Pt(2.0)
 
         c_tf = titul_card.text_frame
@@ -1559,7 +1541,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         p_head.text = lang_info.get("work_title", "OLIY TAʼLIM MUASSASASI TALABASINING TAQDIMOT ISHI")
         p_head.font.size = Pt(14)
         p_head.font.bold = True
-        p_head.font.color.rgb = theme["accent"] if is_dark else theme["primary"]
+        p_head.font.color.rgb = theme["accent"]
         p_head.font.name = "Arial"
         p_head.alignment = PP_ALIGN.CENTER
         p_head.space_after = Pt(8)
@@ -1570,7 +1552,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         p_topic.text = f"{topic_lbl}: {remove_emojis(title_text)}"
         p_topic.font.size = Pt(16)
         p_topic.font.bold = True
-        p_topic.font.color.rgb = theme["accent"] if is_dark else theme["primary"]
+        p_topic.font.color.rgb = RGBColor(255, 255, 255)
         p_topic.font.name = "Arial"
         p_topic.alignment = PP_ALIGN.CENTER
         p_topic.space_after = Pt(10)
@@ -1593,14 +1575,14 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             r_lbl.text = f"{lbl}   "
             r_lbl.font.bold = True
             r_lbl.font.size = Pt(15)
-            r_lbl.font.color.rgb = theme["accent"] if is_dark else theme["primary"]
+            r_lbl.font.color.rgb = theme["accent"]
             r_lbl.font.name = "Arial"
 
             r_val = p_field.add_run()
             r_val.text = val
             r_val.font.bold = True
             r_val.font.size = Pt(15)
-            r_val.font.color.rgb = theme["text_dark"]
+            r_val.font.color.rgb = RGBColor(255, 255, 255)
             r_val.font.name = "Arial"
 
         # Bottom footer: Toshkent - current year
@@ -1610,7 +1592,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         p_foot.text = f"{city_label} — {current_year}"
         p_foot.font.size = Pt(13)
         p_foot.font.bold = True
-        p_foot.font.color.rgb = theme["accent"] if is_dark else theme["text_muted"]
+        p_foot.font.color.rgb = RGBColor(226, 232, 240)
         p_foot.font.name = "Arial"
         p_foot.alignment = PP_ALIGN.CENTER
         p_foot.space_before = Pt(14)
@@ -1662,10 +1644,10 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         if is_mix_theme:
             cur_key = ppt_mix_sequence[(idx - 1) % len(ppt_mix_sequence)]
             curr_theme = THEMES.get(cur_key, theme)
-            curr_is_dark = (cur_key in ("dark", "circuit"))
+            curr_is_dark = True
         else:
             curr_theme = theme
-            curr_is_dark = is_dark
+            curr_is_dark = True
 
         c_slide = prs.slides.add_slide(blank_layout)
         if custom_bg and os.path.exists(custom_bg):
@@ -1746,7 +1728,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
                     dp = dtf.paragraphs[0]
                     dp.text = b_txt
                     dp.font.size = Pt(13)
-                    dp.font.color.rgb = curr_theme["white"] if curr_is_dark else curr_theme["text_muted"]
+                    dp.font.color.rgb = RGBColor(226, 232, 240)
                     dp.font.name = "Arial"
                     dp.alignment = PP_ALIGN.CENTER
 
@@ -1774,7 +1756,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             lp.text = remove_emojis(col1_title)
             lp.font.size = Pt(20)
             lp.font.bold = True
-            lp.font.color.rgb = curr_theme["primary"] if not curr_is_dark else curr_theme["accent"]
+            lp.font.color.rgb = curr_theme["accent"]
             lp.font.name = "Arial"
 
             lb_box = c_slide.shapes.add_textbox(Inches(1.15), y_pos + Inches(0.95), card_w - Inches(0.5), card_h - Inches(1.1))
@@ -1857,7 +1839,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
                 tp.text = remove_emojis(str(st.get("title", "")))
                 tp.font.size = Pt(18)
                 tp.font.bold = True
-                tp.font.color.rgb = curr_theme["primary"] if not curr_is_dark else curr_theme["accent"]
+                tp.font.color.rgb = RGBColor(255, 255, 255)
                 tp.font.name = "Arial"
 
                 # Step Desc
@@ -1867,7 +1849,8 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
                 dp = dtf.paragraphs[0]
                 dp.text = remove_emojis(str(st.get("desc", "")))
                 dp.font.size = Pt(14)
-                dp.font.color.rgb = curr_theme["text_dark"]
+                dp.font.color.rgb = RGBColor(226, 232, 240)
+                dp.font.name = "Arial"
                 dp.font.name = "Arial"
 
         elif img_path and os.path.exists(img_path):
@@ -2009,7 +1992,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         bp1.text = lang_info["thanks"].upper()
         bp1.font.size = Pt(30)
         bp1.font.bold = True
-        bp1.font.color.rgb = theme["accent"] if is_dark else theme["primary"]
+        bp1.font.color.rgb = RGBColor(255, 255, 255)
         bp1.alignment = PP_ALIGN.CENTER
         bp1.space_before = Pt(8)
         bp1.space_after = Pt(6)
@@ -2017,7 +2000,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         bp2 = b_tf.add_paragraph()
         bp2.text = lang_info.get("questions_welcome", "Savollar, fikr-mulohazalar va muhokama uchun tayyorman")
         bp2.font.size = Pt(15)
-        bp2.font.color.rgb = theme["accent"] if is_dark else theme.get("accent_secondary", theme["accent"])
+        bp2.font.color.rgb = theme["accent"]
         bp2.alignment = PP_ALIGN.CENTER
         bp2.space_after = Pt(8)
 
@@ -2026,7 +2009,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             bp3.text = presenter_str
             bp3.font.size = Pt(13)
             bp3.font.bold = True
-            bp3.font.color.rgb = theme["text_dark"] if not is_dark else theme["white"]
+            bp3.font.color.rgb = RGBColor(255, 255, 255)
             bp3.alignment = PP_ALIGN.CENTER
 
     elif closing_count == 2:
@@ -2098,7 +2081,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             t_cleaned = re.sub(r"^[\d\.\)\-\s•]+", "", remove_emojis(str(ref_text))).strip()
             p.text = f"{r_idx}.  {t_cleaned}"
             p.font.size = Pt(13)
-            p.font.color.rgb = theme["text_dark"]
+            p.font.color.rgb = RGBColor(255, 255, 255)
             p.font.name = "Arial"
             p.space_after = Pt(10)
 
@@ -2135,7 +2118,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             p = concl_tf.paragraphs[0]
             p.text = "Taqdimot mavzusi to'liq yoritildi va asosiy masalalar muhokama qilindi."
             p.font.size = Pt(22)
-            p.font.color.rgb = theme["text_dark"]
+            p.font.color.rgb = RGBColor(255, 255, 255)
 
         # Slide N-1: Foydalanilgan adabiyotlar
         ref_slide = prs.slides.add_slide(blank_layout)
@@ -2168,7 +2151,7 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             p.text = f"{r_idx + 1}.  {t_cleaned}"
             p.font.size = font_sz
             p.font.bold = False
-            p.font.color.rgb = theme["text_dark"]
+            p.font.color.rgb = RGBColor(255, 255, 255)
             p.font.name = "Arial"
             p.space_after = spacing
 

@@ -115,6 +115,7 @@ async def generate_gamma_presentation(
         f"Mavzu: {topic}\n"
         f"Til: {lang_info['prompt']}\n"
         f"Dizayn va vizual estetika: {visual_style}\n"
+        f"Talab: Matn harflari va sarlavhalar har doim to'q fonda aniq va tiniq ko'rinishi uchun OQ rangda (white font) bo'lsin, qora xira harflardan foydalanilmasin. Slaydlar daftarning oq varag'iga o'xshab qolmasin, balki zamonaviy hashamatli infografik taqdimot uslubida shakllantirilsin.\n"
         f"Uslub: OTM talabalari uchun akademik, professional, boy ilmiy ma'lumotlar va jozibador vizual infografikalar bilan.\n"
     )
     if author_info:
