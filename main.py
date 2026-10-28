@@ -809,7 +809,7 @@ async def setup_bot_commands(bot: Bot):
     try:
         await bot.set_chat_menu_button(
             menu_button=MenuButtonWebApp(
-                text="🖼 Fon rasmini tanlash",
+                text="🪄 Gamma AI Shablonlari",
                 web_app=WebAppInfo(url=config.THEMES_WEBAPP_URL)
             )
         )
