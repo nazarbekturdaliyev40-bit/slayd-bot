@@ -33,7 +33,7 @@ THEMES_HTML = """<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Fanlar bo'yicha slayd fonlari — PowerPoint 2016</title>
+  <title>🪄 Gamma AI Taqdimot Shablonlari</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
@@ -312,6 +312,7 @@ THEMES_HTML = """<!DOCTYPE html>
 
   <script>
     const tg = window.Telegram?.WebApp;
+    const API_BASE = window.location.origin.includes("github.io") ? "https://slayd-bot-2.onrender.com" : "";
     if (tg) {
       tg.ready();
       tg.expand();
@@ -558,7 +559,7 @@ THEMES_HTML = """<!DOCTYPE html>
         const btnClass = t.isGamma ? "select-btn gamma-btn" : "select-btn";
         card.innerHTML = `
           <div class="slide-preview-wrap">
-            <img src="/preview/${t.id.replace(':', '_')}.png" alt="${t.title}" class="slide-preview-img" onerror="this.onerror=null;this.parentElement.style.background='${t.bg}'" />
+            <img src="previews/${t.id.replace(':', '_')}.png" alt="${t.title}" class="slide-preview-img" onerror="this.onerror=null;this.parentElement.style.background='${t.bg}'" />
             <div class="slide-badge">${t.badge}</div>
           </div>
           <div class="card-content">
@@ -625,7 +626,7 @@ THEMES_HTML = """<!DOCTYPE html>
 
       // 2. HTTP POST orqali yuborish (Inline button ochilganda ham 100% ishlaydi)
       if (userId) {
-        fetch("/api/select-theme", {
+        fetch(API_BASE + "/api/select-theme", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user_id: userId, theme: theme.id, initData: tg?.initData || "" })
@@ -643,7 +644,7 @@ THEMES_HTML = """<!DOCTYPE html>
     // Asinxron ravishda Gamma hisobidagi maxsus temalarni yuklash
     async function loadWorkspaceGammaThemes() {
       try {
-        const resp = await fetch("/api/gamma-themes");
+        const resp = await fetch(API_BASE + "/api/gamma-themes");
         if (!resp.ok) return;
         const data = await resp.json();
         if (data.themes && Array.isArray(data.themes) && data.themes.length > 0) {
@@ -709,8 +710,8 @@ class HealthHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps({"themes": themes_list}).encode("utf-8"))
             return
 
-        # Slayd fonlari rasmlarini ko'rsatish (/preview/circuit.png ...)
-        if self.path.startswith("/preview/"):
+        # Slayd fonlari rasmlarini ko'rsatish (/preview/circuit.png yoki /previews/...)
+        if self.path.startswith("/preview/") or self.path.startswith("/previews/"):
             fname = os.path.basename(self.path.split("?")[0])
             fpath = os.path.join(os.path.dirname(__file__), "previews", fname)
             if os.path.exists(fpath):
