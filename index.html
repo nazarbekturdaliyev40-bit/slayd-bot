@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Fanlar bo'yicha slayd fonlari — PowerPoint 2016</title>
+  <title>🪄 Gamma AI Taqdimot Shablonlari</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
@@ -282,6 +282,7 @@
 
   <script>
     const tg = window.Telegram?.WebApp;
+    const API_BASE = window.location.origin.includes("github.io") ? "https://slayd-bot-2.onrender.com" : "";
     if (tg) {
       tg.ready();
       tg.expand();
@@ -528,7 +529,7 @@
         const btnClass = t.isGamma ? "select-btn gamma-btn" : "select-btn";
         card.innerHTML = `
           <div class="slide-preview-wrap">
-            <img src="/preview/${t.id.replace(':', '_')}.png" alt="${t.title}" class="slide-preview-img" onerror="this.onerror=null;this.parentElement.style.background='${t.bg}'" />
+            <img src="previews/${t.id.replace(':', '_')}.png" alt="${t.title}" class="slide-preview-img" onerror="this.onerror=null;this.parentElement.style.background='${t.bg}'" />
             <div class="slide-badge">${t.badge}</div>
           </div>
           <div class="card-content">
@@ -595,7 +596,7 @@
 
       // 2. HTTP POST orqali yuborish (Inline button ochilganda ham 100% ishlaydi)
       if (userId) {
-        fetch("/api/select-theme", {
+        fetch(API_BASE + "/api/select-theme", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user_id: userId, theme: theme.id, initData: tg?.initData || "" })
@@ -613,7 +614,7 @@
     // Asinxron ravishda Gamma hisobidagi maxsus temalarni yuklash
     async function loadWorkspaceGammaThemes() {
       try {
-        const resp = await fetch("/api/gamma-themes");
+        const resp = await fetch(API_BASE + "/api/gamma-themes");
         if (!resp.ok) return;
         const data = await resp.json();
         if (data.themes && Array.isArray(data.themes) && data.themes.length > 0) {
