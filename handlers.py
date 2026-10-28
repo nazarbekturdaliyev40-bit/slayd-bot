@@ -1466,8 +1466,19 @@ THEME_TITLES = {
     "white": "⚪️ Arxitektura, Galereya va Minimalizm (Minimal Oq)",
     "navy": "🔵 Davlat boshqaruvi va Huquq (Royal Navy)",
     "purple": "🟣 Innovatsiyalar va Ijodiyot (Kosmik Binafsha)",
-    "gamma": "🪄 Gamma AI (gamma.app taqdimot)"
+    "gamma": "🪄 Gamma AI (Universal Auto)",
+    "gamma_auto": "🪄 Gamma AI (Universal Auto)",
+    "gamma_cyber": "🪄 Gamma AI (Cyber & Dark Neon)",
+    "gamma_obsidian": "🪄 Gamma AI (Obsidian & Gold Lux)",
+    "gamma_emerald": "🪄 Gamma AI (Emerald & Clean Mind)",
+    "gamma_academic": "🪄 Gamma AI (Royal Academic)",
+    "gamma_pastel": "🪄 Gamma AI (Pastel & Sunset Prism)"
 }
+
+def is_valid_theme(t: str) -> bool:
+    if not t:
+        return False
+    return t.startswith("gamma") or t in generator.THEMES or t in THEME_TITLES or t == "mix"
 
 
 async def send_theme_selection_window(target_message: Message, state: FSMContext, edit: bool = False):
@@ -1482,8 +1493,9 @@ async def send_theme_selection_window(target_message: Message, state: FSMContext
         f"📌 Mavzu: <b>{safe_topic}</b>\n"
         f"📄 Slaydlar soni: <b>{slide_count} ta</b>\n\n"
         "Taqdimotingiz fanning mazmuniga toʻliq mos va chiroyli chiqishi uchun quyidagilardan birini tanlang:\n\n"
-        "1️⃣ <b>Fon rasmini tanlash</b> — Mini ilova orqali tayyor shablonlardan birini tanlash\n"
-        "2️⃣ <b>Oʻz fon rasmingizni yuklash</b> — Oʻzingiz xohlagan maxsus rasmni yuborish"
+        "1️⃣ <b>Fon rasmini tanlash</b> — Mini ilova orqali <b>Gamma AI</b> va fan shablonlarini tanlash\n"
+        "2️⃣ <b>Tezkor Gamma AI</b> — Neyrotarmoq orqali avtomatik premium dizayn\n"
+        "3️⃣ <b>Oʻz fon rasmingizni yuklash</b> — Oʻzingiz xohlagan maxsus rasmni yuborish"
     )
     reply_markup = keyboards.get_theme_selection_keyboard()
     collage_path = os.path.join(os.path.dirname(__file__), "previews", "all_themes_collage.jpg")
@@ -1702,7 +1714,7 @@ async def process_theme_choice(callback: CallbackQuery, state: FSMContext):
 async def process_web_app_theme(message: Message, state: FSMContext):
     """Telegram WebApp orqali tanlangan fonga muvofiq zudlik bilan slayd tayyorlash."""
     data_str = (message.web_app_data.data or "").strip()
-    theme_key = data_str if (data_str in generator.THEMES or data_str == "mix") else "mix"
+    theme_key = data_str if is_valid_theme(data_str) else "mix"
 
     if message.from_user.id in ACTIVE_GENERATING_USERS:
         await message.answer("⏳ Sizning avvalgi slaydingiz tayyorlanmoqda. Iltimos, u yakunlanishini kuting!")
@@ -1766,7 +1778,7 @@ async def handle_theme_from_webapp(user_id: int, theme_id: str, bot: Bot, dp: Di
     key = StorageKey(bot_id=bot.id, chat_id=user_id, user_id=user_id)
     state = FSMContext(storage=dp.fsm.storage, key=key)
 
-    theme_key = theme_id if (theme_id in generator.THEMES or theme_id == "mix") else "mix"
+    theme_key = theme_id if is_valid_theme(theme_id) else "mix"
     data = await state.get_data()
     topic = data.get("topic")
 
@@ -1937,11 +1949,12 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
     temp_dir = None
 
     try:
-        if theme_choice == "gamma":
+        if theme_choice.startswith("gamma"):
             if not gamma_service.is_gamma_available():
                 await status_msg.edit_text(
                     f"⚠️ <b>Gamma API kaliti hali kiritilmagan.</b>\n"
-                    f"Bot sizga yuqori sifatli infografik taqdimot tayyorlamoqda... ⏳",
+                    f"Admin <code>/set_gamma YOUR_KEY</code> orqali Gamma API kalitini sozlashi mumkin.\n\n"
+                    f"🔄 <i>Bot avtomatik ravishda PowerPoint generatoriga ulanmoqda...</i> ⏳",
                     parse_mode="HTML"
                 )
                 theme_choice = "blue"
@@ -1952,12 +1965,18 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
                     except Exception:
                         pass
 
+                gamma_theme_id = None
+                if ":" in theme_choice:
+                    gamma_theme_id = theme_choice.split(":", 1)[1].strip()
+
                 gamma_res = await gamma_service.generate_gamma_presentation(
                     topic=topic,
                     num_cards=slide_count,
                     author_info=author_info,
                     status_callback=update_gamma_status,
-                    language=slide_language
+                    language=slide_language,
+                    theme_choice=theme_choice,
+                    theme_id=gamma_theme_id
                 )
                 if gamma_res.get("success") and gamma_res.get("file_path"):
                     pptx_path = gamma_res["file_path"]
@@ -2003,11 +2022,13 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
                     bot_user = await chat_message.bot.get_me()
                     share_url = f"https://t.me/share/url?url=https://t.me/{bot_user.username}?start=ref_{user_id}&text=Sun'iy%20intellekt%20yordamida%20talabalar%20uchun%20professional%20taqdimotlar%20tayyorlang!%20%F0%9F%8E%81%20Bepul%20sinab%20ko'rish:"
 
+                    chosen_title = THEME_TITLES.get(theme_choice, "Gamma AI Uslubi")
                     pptx_document = FSInputFile(pptx_path, filename=f"{safe_name}.pptx")
                     caption_html = (
                         f"🎉 <b>Gamma AI taqdimotingiz muvaffaqiyatli tayyorlandi!</b>\n\n"
                         f"📄 Mavzu: <i>{safe_topic}</i>\n"
                         f"🪄 AI platforma: <b>Gamma.app (Premium AI)</b>\n"
+                        f"🎨 Uslub / Fon: <b>{chosen_title}</b>\n"
                         f"📊 Kartalar soni: <b>{slide_count} ta</b>\n"
                         f"📁 Format: <b>PowerPoint (.pptx)</b> — to'liq tahrirlanadigan\n"
                         f"💡 Qolgan limitingiz: {limit_caption}\n\n"
@@ -2515,6 +2536,30 @@ async def admin_set_gamma(message: Message):
     else:
         await message.answer("❌ API kalitini saqlashda xatolik yuz berdi.")
 
+@router.message(Command("gamma_themes"))
+async def admin_gamma_themes(message: Message):
+    if not config.is_admin(message.from_user.id):
+        return
+    if not gamma_service.is_gamma_available():
+        await message.answer(
+            "⚠️ Gamma API kaliti sozlanmagan.\n"
+            "Avval <code>/set_gamma YOUR_KEY</code> orqali kalitni kiriting.",
+            parse_mode="HTML"
+        )
+        return
+    status = await message.answer("🔍 Gamma hisobidagi temalar tekshirilmoqda...")
+    themes = await gamma_service.get_gamma_themes(limit=30)
+    if not themes:
+        await status.edit_text("ℹ️ Gamma hisobida temalar topilmadi yoki API javob bermadi.")
+        return
+    lines = ["🪄 <b>Gamma hisobidagi mavjud temalar:</b>\n"]
+    for t in themes:
+        t_id = t.get("id", "")
+        t_name = t.get("name", "Nomsiz")
+        t_type = t.get("type", "standard")
+        lines.append(f"• <b>{t_name}</b> ({t_type}) — <code>{t_id}</code>")
+    await status.edit_text("\n".join(lines), parse_mode="HTML")
+
 @router.message(F.text.in_({"⚙️ Admin panel", "⚙️ Админ панель", "⚙️ Admin Panel", "📈 Statistika", "📈 Статистика", "📈 Statistics"}))
 @router.message(Command("stats"))
 async def admin_panel(message: Message):
@@ -2531,6 +2576,7 @@ async def admin_panel(message: Message):
         f"🤝 Jami taklif qilingan do'stlar: **{stats.get('total_referrals', 0)} ta**\n"
         f"🪄 Gamma AI integratsiyasi: **{gamma_status}**\n\n"
         f"🔑 Gamma kalitini kiritish: `/set_gamma <API_KEY>`\n"
+        f"🎨 Gamma temalarini ko'rish: `/gamma_themes`\n"
         f"👑 VIP maqom berish: `/set_vip <id>`\n"
         f"🚫 VIP ni bekor qilish: `/remove_vip <id>`\n"
         f"➕ Limit qo'shish: `/add_limit <id> <soni>`\n"

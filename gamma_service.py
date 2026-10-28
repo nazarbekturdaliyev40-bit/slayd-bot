@@ -9,9 +9,44 @@ logger = logging.getLogger(__name__)
 
 GAMMA_API_BASE = "https://public-api.gamma.app/v1.0"
 
+GAMMA_THEME_PROMPTS = {
+    "gamma": "Universal, zamonaviy va professional korporativ infografika dizayni.",
+    "gamma_auto": "Universal, zamonaviy va professional korporativ infografika dizayni.",
+    "gamma_cyber": "Qorong'u kiber-texnologiya, IT, dasturlash va neon vizual aksentlar uslubida (Dark Neon Tech / Cyberpunk). Yuqori texnologik ikonka va kartalar.",
+    "gamma_obsidian": "Premium hashamatli qora obsidian, oltin aksentlar va professional biznes pitch-deck uslubida (Obsidian & Gold Lux).",
+    "gamma_emerald": "Toza zumrad yashil, ochiq tibbiyot, biologiya, ekologiya va salomatlik uslubida (Fresh Emerald & Clean Health).",
+    "gamma_academic": "Klassik nufuzli universitet, OTM ilmiy anjumani, akademik, ilmiy va tahliliy uslubda (Royal Academic Editorial).",
+    "gamma_pastel": "Yumshoq pastel ranglar, zamonaviy dizayn, san'at va marketing infografikasi uslubida (Pastel Prism & Creative Art)."
+}
+
 def is_gamma_available() -> bool:
     """Tekshiradi: Gamma API kaliti sozlanganmi?"""
     return bool(config.GAMMA_API_KEY and len(config.GAMMA_API_KEY.strip()) > 5)
+
+async def get_gamma_themes(limit: int = 50) -> list:
+    """Gamma API dan barcha mavjud temalarni (standard va custom) tortib oladi."""
+    if not is_gamma_available():
+        return []
+
+    headers = {
+        "X-API-KEY": config.GAMMA_API_KEY,
+        "Content-Type": "application/json"
+    }
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                f"{GAMMA_API_BASE}/themes?limit={limit}",
+                headers=headers,
+                timeout=aiohttp.ClientTimeout(total=15)
+            ) as resp:
+                if resp.status == 200:
+                    data = await resp.json()
+                    return data.get("data", [])
+                else:
+                    logger.warning(f"Gamma get_themes HTTP {resp.status}")
+    except Exception as e:
+        logger.error(f"Gamma get_themes error: {e}")
+    return []
 
 def save_gamma_key(new_key: str) -> bool:
     """Yangi Gamma API kalitini saqlaydi va konfiguratsiyani yangilaydi."""
@@ -46,7 +81,9 @@ async def generate_gamma_presentation(
     export_as: str = "pptx",
     author_info: str = "",
     status_callback = None,
-    language: str = "uz"
+    language: str = "uz",
+    theme_choice: str = "gamma",
+    theme_id: str = None
 ) -> dict:
     """
     Gamma.app API (v1.0) orqali professional taqdimot yaratadi.
@@ -67,9 +104,17 @@ async def generate_gamma_presentation(
     import locales
     lang_info = locales.get_slide_lang_info(language)
 
+    # Maxsus vizual uslub va dizayn tavsifi
+    clean_choice = theme_choice.split(":")[0] if ":" in theme_choice else theme_choice
+    visual_style = GAMMA_THEME_PROMPTS.get(
+        clean_choice,
+        "Zamonaviy, yuqori sifatli va professional korporativ infografika dizayni."
+    )
+
     full_prompt = (
         f"Mavzu: {topic}\n"
         f"Til: {lang_info['prompt']}\n"
+        f"Dizayn va vizual estetika: {visual_style}\n"
         f"Uslub: OTM talabalari uchun akademik, professional, boy ilmiy ma'lumotlar va jozibador vizual infografikalar bilan.\n"
     )
     if author_info:
@@ -85,6 +130,8 @@ async def generate_gamma_presentation(
         "numCards": clamped_cards,
         "exportAs": export_as
     }
+    if theme_id:
+        payload["themeId"] = theme_id
 
     async with aiohttp.ClientSession() as session:
         # 1. Start generation

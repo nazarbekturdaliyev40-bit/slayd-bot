@@ -226,21 +226,25 @@ def get_skip_author_keyboard(lang: str = "uz") -> InlineKeyboardMarkup:
     ])
 
 def get_theme_selection_keyboard() -> InlineKeyboardMarkup:
-    """Faqat 3 ta asosiy tugma: Fon rasmini tanlash, O'z fon rasmini yuklash, Bekor qilish."""
+    """Asosiy tugmalar: Mini ilova orqali fon tanlash, Gamma AI, O'z fonini yuklash, Bekor qilish."""
     webapp_url = getattr(config, "THEMES_WEBAPP_URL", "https://slayd-bot-2.onrender.com/themes")
     return InlineKeyboardMarkup(inline_keyboard=[
-        # 1. Fon rasmini tanlash (Mini ilova orqali fanlar bo'yicha shablonlar)
+        # 1. Fon rasmini tanlash (Mini ilova orqali Gamma AI va fanlar bo'yicha shablonlar)
         [
             InlineKeyboardButton(
-                text="🖼 Fon rasmini tanlash",
+                text="🎨 Fon rasmini tanlash (Mini ilova)",
                 web_app=WebAppInfo(url=webapp_url)
             )
         ],
-        # 2. O'z fon rasmini yuklash
+        # 2. Tezkor Gamma AI tugmasi
+        [
+            InlineKeyboardButton(text="🪄 Gamma AI (Avtomatik dizayn)", callback_data="theme_gamma")
+        ],
+        # 3. O'z fon rasmini yuklash
         [
             InlineKeyboardButton(text="📤 Oʻz fon rasmingizni yuklash", callback_data="theme_custom_bg")
         ],
-        # 3. Bekor qilish
+        # 4. Bekor qilish
         [
             InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_generation")
         ]

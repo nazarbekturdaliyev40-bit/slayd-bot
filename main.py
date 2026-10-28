@@ -233,6 +233,19 @@ THEMES_HTML = """<!DOCTYPE html>
     .select-btn:active {
       opacity: 0.85;
     }
+    .theme-card.gamma-card {
+      border: 1.5px solid rgba(168, 85, 247, 0.45);
+      box-shadow: 0 4px 14px rgba(168, 85, 247, 0.12);
+    }
+    .theme-card.gamma-card:hover {
+      border-color: #c084fc;
+      box-shadow: 0 6px 20px rgba(168, 85, 247, 0.28);
+    }
+    .select-btn.gamma-btn {
+      background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(124, 58, 237, 0.35);
+    }
     .overlay {
       position: fixed;
       top: 0;
@@ -307,6 +320,7 @@ THEMES_HTML = """<!DOCTYPE html>
 
     const categories = [
       { id: "all", name: "🔀 Barchasi" },
+      { id: "gamma", name: "🪄 Gamma AI Uslublari" },
       { id: "it", name: "💻 IT & Axborot" },
       { id: "med", name: "🩺 Tibbiyot" },
       { id: "eco", name: "🌿 Tabiat & Eko" },
@@ -319,6 +333,78 @@ THEMES_HTML = """<!DOCTYPE html>
     ];
 
     const themes = [
+      {
+        id: "gamma",
+        category: "gamma",
+        categoryTitle: "🪄 Gamma AI — Universal & Intellektual",
+        title: "Gamma AI (Universal Auto)",
+        badge: "🪄 Gamma AI",
+        desc: "Gamma neyrotarmog'i mavzuni tahlil qilib, eng optimal infografika, kartalar va premium dizaynni o'zi tanlaydi.",
+        tags: ["#GammaAI", "#AutoDesign", "#Premium", "#Infografika"],
+        bg: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%)",
+        accent: "#c084fc",
+        isGamma: true
+      },
+      {
+        id: "gamma_cyber",
+        category: "gamma",
+        categoryTitle: "🪄 Gamma AI — IT, Kiber & Dasturlash",
+        title: "Gamma Cyber & Dark Neon",
+        badge: "🪄 Gamma IT",
+        desc: "IT dasturlash tillari, kiberxavfsizlik, AI va startap texnologiyalar uchun qorong'u kiber-neon Gamma dizayni.",
+        tags: ["#Gamma", "#Cyber", "#DarkNeon", "#IT", "#AI"],
+        bg: "linear-gradient(135deg, #020617 0%, #0891b2 50%, #0284c7 100%)",
+        accent: "#06b6d4",
+        isGamma: true
+      },
+      {
+        id: "gamma_obsidian",
+        category: "gamma",
+        categoryTitle: "🪄 Gamma AI — Biznes, Moliya & Startap",
+        title: "Gamma Obsidian & Gold Lux",
+        badge: "🪄 Gamma Biznes",
+        desc: "Biznes reja, startap pitch deck, investitsiya va iqtisodiy hisobotlar uchun nufuzli qora-oltin obsidian foni.",
+        tags: ["#Gamma", "#Obsidian", "#Startap", "#Biznes", "#PitchDeck"],
+        bg: "linear-gradient(135deg, #18181b 0%, #27272a 50%, #ca8a04 100%)",
+        accent: "#eab308",
+        isGamma: true
+      },
+      {
+        id: "gamma_emerald",
+        category: "gamma",
+        categoryTitle: "🪄 Gamma AI — Tibbiyot, Anatomiya & Eko",
+        title: "Gamma Emerald & Clean Mind",
+        badge: "🪄 Gamma Eko/Med",
+        desc: "Tibbiyot, anatomiya, farmatsevtika, biologiya va ekologiya uchun toza zumrad yashil va yangi g'oyalar uslubi.",
+        tags: ["#Gamma", "#Emerald", "#Tibbiyot", "#Ekologiya", "#Salomatlik"],
+        bg: "linear-gradient(135deg, #064e3b 0%, #059669 50%, #10b981 100%)",
+        accent: "#10b981",
+        isGamma: true
+      },
+      {
+        id: "gamma_academic",
+        category: "gamma",
+        categoryTitle: "🪄 Gamma AI — OTM, Fan & Dissertatsiya",
+        title: "Gamma Royal Academic",
+        badge: "🪄 Gamma Akademik",
+        desc: "OTM talabalari, kurs ishlari, BMI, dissertatsiya va nufuzli ilmiy konferensiyalar uchun jiddiy akademik shablon.",
+        tags: ["#Gamma", "#Akademik", "#OTM", "#Tadqiqot", "#BMI"],
+        bg: "linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%)",
+        accent: "#818cf8",
+        isGamma: true
+      },
+      {
+        id: "gamma_pastel",
+        category: "gamma",
+        categoryTitle: "🪄 Gamma AI — San'at, Madaniyat & Dizayn",
+        title: "Gamma Pastel & Sunset Prism",
+        badge: "🪄 Gamma San'at",
+        desc: "Grafik dizayn, arxitektura, madaniyat, marketing va ijodiy taqdimotlar uchun zamonaviy pastel gradyent.",
+        tags: ["#Gamma", "#Pastel", "#Dizayn", "#Marketing", "#Prism"],
+        bg: "linear-gradient(135deg, #e11d48 0%, #f43f5e 50%, #f59e0b 100%)",
+        accent: "#f43f5e",
+        isGamma: true
+      },
       {
         id: "mix",
         category: "mix",
@@ -535,11 +621,13 @@ THEMES_HTML = """<!DOCTYPE html>
       }
       list.forEach(t => {
         const card = document.createElement("div");
-        card.className = "theme-card";
+        card.className = `theme-card ${t.isGamma ? "gamma-card" : ""}`;
         card.onclick = () => selectTheme(t);
+        const btnText = t.isGamma ? "🪄 Gamma AI bilan tayyorlash" : "🚀 Ushbu fonga tayyorlash";
+        const btnClass = t.isGamma ? "select-btn gamma-btn" : "select-btn";
         card.innerHTML = `
           <div class="slide-preview-wrap">
-            <img src="/preview/${t.id}.png" alt="${t.title}" class="slide-preview-img" onerror="this.onerror=null;this.parentElement.style.background='${t.bg}'" />
+            <img src="/preview/${t.id.replace(':', '_')}.png" alt="${t.title}" class="slide-preview-img" onerror="this.onerror=null;this.parentElement.style.background='${t.bg}'" />
             <div class="slide-badge">${t.badge}</div>
           </div>
           <div class="card-content">
@@ -547,8 +635,8 @@ THEMES_HTML = """<!DOCTYPE html>
             <div class="theme-title">${t.title}</div>
             <div class="theme-desc">${t.desc}</div>
             <div class="tags">${t.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}</div>
-            <button class="select-btn" onclick="event.stopPropagation(); selectThemeById('${t.id}')">
-              🚀 Ushbu fonga tayyorlash
+            <button class="${btnClass}" onclick="event.stopPropagation(); selectThemeById('${t.id}')">
+              ${btnText}
             </button>
           </div>
         `;
@@ -584,6 +672,12 @@ THEMES_HTML = """<!DOCTYPE html>
       }
       const overlay = document.getElementById("loadingOverlay");
       document.getElementById("overlayTitle").textContent = `${theme.title} tanlandi!`;
+      const overlaySub = overlay.querySelector(".overlay-sub");
+      if (overlaySub) {
+        overlaySub.textContent = theme.isGamma
+          ? "🪄 Gamma AI taqdimotingizni shakllantirmoqda..."
+          : "🚀 Taqdimotingiz tayyorlanmoqda...";
+      }
       overlay.classList.remove("hidden");
 
       const user = tg?.initDataUnsafe?.user;
@@ -614,6 +708,38 @@ THEMES_HTML = """<!DOCTYPE html>
 
     renderCategories();
     renderThemes(themes);
+
+    // Asinxron ravishda Gamma hisobidagi maxsus temalarni yuklash
+    async function loadWorkspaceGammaThemes() {
+      try {
+        const resp = await fetch("/api/gamma-themes");
+        if (!resp.ok) return;
+        const data = await resp.json();
+        if (data.themes && Array.isArray(data.themes) && data.themes.length > 0) {
+          data.themes.forEach(gt => {
+            const customId = `gamma:${gt.id}`;
+            if (!themes.some(x => x.id === customId)) {
+              themes.push({
+                id: customId,
+                category: "gamma",
+                categoryTitle: `🪄 Gamma Workspace — ${gt.type === "custom" ? "Maxsus Tema" : "Standart"}`,
+                title: gt.name || "Gamma Custom Theme",
+                badge: "🪄 Gamma Theme",
+                desc: `Sizning Gamma hisobingizdagi brend uslubi (${(gt.colorKeywords || []).join(", ") || "Gamma uslubi"}).`,
+                tags: ["#GammaTheme", "#Workspace", "#Custom", "#AI"],
+                bg: "linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #7c3aed 100%)",
+                accent: "#c084fc",
+                isGamma: true
+              });
+            }
+          });
+          filterThemes();
+        }
+      } catch(e) {
+        console.log("Gamma themes load error:", e);
+      }
+    }
+    loadWorkspaceGammaThemes();
   </script>
 </body>
 </html>
@@ -628,6 +754,24 @@ class HealthHandler(BaseHTTPRequestHandler):
             self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write(b"Bot is running 24/7!")
+            return
+
+        # Gamma hisobidagi mavjud temalar ro'yxatini qaytarish
+        if self.path.startswith("/api/gamma-themes"):
+            import gamma_service
+            themes_list = []
+            if gamma_service.is_gamma_available():
+                if MAIN_LOOP and not MAIN_LOOP.is_closed():
+                    try:
+                        fut = asyncio.run_coroutine_threadsafe(gamma_service.get_gamma_themes(), MAIN_LOOP)
+                        themes_list = fut.result(timeout=6)
+                    except Exception as e:
+                        logger.warning(f"Error fetching gamma themes: {e}")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(json.dumps({"themes": themes_list}).encode("utf-8"))
             return
 
         # Slayd fonlari rasmlarini ko'rsatish (/preview/circuit.png ...)
