@@ -405,18 +405,6 @@ THEMES_HTML = """<!DOCTYPE html>
         isGamma: true
       },
       {
-        id: "gamma_academic",
-        category: "academic",
-        categoryTitle: "🎓 OTM, Fan & Dissertatsiya",
-        title: "Gamma Royal Academic",
-        badge: "🎓 OTM & BMI",
-        desc: "OTM talabalari, kurs ishlari, BMI, dissertatsiya va nufuzli ilmiy konferensiyalar uchun jiddiy akademik Gamma shablon.",
-        tags: ["#Gamma", "#Akademik", "#OTM", "#Tadqiqot", "#BMI"],
-        bg: "linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%)",
-        accent: "#818cf8",
-        isGamma: true
-      },
-      {
         id: "gamma_amber",
         category: "academic",
         categoryTitle: "🎓 Tarix, Falsafa & Madaniy Meros",

@@ -1823,12 +1823,8 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             for b_idx, bullet in enumerate(bullets):
                 _add_styled_bullet(ctf, bullet, curr_theme, font_size=font_sz, space_after=space_aft, is_first=(b_idx == 0))
 
-        # Speaker notes
-        notes = s_data.get("speaker_notes", "")
-        if notes:
-            notes_slide = c_slide.notes_slide
-            text_frame = notes_slide.notes_text_frame
-            text_frame.text = f"Ma'ruza nutqi:\n{notes}"
+        # Speaker notes matni alohida doklad fayli sifatida yuboriladi,
+        # PPTX slaydlariga ortiqcha daftardek qog'oz varog'i qo'shilmaydi.
 
     # References ro'yxatini tozalash va tekshirish
     clean_refs = []
