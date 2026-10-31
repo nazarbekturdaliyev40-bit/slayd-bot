@@ -1232,6 +1232,10 @@ def _create_hero_slide(prs, blank_layout, theme, title_text, subtitle_text, tota
     grp_name = str(author_details.get("group") or "").strip() if has_auth else ""
     dir_name = str(author_details.get("direction") or "").strip() if has_auth else ""
 
+    # Subtitle bo'sh bo'lib qolmasligi uchun kafolat
+    if not subtitle_text or not subtitle_text.strip():
+        subtitle_text = f"Mavzuning nazariy va amaliy asoslari bo'yicha kompleks ilmiy tahlil"
+
     if cover_img and os.path.exists(cover_img):
         t_box = topic_slide.shapes.add_textbox(Inches(0.9), Inches(1.25), Inches(7.0), Inches(1.8))
         t_tf = t_box.text_frame
@@ -1243,20 +1247,37 @@ def _create_hero_slide(prs, blank_layout, theme, title_text, subtitle_text, tota
         p_t.font.color.rgb = theme["accent"]
         p_t.font.name = "Arial"
 
-        if subtitle_text:
-            p_sub = t_tf.add_paragraph()
-            p_sub.text = remove_emojis(subtitle_text)
-            p_sub.font.size = Pt(14)
-            p_sub.font.color.rgb = theme["text_muted"]
-            p_sub.font.name = "Arial"
-            p_sub.space_before = Pt(6)
+        p_sub = t_tf.add_paragraph()
+        p_sub.text = remove_emojis(subtitle_text)
+        p_sub.font.size = Pt(14)
+        p_sub.font.color.rgb = theme["text_muted"]
+        p_sub.font.name = "Arial"
+        p_sub.space_before = Pt(6)
 
-        cl_box = topic_slide.shapes.add_textbox(Inches(0.9), Inches(3.25), Inches(7.0), Inches(3.8))
+        card_l = Inches(0.9)
+        card_t = Inches(3.25)
+        card_w = Inches(7.0)
+        card_h = Inches(3.8)
+
+        # Chap blok uchun zamonaviy karta konteyneri
+        bg_card = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, card_l, card_t, card_w, card_h)
+        bg_card.fill.solid()
+        bg_card.fill.fore_color.rgb = theme.get("card_bg", RGBColor(24, 34, 58))
+        bg_card.line.color.rgb = theme.get("accent", RGBColor(56, 189, 248))
+        bg_card.line.width = Pt(1.2)
+        try:
+            bg_card.adjustments[0] = 0.04
+        except Exception:
+            pass
+
+        bar_l = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, card_l + Inches(0.3), card_t + Inches(0.12), card_w - Inches(0.6), Inches(0.04))
+        bar_l.fill.solid()
+        bar_l.fill.fore_color.rgb = theme["accent"]
+        bar_l.line.fill.background()
+
+        cl_box = topic_slide.shapes.add_textbox(card_l + Inches(0.2), card_t + Inches(0.22), card_w - Inches(0.4), card_h - Inches(0.32))
         cl_tf = cl_box.text_frame
         cl_tf.word_wrap = True
-        cl_tf.margin_left = Inches(0.2)
-        cl_tf.margin_top = Inches(0.2)
-        cl_tf.margin_right = Inches(0.2)
 
         if has_auth:
             p_auth_h = cl_tf.paragraphs[0]
@@ -1357,7 +1378,23 @@ def _create_hero_slide(prs, blank_layout, theme, title_text, subtitle_text, tota
             ]
             for p_i, (c_tag, c_val1, c_val2) in enumerate(auth_cards):
                 px = p_start_x + p_i * (p_w + p_gap)
-                p_box = topic_slide.shapes.add_textbox(px, p_y, p_w, p_h)
+
+                p_card = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, px, p_y, p_w, p_h)
+                p_card.fill.solid()
+                p_card.fill.fore_color.rgb = theme.get("card_bg", RGBColor(24, 34, 58))
+                p_card.line.color.rgb = theme.get("accent", RGBColor(56, 189, 248))
+                p_card.line.width = Pt(1.2)
+                try:
+                    p_card.adjustments[0] = 0.05
+                except Exception:
+                    pass
+
+                c_bar = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, px + Inches(0.25), p_y + Inches(0.12), p_w - Inches(0.5), Inches(0.04))
+                c_bar.fill.solid()
+                c_bar.fill.fore_color.rgb = theme["accent"]
+                c_bar.line.fill.background()
+
+                p_box = topic_slide.shapes.add_textbox(px + Inches(0.15), p_y + Inches(0.22), p_w - Inches(0.3), p_h - Inches(0.32))
                 ptf = p_box.text_frame
                 ptf.word_wrap = True
                 pp1 = ptf.paragraphs[0]
@@ -1391,7 +1428,23 @@ def _create_hero_slide(prs, blank_layout, theme, title_text, subtitle_text, tota
 
             for p_i, (p_title, p_body) in enumerate(pillars):
                 px = p_start_x + p_i * (p_w + p_gap)
-                p_box = topic_slide.shapes.add_textbox(px, p_y, p_w, p_h)
+
+                p_card = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, px, p_y, p_w, p_h)
+                p_card.fill.solid()
+                p_card.fill.fore_color.rgb = theme.get("card_bg", RGBColor(24, 34, 58))
+                p_card.line.color.rgb = theme.get("accent", RGBColor(56, 189, 248))
+                p_card.line.width = Pt(1.2)
+                try:
+                    p_card.adjustments[0] = 0.05
+                except Exception:
+                    pass
+
+                c_bar = topic_slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, px + Inches(0.25), p_y + Inches(0.12), p_w - Inches(0.5), Inches(0.04))
+                c_bar.fill.solid()
+                c_bar.fill.fore_color.rgb = theme["accent"]
+                c_bar.line.fill.background()
+
+                p_box = topic_slide.shapes.add_textbox(px + Inches(0.15), p_y + Inches(0.22), p_w - Inches(0.3), p_h - Inches(0.32))
                 ptf = p_box.text_frame
                 ptf.word_wrap = True
                 pp1 = ptf.paragraphs[0]
@@ -1801,8 +1854,19 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         steps_data = s_data.get("steps_data", [])
 
         if layout_type == "kpi" and isinstance(kpi_items, list) and len(kpi_items) >= 2:
-            # 3 ta KPI karta (yuqoridan pastgacha to'liq to'ldirilgan)
-            items = kpi_items[:3]
+            # 3 ta KPI karta (yuqoridan pastgacha to'liq to'ldirilgan va teng taqsimlangan)
+            items = list(kpi_items[:3])
+            while len(items) < 3:
+                k_pad_idx = len(items) + 1
+                items.append({
+                    "number": "100%" if k_pad_idx == 3 else "2.5x",
+                    "label": f"Tizimli mezon {k_pad_idx}",
+                    "desc": f"{s_title}: Mazkur ko'rsatkich sohadagi asosiy texnologik parametrlar va innovatsion samaradorlik mezonlarining to'liq ta'minlanishini aks ettiradi.",
+                    "points": [
+                        "Standart mezonlari: Xalqaro va milliy talablarga to'liq muvofiqlik tahlili",
+                        "Amaliy natija: Real jarayonlarda yuqori ishonchlilik va samaradorlik kafolati"
+                    ]
+                })
             card_w = Inches(3.6)
             card_h = Inches(5.35)
             gap = Inches(0.366)
@@ -1897,9 +1961,18 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
 
         elif layout_type == "comparison" and isinstance(comparison_data, dict) and (comparison_data.get("col1_points") or comparison_data.get("col1_title")):
             col1_title = comparison_data.get("col1_title", "1-yondashuv")
-            col1_pts = comparison_data.get("col1_points", [])
+            col1_pts = list(comparison_data.get("col1_points", []))
             col2_title = comparison_data.get("col2_title", "2-yondashuv")
-            col2_pts = comparison_data.get("col2_points", [])
+            col2_pts = list(comparison_data.get("col2_points", []))
+
+            # Ikkala ustun bir xil teng va mukammal to'liq bo'lishini ta'minlash (kamida 4-5 ta band)
+            target_pts = max(4, min(5, max(len(col1_pts), len(col2_pts))))
+            while len(col1_pts) < target_pts:
+                p_pad = len(col1_pts) + 1
+                col1_pts.append(f"Tahliliy mezon {p_pad}: Mazkur tizimning asosiy parametrlari, operatsion xususiyatlari va amaliy samaradorligi chuqur o'rganilgan.")
+            while len(col2_pts) < target_pts:
+                p_pad = len(col2_pts) + 1
+                col2_pts.append(f"Qiyosiy ko'rsatkich {p_pad}: Yangi innovatsion yondashuvning texnologik afzalliklari, tezkorligi va xavfsizlik kafolatlari tahlili.")
 
             card_w = Inches(5.4)
             card_h = Inches(5.35)
@@ -1998,7 +2071,18 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
             vsp.alignment = PP_ALIGN.CENTER
 
         elif layout_type == "steps" and isinstance(steps_data, list) and len(steps_data) >= 2:
-            s_items = steps_data[:3]
+            s_items = list(steps_data[:3])
+            while len(s_items) < 3:
+                st_pad_idx = len(s_items) + 1
+                s_items.append({
+                    "step": f"0{st_pad_idx}",
+                    "title": f"{st_pad_idx}-bosqich: Monitoring va optimallashtirish",
+                    "desc": f"Jarayonlarni bosqichma-bosqich tatbiq etish, samaradorlik ko'rsatkichlarini doimiy tahlil qilish va yangi standartlar asosida takomillashtirish mexanizmi.",
+                    "points": [
+                        "Texnik nazorat: Tizimning barqaror ishlashi va sifat parametrlari tahlili",
+                        "Innovatsion rivoj: Yangi texnologik vositalar orqali tizimni modernizatsiya qilish"
+                    ]
+                })
             card_w = Inches(3.6)
             card_h = Inches(5.35)
             gap = Inches(0.366)
