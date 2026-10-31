@@ -320,18 +320,21 @@ THEMES_HTML = """<!DOCTYPE html>
     }
 
     const categories = [
-      { id: "all", name: "🪄 Barcha Gamma Shablonlari" },
-      { id: "tech", name: "⚡️ IT & Sun'iy Intellekt" },
-      { id: "business", name: "💼 Biznes & Startaplar" },
-      { id: "academic", name: "🎓 OTM & Ilmiy Ishlar" },
+      { id: "all", name: "🪄 Barcha Fonlar (40+)" },
+      { id: "tech", name: "⚡️ IT & Dasturlash" },
       { id: "med", name: "🩺 Tibbiyot & Salomatlik" },
-      { id: "creative", name: "🎨 Dizayn & San'at" },
-      { id: "nature", name: "🌿 Tabiat & Ekologiya" },
-      { id: "minimal", name: "✨ Minimalist & Tipografika" },
-      { id: "engineering", name: "📐 Muhandislik & Aniq Fanlar" }
+      { id: "business", name: "💼 Biznes & Moliya" },
+      { id: "academic", name: "🎓 OTM & Diplom Ishlari" },
+      { id: "education", name: "📚 Ta'lim & Pedagogika" },
+      { id: "humanities", name: "🏛 Tarix, Til & Huquq" },
+      { id: "engineering", name: "📐 Aniq Fanlar & Texnika" },
+      { id: "nature", name: "🌿 Agrar & Ekologiya" },
+      { id: "creative", name: "🎨 San'at, Sport & Turizm" },
+      { id: "minimal", name: "✨ Minimalist & Rasmiy" }
     ];
 
     const themes = [
+      // ================= AUTO & SMART =================
       {
         id: "gamma",
         category: "all",
@@ -344,172 +347,504 @@ THEMES_HTML = """<!DOCTYPE html>
         accent: "#c084fc",
         isGamma: true
       },
+
+      // ================= 1. IT, DASTURLASH & KIBERXAVFSIZLIK =================
       {
-        id: "gamma_cyber",
+        id: "cyber",
         category: "tech",
-        categoryTitle: "⚡️ IT, Kiberxavfsizlik & Dasturlash",
-        title: "Gamma Cyber & Dark Neon",
-        badge: "⚡️ IT & Kiber",
-        desc: "IT dasturlash tillari, kiberxavfsizlik, AI va startap texnologiyalar uchun qorong'u kiber-neon Gamma dizayni.",
-        tags: ["#Gamma", "#Cyber", "#DarkNeon", "#IT", "#AI"],
-        bg: "linear-gradient(135deg, #020617 0%, #0891b2 50%, #0284c7 100%)",
+        categoryTitle: "⚡️ IT, Kiberxavfsizlik & Tarmoqlar",
+        title: "Cyber Dark & Neon Cyan",
+        badge: "⚡️ Kiber & Tarmoq",
+        desc: "Kiberxavfsizlik, axborot himoyasi, tarmoq arxitekturasi va pentesting mavzulari uchun qorong'u kiber-neon fon.",
+        tags: ["#Kiberxavfsizlik", "#Tarmoqlar", "#Firewall", "#Cyber", "#DarkNeon"],
+        bg: "linear-gradient(135deg, #020617 0%, #083344 50%, #0e7490 100%)",
         accent: "#06b6d4",
         isGamma: true
       },
       {
-        id: "gamma_violet",
+        id: "ai_violet",
         category: "tech",
         categoryTitle: "⚡️ Sun'iy Intellekt & Robototexnika",
-        title: "Gamma Neon Violet & AI Future",
-        badge: "🤖 AI Future",
-        desc: "Mashinaviy o'rganish, neyrotarmoqlar, robototexnika va kelajak texnologiyalari uchun neon binafsha Gamma uslubi.",
-        tags: ["#AI", "#Robotics", "#NeonViolet", "#MachineLearning", "#Gamma"],
-        bg: "linear-gradient(135deg, #2e1065 0%, #581c87 50%, #7e22ce 100%)",
+        title: "AI Future & Neural Violet",
+        badge: "🤖 Sun'iy Intellekt",
+        desc: "Mashinaviy o'rganish, neyrotarmoqlar, robototexnika, ChatGPT va generativ AI mavzulari uchun neon binafsha fon.",
+        tags: ["#AI", "#Neyron", "#Robototexnika", "#MachineLearning", "#DeepLearning"],
+        bg: "linear-gradient(135deg, #1e1035 0%, #3b0764 50%, #6b21a8 100%)",
         accent: "#a855f7",
         isGamma: true
       },
       {
-        id: "gamma_obsidian",
-        category: "business",
-        categoryTitle: "💼 Biznes, Moliya & Startap",
-        title: "Gamma Obsidian & Gold Lux",
-        badge: "💼 Biznes & Moliya",
-        desc: "Biznes reja, startap pitch deck, investitsiya va iqtisodiy hisobotlar uchun nufuzli qora-oltin obsidian Gamma foni.",
-        tags: ["#Gamma", "#Obsidian", "#Startap", "#Biznes", "#PitchDeck"],
-        bg: "linear-gradient(135deg, #18181b 0%, #27272a 50%, #ca8a04 100%)",
-        accent: "#eab308",
-        isGamma: true
-      },
-      {
-        id: "gamma_ocean",
-        category: "business",
-        categoryTitle: "💼 FinTech, Bank & Analitika",
-        title: "Gamma Ocean & FinTech Analytics",
-        badge: "📊 FinTech",
-        desc: "Bank ishi, moliya bozori, audit, katta ma'lumotlar va korporativ analitika uchun chuqur okean Gamma foni.",
-        tags: ["#FinTech", "#Analitika", "#Bank", "#Audit", "#Ocean"],
-        bg: "linear-gradient(135deg, #0c4a6e 0%, #0369a1 50%, #0284c7 100%)",
-        accent: "#38bdf8",
-        isGamma: true
-      },
-      {
-        id: "gamma_crimson",
-        category: "business",
-        categoryTitle: "💼 Boshqaruv & Strategik Liderlik",
-        title: "Gamma Crimson & Executive Lead",
-        badge: "🏆 Boshqaruv",
-        desc: "Strategik boshqaruv, marketing, inqirozga qarshi menejment va yuqori darajadagi hisobotlar uchun qizil rubin uslub.",
-        tags: ["#Liderlik", "#Menejment", "#Strategiya", "#Crimson"],
-        bg: "linear-gradient(135deg, #450a0a 0%, #7f1d1d 50%, #991b1b 100%)",
-        accent: "#f87171",
-        isGamma: true
-      },
-      {
-        id: "gamma_amber",
-        category: "academic",
-        categoryTitle: "🎓 Tarix, Falsafa & Madaniy Meros",
-        title: "Gamma Vintage Amber & Heritage",
-        badge: "🏛 Tarix & Meros",
-        desc: "O'zbekiston tarixi, sharqshunoslik, adabiyot, falsafa va qadimiy sivilizatsiyalar merosi uchun iliq pergament foni.",
-        tags: ["#Tarix", "#Falsafa", "#Meros", "#Sharqshunoslik", "#Adabiyot"],
-        bg: "linear-gradient(135deg, #451a03 0%, #78350f 50%, #92400e 100%)",
-        accent: "#fbbf24",
-        isGamma: true
-      },
-      {
-        id: "gamma_solar",
-        category: "academic",
-        categoryTitle: "🎓 Pedagogika & Interaktiv Ta'lim",
-        title: "Gamma Solar & Modern Pedagogy",
-        badge: "📚 Zamonaviy Ta'lim",
-        desc: "Interaktiv ta'lim, pedagogika, psixologiya, innovatsion maktab metodikasi va yoshlar loyihalari uchun yorqin energiya.",
-        tags: ["#Pedagogika", "#Talim", "#Psixologiya", "#Metodika"],
-        bg: "linear-gradient(135deg, #7c2d12 0%, #c2410c 50%, #ea580c 100%)",
-        accent: "#f97316",
-        isGamma: true
-      },
-      {
-        id: "gamma_emerald",
-        category: "med",
-        categoryTitle: "🩺 Tibbiyot, Anatomiya & Eko",
-        title: "Gamma Emerald & Clean Mind",
-        badge: "🩺 Tibbiyot & Eko",
-        desc: "Tibbiyot, anatomiya, farmatsevtika, biologiya va ekologiya uchun toza zumrad yashil va yangi g'oyalar uslubi.",
-        tags: ["#Gamma", "#Emerald", "#Tibbiyot", "#Ekologiya", "#Salomatlik"],
-        bg: "linear-gradient(135deg, #064e3b 0%, #059669 50%, #10b981 100%)",
+        id: "tech_matrix",
+        category: "tech",
+        categoryTitle: "⚡️ Dasturlash & Algoritmlar",
+        title: "Terminal Code & Matrix Green",
+        badge: "💻 Dasturlash & Kod",
+        desc: "Python, Java, C++, algoritmlar, backend, Linux va DevOps bo'yicha amaliy dasturlash taqdimotlari.",
+        tags: ["#Dasturlash", "#Python", "#Backend", "#Linux", "#DevOps"],
+        bg: "linear-gradient(135deg, #02140d 0%, #064e3b 50%, #047857 100%)",
         accent: "#10b981",
         isGamma: true
       },
       {
-        id: "gamma_nordic",
-        category: "med",
-        categoryTitle: "🩺 Laboratoriya & Biotexnologiya",
-        title: "Gamma Nordic Glacier & Bio",
-        badge: "🔬 Bio Laboratoriya",
-        desc: "Klinik laboratoriyalar, genetika, stomatologiya, biotexnologiya va yuqori aniqlikdagi tibbiy tadqiqotlar.",
-        tags: ["#Laboratoriya", "#Genetika", "#Biotexnologiya", "#Klinika"],
-        bg: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0284c7 100%)",
+        id: "tech_cloud",
+        category: "tech",
+        categoryTitle: "⚡️ Bulutli Tizimlar & Big Data",
+        title: "Azure Cloud & Big Data",
+        badge: "☁️ Bulutli Tizimlar",
+        desc: "Katta ma'lumotlar (Big Data), AWS, Azure bulutli infratuzilmasi, serverlar va ma'lumotlar bazasi arxitekturasi.",
+        tags: ["#Cloud", "#BigData", "#Azure", "#AWS", "#DataScience"],
+        bg: "linear-gradient(135deg, #081d38 0%, #0f3d6b 50%, #0284c7 100%)",
         accent: "#38bdf8",
         isGamma: true
       },
       {
-        id: "gamma_pastel",
-        category: "creative",
-        categoryTitle: "🎨 San'at, Madaniyat & Dizayn",
-        title: "Gamma Pastel & Sunset Prism",
-        badge: "🎨 Dizayn & San'at",
-        desc: "Grafik dizayn, arxitektura, madaniyat, marketing va ijodiy taqdimotlar uchun zamonaviy pastel gradyent.",
-        tags: ["#Gamma", "#Pastel", "#Dizayn", "#Marketing", "#Prism"],
-        bg: "linear-gradient(135deg, #e11d48 0%, #f43f5e 50%, #f59e0b 100%)",
+        id: "tech_mobile",
+        category: "tech",
+        categoryTitle: "⚡️ Mobil Ilovalar & UI/UX",
+        title: "Mobile Dev & Flutter Coral",
+        badge: "📱 Mobil UI/UX",
+        desc: "Android, iOS, Flutter, React Native mobil dasturlar va zamonaviy ilovalar dizayni bo'yicha taqdimotlar.",
+        tags: ["#Mobile", "#Android", "#iOS", "#Flutter", "#UIUX"],
+        bg: "linear-gradient(135deg, #1f1124 0%, #4a154b 50%, #be185d 100%)",
+        accent: "#fb7185",
+        isGamma: true
+      },
+
+      // ================= 2. TIBBIYOT & SALOMATLIK =================
+      {
+        id: "med_clinic",
+        category: "med",
+        categoryTitle: "🩺 Tibbiyot, Anatomiya & Terapiya",
+        title: "Clinical Teal & Shifoxona",
+        badge: "🩺 Terapiya & Klinika",
+        desc: "Umumiy tibbiyot, ichki kasalliklar terapiyasi, diagnostika va shifoxona tizimlari uchun toza tibbiy teal fon.",
+        tags: ["#Tibbiyot", "#Klinika", "#Terapiya", "#Diagnostika", "#Shifokor"],
+        bg: "linear-gradient(135deg, #042621 0%, #065f46 50%, #0d9488 100%)",
+        accent: "#14b8a6",
+        isGamma: true
+      },
+      {
+        id: "med_pharma",
+        category: "med",
+        categoryTitle: "🩺 Farmatsevtika & Dorishunoslik",
+        title: "Farmatsevtika & Bio Yalpiz",
+        badge: "💊 Dori Vositalari",
+        desc: "Farmakologiya, dori vositalari texnologiyasi, kimyoviy preparatlar va vaksinalar ishlab chiqarish tadqiqotlari.",
+        tags: ["#Farmatsevtika", "#Dori", "#Vaksina", "#BioMint", "#Farmakologiya"],
+        bg: "linear-gradient(135deg, #05241b 0%, #044e3b 50%, #059669 100%)",
+        accent: "#10b981",
+        isGamma: true
+      },
+      {
+        id: "med_cardio",
+        category: "med",
+        categoryTitle: "🩺 Kardiologiya & Shoshilinch Yordam",
+        title: "Kardiologiya & Qon Tomir Qizil",
+        badge: "🫀 Kardiologiya & Jarrohlik",
+        desc: "Yurak-qon tomir kasalliklari, kardiologiya, shoshilinch tez yordam va reanimatsiya mavzulari uchun pulsatsiyali qizil fon.",
+        tags: ["#Kardiologiya", "#Yurak", "#Jarrohlik", "#Reanimatsiya", "#QonTomir"],
+        bg: "linear-gradient(135deg, #2b080f 0%, #5c0f1e 50%, #9f1239 100%)",
         accent: "#f43f5e",
         isGamma: true
       },
       {
-        id: "gamma_mono",
-        category: "minimal",
-        categoryTitle: "✨ Tipografika & Rasmiy Huquq",
-        title: "Gamma Platinum Mono & Type",
-        badge: "✨ Toza Tipografika",
-        desc: "Yuridik huquq, qonunchilik, arxitektura va minimalist zamonaviy taqdimotlar uchun toza tipografika.",
-        tags: ["#Minimalizm", "#Yuridik", "#Tipografika", "#Arxitektura"],
-        bg: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)",
-        accent: "#f8fafc",
+        id: "med_dental",
+        category: "med",
+        categoryTitle: "🩺 Stomatologiya & Ortodontiya",
+        title: "Stomatologiya & Marvarid Oq",
+        badge: "🦷 Stomatologiya",
+        desc: "Tish davolash, karies profilaktikasi, implantatsiya, ortodontiya va og'iz bo'shlig'i gigiyenasi uchun pokiza dengiz foni.",
+        tags: ["#Stomatologiya", "#TishDavolash", "#Ortodontiya", "#Implant"],
+        bg: "linear-gradient(135deg, #081c2e 0%, #0c3658 50%, #0369a1 100%)",
+        accent: "#38bdf8",
         isGamma: true
       },
       {
-        id: "gamma_forest",
-        category: "nature",
-        categoryTitle: "🌿 Tabiat, Agrar & Ekologiya",
-        title: "Gamma Deep Forest & Nature",
-        badge: "🌿 Ekologiya & Agrar",
-        desc: "Ekologiya, agrar soha, qishloq xo'jaligi, o'rmonchilik, bio-xilma-xillik va tabiatni muhofaza qilish.",
-        tags: ["#Ekologiya", "#Agrar", "#Tabiat", "#QishloqXojaligi"],
-        bg: "linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%)",
-        accent: "#34d399",
-        isGamma: true
-      },
-      {
-        id: "gamma_space",
-        category: "engineering",
-        categoryTitle: "📐 Koinot, Fizika & Optika",
-        title: "Gamma Deep Cosmos & Physics",
-        badge: "🌌 Kosmos & Fizika",
-        desc: "Fizika, astronomiya, aerokosmik texnika, optika, kvant mexanikasi va fundamental ilm-fan.",
-        tags: ["#Fizika", "#Astronomiya", "#Kosmos", "#Kvant"],
-        bg: "linear-gradient(135deg, #030712 0%, #111827 50%, #312e81 100%)",
-        accent: "#6366f1",
-        isGamma: true
-      },
-      {
-        id: "gamma_blueprint",
-        category: "engineering",
-        categoryTitle: "📐 Muhandislik & Matematika",
-        title: "Gamma Blueprint & Math Model",
-        badge: "📐 Oliy Matematika",
-        desc: "Oliy matematika, mashinasozlik, mexanika, axborot modellari va qurilish muhandisligi.",
-        tags: ["#Matematika", "#Muhandislik", "#Chizma", "#Mexanika"],
-        bg: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%)",
+        id: "med_lab",
+        category: "med",
+        categoryTitle: "🩺 Biotexnologiya & Genetika",
+        title: "Biotexnologiya & Genetika",
+        badge: "🔬 Bio Laboratoriya",
+        desc: "DNK tadqiqotlari, inson genomi, klinik laboratoriya tahlillari va hujayra biotexnologiyasi.",
+        tags: ["#Genetika", "#DNK", "#Laboratoriya", "#Biotexnologiya", "#Mikrobiologiya"],
+        bg: "linear-gradient(135deg, #091322 0%, #152945 50%, #1d4ed8 100%)",
         accent: "#60a5fa",
+        isGamma: true
+      },
+
+      // ================= 3. BIZNES & MOLIYA =================
+      {
+        id: "biz_pitch",
+        category: "business",
+        categoryTitle: "💼 Biznes, Startap & Investitsiya",
+        title: "Obsidian & Oltin Lux (Pitch Deck)",
+        badge: "💼 Startap & Pitch Deck",
+        desc: "Startap pitch deck, venchur investitsiyalar, biznes-reja va investorlar oldidagi nufuzli namoyishlar.",
+        tags: ["#PitchDeck", "#Startap", "#Investitsiya", "#BiznesReja", "#Obsidian"],
+        bg: "linear-gradient(135deg, #121214 0%, #222226 50%, #a16207 100%)",
+        accent: "#eab308",
+        isGamma: true
+      },
+      {
+        id: "biz_bank",
+        category: "business",
+        categoryTitle: "💼 Bank, FinTech & Katta Moliya",
+        title: "FinTech, Bank & Katta Moliya",
+        badge: "📊 FinTech & Bank",
+        desc: "Tijorat banklari, moliyaviy hisobotlar, kredit-depozit siyosati, audit va to'lov tizimlari.",
+        tags: ["#Bank", "#Moliya", "#FinTech", "#Audit", "#Buxgalteriya"],
+        bg: "linear-gradient(135deg, #061933 0%, #0c3866 50%, #0284c7 100%)",
+        accent: "#38bdf8",
+        isGamma: true
+      },
+      {
+        id: "biz_crypto",
+        category: "business",
+        categoryTitle: "💼 Kriptovalyuta, Blokcheyn & Web3",
+        title: "Kriptovalyuta & Blokcheyn",
+        badge: "🪙 Web3 & Kripto",
+        desc: "Kriptovalyutalar bozor tahlili, Bitcoin, aqlli shartnomalar, DeFi va markazlashmagan Web3 moliya tizimlari.",
+        tags: ["#Kripto", "#Bitcoin", "#Blokcheyn", "#Web3", "#DeFi"],
+        bg: "linear-gradient(135deg, #091b1a 0%, #064036 50%, #047857 100%)",
+        accent: "#10b981",
+        isGamma: true
+      },
+      {
+        id: "biz_marketing",
+        category: "business",
+        categoryTitle: "💼 Marketing, Savdo & E-Commerce",
+        title: "Marketing, Savdo & E-Commerce",
+        badge: "🚀 SMM & Reklama",
+        desc: "Raqamli marketing, maqsadli reklama (Target), brending, konversiya voronkasi va internet savdo.",
+        tags: ["#Marketing", "#SMM", "#Reklama", "#Savdo", "#ECommerce"],
+        bg: "linear-gradient(135deg, #2b0b1a 0%, #631238 50%, #be123c 100%)",
+        accent: "#fb7185",
+        isGamma: true
+      },
+      {
+        id: "biz_lead",
+        category: "business",
+        categoryTitle: "💼 Boshqaruv & Korporativ Liderlik",
+        title: "Korporativ Boshqaruv & Liderlik",
+        badge: "🏆 Top Boshqaruv",
+        desc: "Boshqaruv strategiyasi, kadrlar siyosati (HRM), inqirozga qarshi choralar va korporativ yetakchilik.",
+        tags: ["#Menejment", "#Liderlik", "#HRM", "#Strategiya", "#Boshqaruv"],
+        bg: "linear-gradient(135deg, #2b080a 0%, #580d13 50%, #991b1b 100%)",
+        accent: "#ef4444",
+        isGamma: true
+      },
+
+      // ================= 4. OTM & ILMIY TADQIQOTLAR =================
+      {
+        id: "academic_royal",
+        category: "academic",
+        categoryTitle: "🎓 OTM, Diplom & Magistratura",
+        title: "Royal Academic Blue (OTM & Diplom)",
+        badge: "🎓 Diplom & OTM",
+        desc: "Oliy ta'lim muassasalari diplom ishi, bitiruv malakaviy ishi (BMI) va magistrlik dissertatsiyalari.",
+        tags: ["#Diplom", "#Universitet", "#BMI", "#Magistratura", "#OTM"],
+        bg: "linear-gradient(135deg, #081730 0%, #102a54 50%, #1e40af 100%)",
+        accent: "#f59e0b",
+        isGamma: true
+      },
+      {
+        id: "academic_phd",
+        category: "academic",
+        categoryTitle: "🎓 Dissertatsiya & Monografiya",
+        title: "Ilmiy Dissertatsiya & Monografiya",
+        badge: "📜 PhD & Monografiya",
+        desc: "Fan doktori (DSc), PhD ilmiy darajasi, monografiyalar va nufuzli ilmiy seminarlar uchun tantanali akademik fon.",
+        tags: ["#PhD", "#Dissertatsiya", "#Monografiya", "#Doktorantura", "#IlmiyKengash"],
+        bg: "linear-gradient(135deg, #211208 0%, #45210d 50%, #92400e 100%)",
+        accent: "#d97706",
+        isGamma: true
+      },
+      {
+        id: "academic_research",
+        category: "academic",
+        categoryTitle: "🎓 Ilmiy Maqolalar & Scopus",
+        title: "Ilmiy Maqola & Scopus Jurnallar",
+        badge: "📚 Scopus & Tadqiqot",
+        desc: "Xalqaro ilmiy jurnallar, Scopus / Web of Science indeksli maqolalar, ilmiy tajribalar va tahliliy hisobotlar.",
+        tags: ["#Scopus", "#IlmiyMaqola", "#Jurnal", "#Tadqiqot", "#Tahlil"],
+        bg: "linear-gradient(135deg, #0d1624 0%, #1a2c49 50%, #2563eb 100%)",
+        accent: "#22d3ee",
+        isGamma: true
+      },
+
+      // ================= 5. TA'LIM & PEDAGOGIKA =================
+      {
+        id: "edu_pedagogy",
+        category: "education",
+        categoryTitle: "📚 Zamonaviy Pedagogika & Maktab",
+        title: "Zamonaviy Pedagogika & Metodika",
+        badge: "📚 Maktab & Metodika",
+        desc: "Innovatsion pedagogik texnologiyalar, namunali ochiq darslar, maktab metodikasi va dars ishlanmalari.",
+        tags: ["#Pedagogika", "#Metodika", "#OchiqDars", "#Maktab", "#Talim"],
+        bg: "linear-gradient(135deg, #300f04 0%, #682208 50%, #c2410c 100%)",
+        accent: "#f97316",
+        isGamma: true
+      },
+      {
+        id: "edu_psychology",
+        category: "education",
+        categoryTitle: "📚 Psixologiya & Kognitiv Ta'lim",
+        title: "Psixologiya & Kognitiv Rivojlanish",
+        badge: "🧠 Psixologiya",
+        desc: "Shaxs psixologiyasi, ruhiy salomatlik, stressni yengish, xulq-atvor tahlili va empatiya qonuniyatlari.",
+        tags: ["#Psixologiya", "#Ruhiyat", "#Stress", "#Kognitiv", "#Munosabatlar"],
+        bg: "linear-gradient(135deg, #180d28 0%, #351458 50%, #7e22ce 100%)",
+        accent: "#c084fc",
+        isGamma: true
+      },
+      {
+        id: "edu_kids",
+        category: "education",
+        categoryTitle: "📚 Maktabgacha & Boshlang'ich Ta'lim",
+        title: "Maktabgacha & Bolalar Ta'limi",
+        badge: "🎈 Bolalar Ta'limi",
+        desc: "Maktabgacha ta'lim (bog'cha), boshlang'ich sinf ta'limi, ertaklar, o'yin metodikalari va bolalar rivojlanishi.",
+        tags: ["#Bogcha", "#Maktabgacha", "#Bolalar", "#Boshlangich", "#Oyinchroq"],
+        bg: "linear-gradient(135deg, #101c2c 0%, #173854 50%, #0284c7 100%)",
+        accent: "#fbbf24",
+        isGamma: true
+      },
+      {
+        id: "edu_languages",
+        category: "education",
+        categoryTitle: "📚 Xorijiy Tillar & Lingvistika",
+        title: "Xorijiy Tillar & Lingvistika",
+        badge: "🗣 IELTS & Tillar",
+        desc: "Ingliz tili (IELTS / CEFR), nemis, rus, xitoy tillari va qiyosiy tilshunoslik fanlari bo'yicha darslar.",
+        tags: ["#InglizTili", "#IELTS", "#CEFR", "#Tillar", "#Lingvistika"],
+        bg: "linear-gradient(135deg, #091c2b 0%, #103c5e 50%, #0369a1 100%)",
+        accent: "#38bdf8",
+        isGamma: true
+      },
+
+      // ================= 6. TARIX, HUQUQ & ADABIYOT =================
+      {
+        id: "history_heritage",
+        category: "humanities",
+        categoryTitle: "🏛 Tarix, Arxeologiya & Madaniy Meros",
+        title: "O'zbekiston Tarixi & Madaniy Meros",
+        badge: "🏛 Tarix & Meros",
+        desc: "Qadimgi davlatlar, Amir Temur saltanati, xonliklar, Jadidchilik harakati va moddiy-madaniy yodgorliklar.",
+        tags: ["#Tarix", "#AmirTemur", "#Jadidlar", "#Xonliklar", "#Arxeologiya"],
+        bg: "linear-gradient(135deg, #291407 0%, #542407 50%, #92400e 100%)",
+        accent: "#f59e0b",
+        isGamma: true
+      },
+      {
+        id: "law_justice",
+        category: "humanities",
+        categoryTitle: "🏛 Huquqshunoslik & Adliya",
+        title: "Yuridik Huquq & Sud Tizimi",
+        badge: "⚖️ Huquq & Sud",
+        desc: "Konstitutsiyaviy huquq, jinoyat qonunchiligi, sud-huquq islohoti, advokatura va adolat tamoyillari.",
+        tags: ["#Huquq", "#Konstitutsiya", "#Sud", "#Adolat", "#Advokatura"],
+        bg: "linear-gradient(135deg, #141312 0%, #292524 50%, #57534e 100%)",
+        accent: "#e2e8f0",
+        isGamma: true
+      },
+      {
+        id: "humanities_uzbek",
+        category: "humanities",
+        categoryTitle: "🏛 O'zbek Tili & Mumtoz Adabiyot",
+        title: "O'zbek Tili & Milliy Adabiyot",
+        badge: "📖 Adabiyot & Til",
+        desc: "Alisher Navoiy g'azallari, Bobur, mumtoz va zamonaviy o'zbek adabiyoti, badiiy asarlar tahlili.",
+        tags: ["#Adabiyot", "#Navoiy", "#OnaTili", "#Sheriyat", "#BadiiyAsar"],
+        bg: "linear-gradient(135deg, #240c1d 0%, #50133c 50%, #9d174d 100%)",
+        accent: "#f472b6",
+        isGamma: true
+      },
+      {
+        id: "humanities_philosophy",
+        category: "humanities",
+        categoryTitle: "🏛 Falsafa, Mantiq & Jamiyatshunoslik",
+        title: "Falsafa, Mantiq & Jamiyat",
+        badge: "🗿 Falsafa & Mantiq",
+        desc: "Sharq va G'arb falsafiy tafakkuri, formal mantiq, axloqshunoslik (etika) va zamonaviy ijtimoiy ong.",
+        tags: ["#Falsafa", "#Mantiq", "#Etika", "#IjtimoiyOng", "#Jamiyat"],
+        bg: "linear-gradient(135deg, #1c1a17 0%, #36322b 50%, #57534e 100%)",
+        accent: "#fbbf24",
+        isGamma: true
+      },
+
+      // ================= 7. ANIQ VA TABIIY FANLAR, MUHANDISLIK =================
+      {
+        id: "eng_math",
+        category: "engineering",
+        categoryTitle: "📐 Matematika & Muhandislik Grafikasi",
+        title: "Oliy Matematika & Chizma Geometriya",
+        badge: "📐 Matematika & Chizma",
+        desc: "Matematik analiz, chiziqli algebra, differensial tenglamalar, muhandislik grafikasi va chizmachilik.",
+        tags: ["#Matematika", "#Algebra", "#Geometriya", "#Chizma", "#Integral"],
+        bg: "linear-gradient(135deg, #07152b 0%, #0e2d5c 50%, #1d4ed8 100%)",
+        accent: "#38bdf8",
+        isGamma: true
+      },
+      {
+        id: "sci_physics",
+        category: "engineering",
+        categoryTitle: "📐 Fizika, Astronomiya & Kosmos",
+        title: "Kosmos, Kvant Fizikasi & Astronomiya",
+        badge: "🌌 Kosmos & Fizika",
+        desc: "Nazariy fizika, astrofizika, kvant mexanikasi, elementar zarralar va koinotning paydo bo'lishi.",
+        tags: ["#Fizika", "#Kosmos", "#Astronomiya", "#Kvant", "#Yadro"],
+        bg: "linear-gradient(135deg, #030612 0%, #0a112c 50%, #312e81 100%)",
+        accent: "#818cf8",
+        isGamma: true
+      },
+      {
+        id: "sci_chemistry",
+        category: "engineering",
+        categoryTitle: "📐 Kimyo & Laboratoriya Texnologiyalari",
+        title: "Kimyo & Laboratoriya Reaksiyalari",
+        badge: "🧪 Kimyo Fanlari",
+        desc: "Organik va anorganik kimyo, kimyoviy texnologiyalar, polimerlar va sanoat kataliz jarayonlari.",
+        tags: ["#Kimyo", "#Reaksiya", "#Molekula", "#Polimer", "#KimyoviyLab"],
+        bg: "linear-gradient(135deg, #041c19 0%, #07423a 50%, #0f766e 100%)",
+        accent: "#2dd4bf",
+        isGamma: true
+      },
+      {
+        id: "eng_civil",
+        category: "engineering",
+        categoryTitle: "📐 Qurilish, Arxitektura & Bino",
+        title: "Qurilish, Geodeziya & Arxitektura",
+        badge: "🏗 Qurilish & Bino",
+        desc: "Zamonaviy binolar loyihalash, seysmik xavfsizlik, geodeziya, temir-beton konstruksiyalar va shaharsozlik.",
+        tags: ["#Qurilish", "#Arxitektura", "#Bino", "#Geodeziya", "#Loyiha"],
+        bg: "linear-gradient(135deg, #151a22 0%, #242c38 50%, #475569 100%)",
+        accent: "#f97316",
+        isGamma: true
+      },
+      {
+        id: "eng_energy",
+        category: "engineering",
+        categoryTitle: "📐 Energetika & Qayta Tiklanuvchi Quvvat",
+        title: "Energetika & Yashil Quvvat",
+        badge: "⚡️ Energetika",
+        desc: "Quyosh elektr stansiyalari, shamol energetikasi, atom va gidroenergetika hamda yuqori voltli tarmoqlar.",
+        tags: ["#Energetika", "#QuyoshPaneli", "#Atom", "#Elektr", "#YashilEnergiya"],
+        bg: "linear-gradient(135deg, #121c0e 0%, #1e3814 50%, #15803d 100%)",
+        accent: "#eab308",
+        isGamma: true
+      },
+
+      // ================= 8. EKOLOGIYA & QISHLOQ XO'JALIGI =================
+      {
+        id: "eco_green",
+        category: "nature",
+        categoryTitle: "🌿 Ekologiya & Yashil Makon",
+        title: "Ekologiya & Yashil Makon",
+        badge: "🌿 Ekologiya",
+        desc: "Global iqlim o'zgarishi, Yashil Makon loyihasi, bio-xilma-xillik va atrof-muhitni muhofaza qilish choralari.",
+        tags: ["#Ekologiya", "#YashilMakon", "#Iqlim", "#Tabiat", "#Biologiya"],
+        bg: "linear-gradient(135deg, #042417 0%, #064e3b 50%, #047857 100%)",
+        accent: "#10b981",
+        isGamma: true
+      },
+      {
+        id: "agro_harvest",
+        category: "nature",
+        categoryTitle: "🌿 Qishloq Xo'jaligi & Agrotexnologiya",
+        title: "Qishloq Xo'jaligi & Agrotexnologiya",
+        badge: "🌾 Agrar & Dehqonchilik",
+        desc: "Paxtachilik, g'allachilik, zamonaviy issiqxona xo'jaliklari, tomchilatib sug'orish va urug'chilik genetikasi.",
+        tags: ["#QishloqXojaligi", "#Agrar", "#Hosildorlik", "#Dehqon", "#Issiqxona"],
+        bg: "linear-gradient(135deg, #1f1505 0%, #3d2c08 50%, #854d0e 100%)",
+        accent: "#eab308",
+        isGamma: true
+      },
+      {
+        id: "water_hydro",
+        category: "nature",
+        categoryTitle: "🌿 Gidrologiya & Suv Resurslari",
+        title: "Gidrologiya & Suv Resurslari",
+        badge: "💧 Suv Xo'jaligi",
+        desc: "Orol fojiasi va tiklash choralari, daryolar oqimi, suv omborlari, ichimlik suvi filtrlash va gidrologiya.",
+        tags: ["#Gidrologiya", "#SuvXojaligi", "#Orol", "#Daryo", "#Melioratsiya"],
+        bg: "linear-gradient(135deg, #051e2b 0%, #09405c 50%, #0284c7 100%)",
+        accent: "#06b6d4",
+        isGamma: true
+      },
+
+      // ================= 9. SAN'AT, SPORT & TURIZM =================
+      {
+        id: "art_design",
+        category: "creative",
+        categoryTitle: "🎨 Zamonaviy San'at & Grafik Dizayn",
+        title: "Zamonaviy San'at & Grafik Dizayn",
+        badge: "🎨 Grafik Dizayn",
+        desc: "Vizual kommunikatsiya, ranglar nazariyasi, kompozitsiya, tipografika va raqamli illyustratsiya san'ati.",
+        tags: ["#Dizayn", "#Sanat", "#Grafika", "#Ranglar", "#Illyustratsiya"],
+        bg: "linear-gradient(135deg, #240a1c 0%, #52103d 50%, #be123c 100%)",
+        accent: "#f43f5e",
+        isGamma: true
+      },
+      {
+        id: "tourism_uzbek",
+        category: "creative",
+        categoryTitle: "🎨 Turizm & Milliy Mehmondo'stlik",
+        title: "Samarqand Firuzasi & Sayyohlik",
+        badge: "🕌 Milliy Turizm",
+        desc: "Buyuk Ipak Yo'li, Samarqand, Buxoro, Xiva obidalari, milliy mehmondo'stlik va turizm infratuzilmasi.",
+        tags: ["#Turizm", "#Samarqand", "#Buxoro", "#IpakYoli", "#Sayyohlik"],
+        bg: "linear-gradient(135deg, #05202b 0%, #084359 50%, #0284c7 100%)",
+        accent: "#38bdf8",
+        isGamma: true
+      },
+      {
+        id: "sport_fitness",
+        category: "creative",
+        categoryTitle: "🎨 Jismoniy Tarbiya, Sport & Fitnes",
+        title: "Sport, Fitnes & Dinamik Atletika",
+        badge: "🏅 Sport & Salomatlik",
+        desc: "Olimpiada o'yinlari, futbol taktikasi, fitnes mashg'ulotlari, sog'lom turmush tarzi va jismoniy tarbiya.",
+        tags: ["#Sport", "#Futbol", "#Fitnes", "#Olimpiada", "#JismoniyTarbiya"],
+        bg: "linear-gradient(135deg, #0c141e 0%, #172a38 50%, #15803d 100%)",
+        accent: "#84cc16",
+        isGamma: true
+      },
+      {
+        id: "art_music",
+        category: "creative",
+        categoryTitle: "🎨 Musiqa, Estrada & Teatr",
+        title: "Musiqa San'ati & Sahna Madaniyati",
+        badge: "🎵 Musiqa & Teatr",
+        desc: "Mumtoz musiqa, maqom san'ati, cholg'u asboblari, zamonaviy estrada va teatr sahna bezaklari.",
+        tags: ["#Musiqa", "#Estrada", "#Maqom", "#Teatr", "#Cholgu"],
+        bg: "linear-gradient(135deg, #1d0729 0%, #430c5e 50%, #9333ea 100%)",
+        accent: "#d946ef",
+        isGamma: true
+      },
+
+      // ================= 10. MINIMALIST & DAVLAT BOSHQARUVI =================
+      {
+        id: "minimal_platinum",
+        category: "minimal",
+        categoryTitle: "✨ Tipografika & Rasmiy Monoxrom",
+        title: "Toza Monoxrom Tipografika",
+        badge: "✨ Minimalist",
+        desc: "Shveysariya uslubidagi toza tipografika, ortiqcha bezaklarsiz jiddiy va aniq ma'lumot beruvchi monoxrom fon.",
+        tags: ["#Minimalizm", "#Monoxrom", "#Tipografika", "#Toza", "#Shveysariya"],
+        bg: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)",
+        accent: "#f1f5f9",
+        isGamma: true
+      },
+      {
+        id: "gov_official",
+        category: "minimal",
+        categoryTitle: "✨ Davlat Organlari & Strategik Hisobot",
+        title: "Davlat Boshqaruvi & Rasmiy Strategiya",
+        badge: "🏛 Davlat & Strategiya",
+        desc: "Vazirliklar, davlat organlari hisobotlari, qonunchilik qarorlari va rasmiy brifinglar uchun davlat darajasidagi fon.",
+        tags: ["#Davlat", "#Vazirlik", "#Rasmiy", "#Strategiya", "#PrezidentQarori"],
+        bg: "linear-gradient(135deg, #071730 0%, #0f2c59 50%, #1d4ed8 100%)",
+        accent: "#eab308",
         isGamma: true
       }
     ];
@@ -546,8 +881,17 @@ THEMES_HTML = """<!DOCTYPE html>
         const btnText = t.isGamma ? "🪄 Gamma AI bilan tayyorlash" : "🚀 Ushbu fonga tayyorlash";
         const btnClass = t.isGamma ? "select-btn gamma-btn" : "select-btn";
         card.innerHTML = `
-          <div class="slide-preview-wrap">
-            <img src="previews/${t.id.replace(':', '_')}.png" alt="${t.title}" class="slide-preview-img" onerror="this.onerror=null;this.parentElement.style.background='${t.bg}'" />
+          <div class="slide-preview-wrap" style="background: ${t.bg};">
+            <div style="position:absolute; inset:0; padding:12px; display:flex; flex-direction:column; justify-content:space-between; pointer-events:none; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.65) 100%);">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:10px; font-weight:800; letter-spacing:0.8px; color:${t.accent}; text-transform:uppercase; background:rgba(0,0,0,0.5); padding:2px 8px; border-radius:4px; border:1px solid ${t.accent}44;">✦ ${t.badge}</span>
+              </div>
+              <div>
+                <div style="font-size:13px; font-weight:700; color:#fff; text-shadow:0 1px 4px rgba(0,0,0,0.8);">${t.title}</div>
+                <div style="height:3px; width:45px; background:${t.accent}; border-radius:2px; margin-top:4px;"></div>
+              </div>
+            </div>
+            <img src="previews/${t.id.replace(':', '_')}.png" alt="${t.title}" class="slide-preview-img" style="opacity:0.2; mix-blend-mode:overlay;" onerror="this.style.display='none'" />
             <div class="slide-badge">${t.badge}</div>
           </div>
           <div class="card-content">

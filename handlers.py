@@ -1446,43 +1446,109 @@ async def process_slide_count_invalid(message: Message, state: FSMContext):
 
 
 THEME_TITLES = {
+    # Asosiy & Avtomatik
     "auto": "🪄 Gamma AI (Universal Auto)",
     "gamma": "🪄 Gamma AI (Universal Auto)",
     "gamma_auto": "🪄 Gamma AI (Universal Auto)",
-    "gamma_cyber": "⚡️ Gamma Cyber & Dark Neon (IT & Kiber)",
-    "gamma_violet": "🤖 Gamma Neon Violet & AI Future",
-    "gamma_obsidian": "💼 Gamma Obsidian & Gold Lux (Biznes)",
-    "gamma_ocean": "📊 Gamma Ocean & FinTech Analytics",
-    "gamma_crimson": "🏆 Gamma Crimson & Executive Lead",
-    "gamma_amber": "🏛 Gamma Vintage Amber & Heritage (Tarix)",
-    "gamma_solar": "📚 Gamma Solar & Modern Pedagogy (Ta'lim)",
-    "gamma_emerald": "🩺 Gamma Emerald & Clean Mind (Tibbiyot)",
-    "gamma_nordic": "🔬 Gamma Nordic Glacier & Bio (Laboratoriya)",
-    "gamma_pastel": "🎨 Gamma Pastel & Sunset Prism (Dizayn)",
-    "gamma_mono": "✨ Gamma Platinum Mono & Type (Minimalist)",
-    "gamma_forest": "🌿 Gamma Deep Forest & Nature (Ekologiya)",
-    "gamma_space": "🌌 Gamma Deep Cosmos & Physics (Kosmos)",
-    "gamma_blueprint": "📐 Gamma Blueprint & Math (Muhandislik)",
-    # Legacy fallbacks (barcha shablonlar Gamma ga moslashtirilgan)
-    "mix": "🪄 Gamma AI (Universal Auto)",
-    "circuit": "⚡️ Gamma Cyber & Dark Neon (IT)",
-    "slice": "⚡️ Gamma Cyber & Dark Neon (IT)",
-    "droplet": "🩺 Gamma Emerald & Clean Mind (Tibbiyot)",
-    "blue": "🩺 Gamma Emerald & Clean Mind (Tibbiyot)",
-    "facet": "🌿 Gamma Deep Forest & Nature (Ekologiya)",
-    "green": "🌿 Gamma Deep Forest & Nature (Ekologiya)",
-    "office": "💼 Gamma Obsidian & Gold Lux (Biznes)",
-    "dark": "💼 Gamma Obsidian & Gold Lux (Biznes)",
-    "integral": "📐 Gamma Blueprint & Math (Muhandislik)",
-    "celestial": "🌌 Gamma Deep Cosmos & Physics (Kosmos)",
-    "retrospect": "🏛 Gamma Vintage Amber & Heritage (Tarix)",
-    "vintage": "🏛 Gamma Vintage Amber & Heritage (Tarix)",
-    "savon": "🎓 Gamma Royal Academic (OTM & Fan)",
-    "ion": "📚 Gamma Solar & Modern Pedagogy (Ta'lim)",
-    "canva_pastel": "🎨 Gamma Pastel & Sunset Prism (Dizayn)",
-    "white": "✨ Gamma Platinum Mono & Type (Minimalist)",
-    "navy": "📊 Gamma Ocean & FinTech Analytics",
-    "purple": "🤖 Gamma Neon Violet & AI Future"
+    "mix": "🔀 PPT 2016 Dinamik Mix",
+
+    # 1. IT, Dasturlash & Kiberxavfsizlik
+    "cyber": "⚡️ Kiberxavfsizlik & Neon Cyan",
+    "gamma_cyber": "⚡️ Kiberxavfsizlik & Neon Cyan (IT & Kiber)",
+    "ai_violet": "🤖 Sun'iy Intellekt & Neyron Binafsha",
+    "gamma_violet": "🤖 Sun'iy Intellekt & Neyron Binafsha (AI Future)",
+    "tech_matrix": "💻 Dasturlash & Terminal Green (DevOps & Code)",
+    "tech_cloud": "☁️ Bulutli Texnologiya & Azure Blue (Cloud & Data)",
+    "tech_mobile": "📱 Mobil Ilovalar & Flutter Coral (Mobile UI/UX)",
+    "tech": "⚡️ Kiberxavfsizlik & Neon Cyan",
+    "circuit": "⚡️ Kiber Texno Dark (Circuit)",
+    "slice": "🔷 Kesimli Neo Havorang (Slice)",
+
+    # 2. Tibbiyot, Farmatsevtika & Salomatlik
+    "med_clinic": "🩺 Shifoxona & Klinik Teal (Tibbiyot & Terapiya)",
+    "gamma_emerald": "🩺 Shifoxona & Klinik Teal (Tibbiyot)",
+    "med_pharma": "💊 Farmatsevtika & Bio Yalpiz (Dori vositalari)",
+    "med_cardio": "🫀 Kardiologiya & Qon Tomir Qizil (Jarrohlik)",
+    "med_dental": "🦷 Stomatologiya & Marvarid Oq (Tish davolash)",
+    "med_lab": "🔬 Biotexnologiya & Genetika (Bio Laboratoriya)",
+    "gamma_nordic": "🔬 Biotexnologiya & Genetika (Laboratoriya)",
+    "droplet": "💧 Yumshoq Tomchi Akva (Droplet)",
+    "blue": "🔷 Moviy fon (Havorang)",
+
+    # 3. Biznes, Moliya, Bank & Startaplar
+    "biz_pitch": "💼 Obsidian & Oltin Lux (Startap & Pitch Deck)",
+    "gamma_obsidian": "💼 Obsidian & Oltin Lux (Biznes & Pitch Deck)",
+    "biz_bank": "📊 FinTech, Bank & Katta Moliya (Analitika)",
+    "gamma_ocean": "📊 FinTech, Bank & Katta Moliya (FinTech)",
+    "biz_crypto": "🪙 Kriptovalyuta & Blokcheyn (Web3 & DeFi)",
+    "biz_marketing": "🚀 Marketing, Savdo & E-Commerce (SMM & Reklama)",
+    "biz_lead": "🏆 Korporativ Boshqaruv & Liderlik (Top Menejment)",
+    "gamma_crimson": "🏆 Korporativ Boshqaruv & Liderlik (Executive)",
+    "office": "🏢 Klassik Moviy (Office)",
+    "business": "💼 Obsidian & Oltin Lux (Biznes)",
+    "dark": "🖤 Qora fon (Premium Dark)",
+
+    # 4. OTM & Ilmiy Tadqiqotlar
+    "academic_royal": "🎓 Royal Academic Blue (Universitet & Diplom)",
+    "academic_phd": "📜 Ilmiy Dissertatsiya & Monografiya (PhD)",
+    "academic_research": "📚 Ilmiy Maqola & Scopus Jurnallar",
+    "savon": "🎓 Aristokrat Shampan (Savon)",
+
+    # 5. Ta'lim, Pedagogika & Psixologiya
+    "edu_pedagogy": "📚 Zamonaviy Pedagogika & Maktab Metodikasi",
+    "gamma_solar": "📚 Zamonaviy Pedagogika & Maktab Metodikasi",
+    "edu_psychology": "🧠 Psixologiya & Kognitiv Rivojlanish",
+    "edu_kids": "🎈 Maktabgacha & Bolalar Ta'limi",
+    "edu_languages": "🗣 Xorijiy Tillar & Lingvistika (IELTS & Til)",
+    "ion": "🔴 Ion 2016 (Bordo & To'q qizil)",
+
+    # 6. Tarix, Huquq & Falsafa
+    "history_heritage": "🏛 O'zbekiston Tarixi & Madaniy Meros",
+    "gamma_amber": "🏛 O'zbekiston Tarixi & Madaniy Meros (Vintage Amber)",
+    "law_justice": "⚖️ Yuridik Huquq & Sud Tizimi (Adliya)",
+    "humanities_uzbek": "📖 O'zbek Tili & Milliy Adabiyot",
+    "humanities_philosophy": "🗿 Falsafa, Mantiq & Jamiyatshunoslik",
+    "retrospect": "🏺 Retro Oltin Qum (Retrospect)",
+    "vintage": "📜 Klassik Pergament fon",
+    "history": "🏛 O'zbekiston Tarixi & Madaniy Meros",
+
+    # 7. Aniq Fanlar, Texnika & Muhandislik
+    "eng_math": "📐 Oliy Matematika & Chizma Geometriya (Blueprint)",
+    "gamma_blueprint": "📐 Oliy Matematika & Chizma Geometriya",
+    "sci_physics": "🌌 Kosmos, Kvant Fizikasi & Astronomiya",
+    "gamma_space": "🌌 Kosmos, Kvant Fizikasi & Astronomiya (Cosmos)",
+    "sci_chemistry": "🧪 Kimyo & Laboratoriya Reaksiyalari",
+    "eng_civil": "🏗 Qurilish, Geodeziya & Arxitektura",
+    "eng_energy": "⚡️ Energetika & Qayta Tiklanuvchi Quvvat",
+    "integral": "📐 Muhandislik & Terrakota (Integral)",
+    "celestial": "🌌 Koinot Tungi Moviy (Celestial)",
+    "science": "🌌 Kosmos, Kvant Fizikasi & Astronomiya",
+
+    # 8. Ekologiya, Qishloq & Suv Xo'jaligi
+    "eco_green": "🌿 Ekologiya & Yashil Makon (Atrof-muhit)",
+    "gamma_forest": "🌿 Ekologiya & Yashil Makon (Deep Forest)",
+    "agro_harvest": "🌾 Qishloq Xo'jaligi & Agrotexnologiya (Agrar)",
+    "water_hydro": "💧 Gidrologiya & Suv Resurslari",
+    "facet": "🟢 Facet 2016 (Geometrik Zumrad)",
+    "green": "🟢 Zumrad yashil fon",
+    "nature": "🌿 Ekologiya & Yashil Makon",
+
+    # 9. San'at, Sport & Turizm
+    "art_design": "🎨 Zamonaviy San'at & Grafik Dizayn",
+    "gamma_pastel": "🎨 Zamonaviy San'at & Grafik Dizayn (Pastel)",
+    "tourism_uzbek": "🕌 Samarqand Firuzasi & O'zbekiston Turizmi",
+    "sport_fitness": "🏅 Sport, Fitnes & Dinamik Atletika",
+    "art_music": "🎵 Musiqa San'ati & Sahna Madaniyati",
+    "canva_pastel": "🌸 Canva Pastel fon (Nafis)",
+    "art": "🎨 Zamonaviy San'at & Grafik Dizayn",
+
+    # 10. Minimalist & Rasmiy Boshqaruv
+    "minimal_platinum": "✨ Toza Monoxrom Tipografika (Minimalist)",
+    "gamma_mono": "✨ Toza Monoxrom Tipografika (Platinum Mono)",
+    "white": "⚪️ Minimalist Dark Slate",
+    "navy": "🔵 Toʻq koʻk fon (Royal Navy)",
+    "purple": "🟣 Binafsha fon (Kosmik)",
+    "gov_official": "🏛 Davlat Boshqaruvi & Rasmiy Strategiya"
 }
 
 def is_valid_theme(t: str) -> bool:
@@ -1914,129 +1980,122 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
     temp_dir = None
 
     try:
-        use_gamma = theme_choice.startswith("gamma") or gamma_service.is_gamma_available()
+        use_gamma = gamma_service.is_gamma_available() and (theme_choice.startswith("gamma") or ":" in theme_choice)
         if use_gamma:
-            if not gamma_service.is_gamma_available():
-                await status_msg.edit_text(
-                    f"⚠️ <b>Gamma API kaliti hali kiritilmagan.</b>\n"
-                    f"Admin <code>/set_gamma YOUR_KEY</code> orqali Gamma API kalitini sozlashi mumkin.\n\n"
-                    f"🔄 <i>Hozircha bot avtomatik ravishda zamonaviy generatorga ulanmoqda...</i> ⏳",
+            async def update_gamma_status(status_text: str):
+                try:
+                    await status_msg.edit_text(f"⏳ <b>'{safe_topic}'</b>:\n{status_text}", parse_mode="HTML")
+                except Exception:
+                    pass
+
+            gamma_theme_id = None
+            if ":" in theme_choice:
+                gamma_theme_id = theme_choice.split(":", 1)[1].strip()
+
+            gamma_res = await gamma_service.generate_gamma_presentation(
+                topic=topic,
+                num_cards=slide_count,
+                author_info=author_info,
+                status_callback=update_gamma_status,
+                language=slide_language,
+                theme_choice=theme_choice,
+                theme_id=gamma_theme_id
+            )
+            if gamma_res.get("success") and gamma_res.get("file_path"):
+                pptx_path = gamma_res["file_path"]
+                gamma_url = gamma_res.get("gamma_url", "")
+
+                try:
+                    content_mini = await generator.generate_presentation_content(topic, slide_count=min(slide_count, 6), language=slide_language, author_info=author_info)
+                    speech_text = generator.generate_speech_script(content_mini, author_info=author_info)
+                except Exception:
+                    speech_text = f"Taqdimot mavzusi: {topic}\n\nHimoya nutqi:\nHurmatli ustoz va talabalar, ushbu taqdimot '{topic}' mavzusiga bag'ishlangan bo'lib, zamonaviy axborotlar va vizual tuzilma asosida tayyorlandi."
+
+                user_cache_dir = os.path.join(os.path.dirname(__file__), "user_cache", str(user_id))
+                os.makedirs(user_cache_dir, exist_ok=True)
+                cached_pptx = os.path.join(user_cache_dir, "latest.pptx")
+                cached_speech = os.path.join(user_cache_dir, "latest_speech.txt")
+                cached_meta = os.path.join(user_cache_dir, "meta.json")
+
+                safe_name = "".join(c for c in topic[:30] if c.isalnum() or c in (" ", "_", "-")).strip() or "taqdimot"
+                shutil.copy2(pptx_path, cached_pptx)
+                with open(cached_speech, "w", encoding="utf-8") as f:
+                    f.write(speech_text)
+                with open(cached_meta, "w", encoding="utf-8") as f:
+                    json.dump({"topic": topic, "safe_name": safe_name, "gamma_url": gamma_url}, f, ensure_ascii=False)
+
+                user_info = await database.get_user(user_id) or {}
+                user_lang = user_info.get("language") or "uz"
+                is_sub = database.is_subscription_active(user_info)
+                is_unlimited_user = bool(user_info.get("is_unlimited")) or config.is_unlimited(user_id) or is_sub
+
+                if is_unlimited_user:
+                    limit_caption = "♾ <b>Cheksiz (VIP / Boshqaruvchi)</b>"
+                elif is_sub:
+                    exp_date = user_info.get("subscription_until", "")
+                    limit_caption = f"⭐️ <b>Oylik obuna faol</b> (<code>{exp_date}</code> gacha)"
+                else:
+                    cur_free = user_info.get("free_limit", 0)
+                    cur_paid = user_info.get("paid_balance", 0)
+                    rem_free = max(0, cur_free - 1) if cur_free > 0 else 0
+                    rem_paid = (cur_paid - 1) if (cur_free == 0 and cur_paid > 0) else cur_paid
+                    rem_total = rem_free + rem_paid
+                    limit_caption = f"<b>{rem_total} ta</b> ({rem_free} ta bepul, {rem_paid} ta pulli)"
+
+                bot_user = await chat_message.bot.get_me()
+                share_url = f"https://t.me/share/url?url=https://t.me/{bot_user.username}?start=ref_{user_id}&text=Sun'iy%20intellekt%20yordamida%20talabalar%20uchun%20professional%20taqdimotlar%20tayyorlang!%20%F0%9F%8E%81%20Bepul%20sinab%20ko'rish:"
+
+                chosen_title = THEME_TITLES.get(theme_choice, "Gamma AI Uslubi")
+                pptx_document = FSInputFile(pptx_path, filename=f"{safe_name}.pptx")
+                caption_html = (
+                    f"🎉 <b>Gamma AI taqdimotingiz muvaffaqiyatli tayyorlandi!</b>\n\n"
+                    f"📄 Mavzu: <i>{safe_topic}</i>\n"
+                    f"🪄 AI platforma: <b>Gamma.app (Premium AI)</b>\n"
+                    f"🎨 Uslub / Fon: <b>{chosen_title}</b>\n"
+                    f"📊 Kartalar soni: <b>{slide_count} ta</b>\n"
+                    f"📁 Format: <b>PowerPoint (.pptx)</b> — to'liq tahrirlanadigan\n"
+                    f"💡 Qolgan limitingiz: {limit_caption}\n\n"
+                    f"👇 <i>Taqdimotni Gamma vebda ko'rish, PDF ga aylantirish yoki nutq matnini olish uchun tugmalardan foydalaning:</i>"
+                )
+                sent_doc = await chat_message.reply_document(
+                    document=pptx_document,
+                    caption=caption_html,
+                    reply_markup=keyboards.get_slide_action_keyboard(share_url=share_url, gamma_url=gamma_url, lang=user_lang),
                     parse_mode="HTML"
                 )
-                theme_choice = "white"
-            else:
-                async def update_gamma_status(status_text: str):
-                    try:
-                        await status_msg.edit_text(f"⏳ <b>'{safe_topic}'</b>:\n{status_text}", parse_mode="HTML")
-                    except Exception:
-                        pass
+                doc_file_id = sent_doc.document.file_id if sent_doc and sent_doc.document else ""
+                perm_name = f"{int(time.time())}_{safe_name}.pptx"
+                perm_path = os.path.join(user_cache_dir, perm_name)
+                try:
+                    shutil.copy2(pptx_path, perm_path)
+                except Exception:
+                    perm_path = cached_pptx
 
-                gamma_theme_id = None
-                if ":" in theme_choice:
-                    gamma_theme_id = theme_choice.split(":", 1)[1].strip()
-
-                gamma_res = await gamma_service.generate_gamma_presentation(
+                await database.save_user_file(
+                    telegram_id=user_id,
                     topic=topic,
-                    num_cards=slide_count,
-                    author_info=author_info,
-                    status_callback=update_gamma_status,
-                    language=slide_language,
-                    theme_choice=theme_choice,
-                    theme_id=gamma_theme_id
+                    file_name=f"{safe_name}.pptx",
+                    file_id=doc_file_id,
+                    file_path=perm_path,
+                    file_type="pptx"
                 )
-                if gamma_res.get("success") and gamma_res.get("file_path"):
-                    pptx_path = gamma_res["file_path"]
-                    gamma_url = gamma_res.get("gamma_url", "")
-
-                    try:
-                        content_mini = await generator.generate_presentation_content(topic, slide_count=min(slide_count, 6), language=slide_language, author_info=author_info)
-                        speech_text = generator.generate_speech_script(content_mini, author_info=author_info)
-                    except Exception:
-                        speech_text = f"Taqdimot mavzusi: {topic}\n\nHimoya nutqi:\nHurmatli ustoz va talabalar, ushbu taqdimot '{topic}' mavzusiga bag'ishlangan bo'lib, zamonaviy axborotlar va vizual tuzilma asosida tayyorlandi."
-
-                    user_cache_dir = os.path.join(os.path.dirname(__file__), "user_cache", str(user_id))
-                    os.makedirs(user_cache_dir, exist_ok=True)
-                    cached_pptx = os.path.join(user_cache_dir, "latest.pptx")
-                    cached_speech = os.path.join(user_cache_dir, "latest_speech.txt")
-                    cached_meta = os.path.join(user_cache_dir, "meta.json")
-
-                    safe_name = "".join(c for c in topic[:30] if c.isalnum() or c in (" ", "_", "-")).strip() or "taqdimot"
-                    shutil.copy2(pptx_path, cached_pptx)
-                    with open(cached_speech, "w", encoding="utf-8") as f:
-                        f.write(speech_text)
-                    with open(cached_meta, "w", encoding="utf-8") as f:
-                        json.dump({"topic": topic, "safe_name": safe_name, "gamma_url": gamma_url}, f, ensure_ascii=False)
-
-                    user_info = await database.get_user(user_id) or {}
-                    user_lang = user_info.get("language") or "uz"
-                    is_sub = database.is_subscription_active(user_info)
-                    is_unlimited_user = bool(user_info.get("is_unlimited")) or config.is_unlimited(user_id) or is_sub
-
-                    if is_unlimited_user:
-                        limit_caption = "♾ <b>Cheksiz (VIP / Boshqaruvchi)</b>"
-                    elif is_sub:
-                        exp_date = user_info.get("subscription_until", "")
-                        limit_caption = f"⭐️ <b>Oylik obuna faol</b> (<code>{exp_date}</code> gacha)"
-                    else:
-                        cur_free = user_info.get("free_limit", 0)
-                        cur_paid = user_info.get("paid_balance", 0)
-                        rem_free = max(0, cur_free - 1) if cur_free > 0 else 0
-                        rem_paid = (cur_paid - 1) if (cur_free == 0 and cur_paid > 0) else cur_paid
-                        rem_total = rem_free + rem_paid
-                        limit_caption = f"<b>{rem_total} ta</b> ({rem_free} ta bepul, {rem_paid} ta pulli)"
-
-                    bot_user = await chat_message.bot.get_me()
-                    share_url = f"https://t.me/share/url?url=https://t.me/{bot_user.username}?start=ref_{user_id}&text=Sun'iy%20intellekt%20yordamida%20talabalar%20uchun%20professional%20taqdimotlar%20tayyorlang!%20%F0%9F%8E%81%20Bepul%20sinab%20ko'rish:"
-
-                    chosen_title = THEME_TITLES.get(theme_choice, "Gamma AI Uslubi")
-                    pptx_document = FSInputFile(pptx_path, filename=f"{safe_name}.pptx")
-                    caption_html = (
-                        f"🎉 <b>Gamma AI taqdimotingiz muvaffaqiyatli tayyorlandi!</b>\n\n"
-                        f"📄 Mavzu: <i>{safe_topic}</i>\n"
-                        f"🪄 AI platforma: <b>Gamma.app (Premium AI)</b>\n"
-                        f"🎨 Uslub / Fon: <b>{chosen_title}</b>\n"
-                        f"📊 Kartalar soni: <b>{slide_count} ta</b>\n"
-                        f"📁 Format: <b>PowerPoint (.pptx)</b> — to'liq tahrirlanadigan\n"
-                        f"💡 Qolgan limitingiz: {limit_caption}\n\n"
-                        f"👇 <i>Taqdimotni Gamma vebda ko'rish, PDF ga aylantirish yoki nutq matnini olish uchun tugmalardan foydalaning:</i>"
-                    )
-                    sent_doc = await chat_message.reply_document(
-                        document=pptx_document,
-                        caption=caption_html,
-                        reply_markup=keyboards.get_slide_action_keyboard(share_url=share_url, gamma_url=gamma_url, lang=user_lang),
-                        parse_mode="HTML"
-                    )
-                    doc_file_id = sent_doc.document.file_id if sent_doc and sent_doc.document else ""
-                    perm_name = f"{int(time.time())}_{safe_name}.pptx"
-                    perm_path = os.path.join(user_cache_dir, perm_name)
-                    try:
-                        shutil.copy2(pptx_path, perm_path)
-                    except Exception:
-                        perm_path = cached_pptx
-
-                    await database.save_user_file(
-                        telegram_id=user_id,
-                        topic=topic,
-                        file_name=f"{safe_name}.pptx",
-                        file_id=doc_file_id,
-                        file_path=perm_path,
-                        file_type="pptx"
-                    )
-                    await database.consume_limit(user_id)
-                    try:
-                        await status_msg.delete()
-                    except Exception:
-                        pass
-                    return
-                else:
-                    err_detail = gamma_res.get("error", "Noma'lum xatolik")
-                    logger.warning(f"Gamma generation failed: {err_detail}, falling back to local Gemini engine...")
-                    await status_msg.edit_text(
-                        f"⚠️ <b>Gamma AI bildirishnomasi:</b> {html.escape(err_detail)}\n"
-                        "🔄 <i>Bot avtomatik ravishda premium dizayn generatoriga o'tmoqda...</i> ⏳",
-                        parse_mode="HTML"
-                    )
-                    theme_choice = "blue"
+                await database.consume_limit(user_id)
+                try:
+                    await status_msg.delete()
+                except Exception:
+                    pass
+                return
+            else:
+                err_detail = gamma_res.get("error", "Noma'lum xatolik")
+                logger.warning(f"Gamma generation failed: {err_detail}, falling back to local Gemini engine...")
+                await status_msg.edit_text(
+                    f"⚠️ <b>Gamma AI bildirishnomasi:</b> {html.escape(err_detail)}\n"
+                    "🔄 <i>Bot avtomatik ravishda premium dizayn generatoriga o'tmoqda...</i> ⏳",
+                    parse_mode="HTML"
+                )
+                # Agar tanlangan tema mavjud bo'lsa, uni saqlab qolamiz
+                if theme_choice not in generator.THEMES and theme_choice.replace("gamma_", "") in generator.THEMES:
+                    theme_choice = theme_choice.replace("gamma_", "")
 
         # Generate with Gemini
         content = await generator.generate_presentation_content(
@@ -2052,7 +2111,12 @@ async def generate_and_send_presentation(chat_message: Message, user_id: int, to
         images_dir = tempfile.mkdtemp(prefix="slayd_imgs_")
         images_map = await generator.fetch_images_for_presentation(content, images_dir)
 
-        chosen_theme = content.get("theme", theme_choice if theme_choice != "auto" else "blue")
+        # Agar foydalanuvchi aniq fon tanlagan bo'lsa, uning tanlovi ustuvor bo'ladi
+        if theme_choice and theme_choice not in ("auto", "gamma", "gamma_auto"):
+            chosen_theme = theme_choice
+        else:
+            chosen_theme = content.get("theme", "blue")
+
         if chosen_theme not in generator.THEMES:
             chosen_theme = "blue"
 

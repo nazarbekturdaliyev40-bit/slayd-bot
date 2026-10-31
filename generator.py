@@ -293,49 +293,754 @@ THEMES = {
         "white": RGBColor(255, 255, 255),
         "bullet_icon": "✦",
         "tag": "PPT 2016 MIX"
+    },
+    # ================= 1. IT, DASTURLASH & KIBERXAVFSIZLIK =================
+    "cyber": {
+        "name": "⚡️ Kiberxavfsizlik & Neon Cyan",
+        "primary": RGBColor(3, 7, 18),
+        "accent": RGBColor(6, 182, 212),
+        "accent_secondary": RGBColor(59, 130, 246),
+        "bg_slide": RGBColor(3, 7, 18),
+        "card_bg": RGBColor(15, 23, 42),
+        "card_border": RGBColor(6, 182, 212),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "CYBER SECURITY"
+    },
+    "ai_violet": {
+        "name": "🤖 Sun'iy Intellekt & Neyron Binafsha",
+        "primary": RGBColor(24, 12, 44),
+        "accent": RGBColor(168, 85, 247),
+        "accent_secondary": RGBColor(217, 70, 239),
+        "bg_slide": RGBColor(24, 12, 44),
+        "card_bg": RGBColor(38, 18, 68),
+        "card_border": RGBColor(168, 85, 247),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "AI & NEURAL"
+    },
+    "tech_matrix": {
+        "name": "💻 Dasturlash & Terminal Green",
+        "primary": RGBColor(2, 20, 13),
+        "accent": RGBColor(16, 185, 129),
+        "accent_secondary": RGBColor(52, 211, 153),
+        "bg_slide": RGBColor(2, 20, 13),
+        "card_bg": RGBColor(6, 36, 24),
+        "card_border": RGBColor(16, 185, 129),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "DEVELOPER CODE"
+    },
+    "tech_cloud": {
+        "name": "☁️ Bulutli Texnologiya & Azure Blue",
+        "primary": RGBColor(10, 28, 56),
+        "accent": RGBColor(56, 189, 248),
+        "accent_secondary": RGBColor(96, 165, 250),
+        "bg_slide": RGBColor(10, 28, 56),
+        "card_bg": RGBColor(18, 44, 82),
+        "card_border": RGBColor(56, 189, 248),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "CLOUD & BIG DATA"
+    },
+    "tech_mobile": {
+        "name": "📱 Mobil Ilovalar & Flutter Coral",
+        "primary": RGBColor(26, 18, 38),
+        "accent": RGBColor(251, 113, 133),
+        "accent_secondary": RGBColor(129, 140, 248),
+        "bg_slide": RGBColor(26, 18, 38),
+        "card_bg": RGBColor(40, 26, 58),
+        "card_border": RGBColor(251, 113, 133),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "MOBILE & UI"
+    },
+    # ================= 2. TIBBIYOT & SALOMATLIK =================
+    "med_clinic": {
+        "name": "🩺 Shifoxona & Klinik Teal",
+        "primary": RGBColor(6, 44, 38),
+        "accent": RGBColor(20, 184, 166),
+        "accent_secondary": RGBColor(45, 212, 191),
+        "bg_slide": RGBColor(6, 44, 38),
+        "card_bg": RGBColor(10, 64, 56),
+        "card_border": RGBColor(20, 184, 166),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "CLINICAL MEDICINE"
+    },
+    "med_pharma": {
+        "name": "💊 Farmatsevtika & Bio Yalpiz",
+        "primary": RGBColor(8, 40, 32),
+        "accent": RGBColor(16, 185, 129),
+        "accent_secondary": RGBColor(167, 243, 208),
+        "bg_slide": RGBColor(8, 40, 32),
+        "card_bg": RGBColor(14, 58, 48),
+        "card_border": RGBColor(16, 185, 129),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "PHARMACEUTICAL"
+    },
+    "med_cardio": {
+        "name": "🫀 Kardiologiya & Qon Tomir Qizil",
+        "primary": RGBColor(48, 12, 20),
+        "accent": RGBColor(244, 63, 94),
+        "accent_secondary": RGBColor(251, 113, 133),
+        "bg_slide": RGBColor(48, 12, 20),
+        "card_bg": RGBColor(68, 18, 28),
+        "card_border": RGBColor(244, 63, 94),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "CARDIOLOGY"
+    },
+    "med_dental": {
+        "name": "🦷 Stomatologiya & Marvarid Oq",
+        "primary": RGBColor(12, 34, 56),
+        "accent": RGBColor(14, 165, 233),
+        "accent_secondary": RGBColor(224, 242, 254),
+        "bg_slide": RGBColor(12, 34, 56),
+        "card_bg": RGBColor(20, 48, 76),
+        "card_border": RGBColor(14, 165, 233),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "DENTISTRY"
+    },
+    "med_lab": {
+        "name": "🔬 Biotexnologiya & Genetika Laboratoriyasi",
+        "primary": RGBColor(15, 23, 42),
+        "accent": RGBColor(56, 189, 248),
+        "accent_secondary": RGBColor(129, 140, 248),
+        "bg_slide": RGBColor(15, 23, 42),
+        "card_bg": RGBColor(26, 36, 62),
+        "card_border": RGBColor(56, 189, 248),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "BIO RESEARCH"
+    },
+    # ================= 3. BIZNES & MOLIYA =================
+    "biz_pitch": {
+        "name": "💼 Obsidian & Oltin Lux (Pitch Deck)",
+        "primary": RGBColor(20, 20, 22),
+        "accent": RGBColor(234, 179, 8),
+        "accent_secondary": RGBColor(245, 158, 11),
+        "bg_slide": RGBColor(20, 20, 22),
+        "card_bg": RGBColor(34, 34, 38),
+        "card_border": RGBColor(234, 179, 8),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "PITCH DECK LUX"
+    },
+    "biz_bank": {
+        "name": "📊 FinTech, Bank & Katta Moliya",
+        "primary": RGBColor(10, 30, 59),
+        "accent": RGBColor(56, 189, 248),
+        "accent_secondary": RGBColor(96, 165, 250),
+        "bg_slide": RGBColor(10, 30, 59),
+        "card_bg": RGBColor(16, 44, 84),
+        "card_border": RGBColor(56, 189, 248),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "BANK & FINTECH"
+    },
+    "biz_crypto": {
+        "name": "🪙 Kriptovalyuta & Blokcheyn",
+        "primary": RGBColor(13, 27, 30),
+        "accent": RGBColor(16, 185, 129),
+        "accent_secondary": RGBColor(245, 158, 11),
+        "bg_slide": RGBColor(13, 27, 30),
+        "card_bg": RGBColor(22, 42, 46),
+        "card_border": RGBColor(16, 185, 129),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "CRYPTO & DEFI"
+    },
+    "biz_marketing": {
+        "name": "🚀 Marketing, Savdo & E-Commerce",
+        "primary": RGBColor(36, 16, 40),
+        "accent": RGBColor(249, 115, 22),
+        "accent_secondary": RGBColor(236, 72, 153),
+        "bg_slide": RGBColor(36, 16, 40),
+        "card_bg": RGBColor(54, 24, 60),
+        "card_border": RGBColor(249, 115, 22),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "MARKETING & SALES"
+    },
+    "biz_lead": {
+        "name": "🏆 Korporativ Boshqaruv & Liderlik",
+        "primary": RGBColor(50, 10, 14),
+        "accent": RGBColor(239, 68, 68),
+        "accent_secondary": RGBColor(248, 113, 113),
+        "bg_slide": RGBColor(50, 10, 14),
+        "card_bg": RGBColor(72, 16, 22),
+        "card_border": RGBColor(239, 68, 68),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "LEADERSHIP"
+    },
+    # ================= 4. OTM & ILMIY TADQIQOTLAR =================
+    "academic_royal": {
+        "name": "🎓 Royal Academic Blue (OTM & Diplom)",
+        "primary": RGBColor(10, 25, 49),
+        "accent": RGBColor(245, 158, 11),
+        "accent_secondary": RGBColor(96, 165, 250),
+        "bg_slide": RGBColor(10, 25, 49),
+        "card_bg": RGBColor(18, 38, 72),
+        "card_border": RGBColor(245, 158, 11),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "ROYAL ACADEMIC"
+    },
+    "academic_phd": {
+        "name": "📜 Ilmiy Dissertatsiya & Monografiya",
+        "primary": RGBColor(36, 24, 18),
+        "accent": RGBColor(217, 119, 6),
+        "accent_secondary": RGBColor(251, 191, 36),
+        "bg_slide": RGBColor(36, 24, 18),
+        "card_bg": RGBColor(52, 34, 26),
+        "card_border": RGBColor(217, 119, 6),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "PHD DISSERTATION"
+    },
+    "academic_research": {
+        "name": "📚 Ilmiy Maqola & Scopus Jurnallar",
+        "primary": RGBColor(21, 30, 46),
+        "accent": RGBColor(34, 211, 238),
+        "accent_secondary": RGBColor(165, 180, 252),
+        "bg_slide": RGBColor(21, 30, 46),
+        "card_bg": RGBColor(32, 44, 68),
+        "card_border": RGBColor(34, 211, 238),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "SCOPUS RESEARCH"
+    },
+    # ================= 5. TA'LIM & PEDAGOGIKA =================
+    "edu_pedagogy": {
+        "name": "📚 Zamonaviy Pedagogika & Maktab Metodikasi",
+        "primary": RGBColor(60, 22, 8),
+        "accent": RGBColor(249, 115, 22),
+        "accent_secondary": RGBColor(251, 191, 36),
+        "bg_slide": RGBColor(60, 22, 8),
+        "card_bg": RGBColor(84, 32, 14),
+        "card_border": RGBColor(249, 115, 22),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "MODERN PEDAGOGY"
+    },
+    "edu_psychology": {
+        "name": "🧠 Psixologiya & Kognitiv Rivojlanish",
+        "primary": RGBColor(32, 20, 53),
+        "accent": RGBColor(192, 132, 252),
+        "accent_secondary": RGBColor(244, 114, 182),
+        "bg_slide": RGBColor(32, 20, 53),
+        "card_bg": RGBColor(48, 30, 78),
+        "card_border": RGBColor(192, 132, 252),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "PSYCHOLOGY"
+    },
+    "edu_kids": {
+        "name": "🎈 Maktabgacha & Bolalar Ta'limi",
+        "primary": RGBColor(24, 40, 59),
+        "accent": RGBColor(251, 191, 36),
+        "accent_secondary": RGBColor(52, 211, 153),
+        "bg_slide": RGBColor(24, 40, 59),
+        "card_bg": RGBColor(36, 58, 84),
+        "card_border": RGBColor(251, 191, 36),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "CHILD EDUCATION"
+    },
+    "edu_languages": {
+        "name": "🗣 Xorijiy Tillar & Lingvistika",
+        "primary": RGBColor(14, 38, 56),
+        "accent": RGBColor(56, 189, 248),
+        "accent_secondary": RGBColor(244, 63, 94),
+        "bg_slide": RGBColor(14, 38, 56),
+        "card_bg": RGBColor(22, 54, 78),
+        "card_border": RGBColor(56, 189, 248),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "LINGUISTICS"
+    },
+    # ================= 6. TARIX, HUQUQ & FALSAFA =================
+    "history_heritage": {
+        "name": "🏛 O'zbekiston Tarixi & Madaniy Meros",
+        "primary": RGBColor(56, 30, 13),
+        "accent": RGBColor(245, 158, 11),
+        "accent_secondary": RGBColor(217, 119, 6),
+        "bg_slide": RGBColor(56, 30, 13),
+        "card_bg": RGBColor(78, 42, 20),
+        "card_border": RGBColor(245, 158, 11),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "HISTORY & HERITAGE"
+    },
+    "law_justice": {
+        "name": "⚖️ Yuridik Huquq & Sud Tizimi",
+        "primary": RGBColor(28, 25, 23),
+        "accent": RGBColor(226, 232, 240),
+        "accent_secondary": RGBColor(202, 138, 4),
+        "bg_slide": RGBColor(28, 25, 23),
+        "card_bg": RGBColor(44, 40, 36),
+        "card_border": RGBColor(202, 138, 4),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "LAW & JUSTICE"
+    },
+    "humanities_uzbek": {
+        "name": "📖 O'zbek Tili & Milliy Adabiyot",
+        "primary": RGBColor(46, 16, 38),
+        "accent": RGBColor(244, 114, 182),
+        "accent_secondary": RGBColor(234, 179, 8),
+        "bg_slide": RGBColor(46, 16, 38),
+        "card_bg": RGBColor(68, 24, 56),
+        "card_border": RGBColor(244, 114, 182),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "UZBEK LITERATURE"
+    },
+    "humanities_philosophy": {
+        "name": "🗿 Falsafa, Mantiq & Jamiyatshunoslik",
+        "primary": RGBColor(36, 34, 32),
+        "accent": RGBColor(251, 191, 36),
+        "accent_secondary": RGBColor(148, 163, 184),
+        "bg_slide": RGBColor(36, 34, 32),
+        "card_bg": RGBColor(52, 48, 46),
+        "card_border": RGBColor(251, 191, 36),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "PHILOSOPHY"
+    },
+    # ================= 7. ANIQ VA TABIIY FANLAR, MUHANDISLIK =================
+    "eng_math": {
+        "name": "📐 Oliy Matematika & Chizma Geometriya",
+        "primary": RGBColor(10, 28, 56),
+        "accent": RGBColor(56, 189, 248),
+        "accent_secondary": RGBColor(96, 165, 250),
+        "bg_slide": RGBColor(10, 28, 56),
+        "card_bg": RGBColor(18, 42, 80),
+        "card_border": RGBColor(56, 189, 248),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "MATH & BLUEPRINT"
+    },
+    "sci_physics": {
+        "name": "🌌 Kosmos, Kvant Fizikasi & Astronomiya",
+        "primary": RGBColor(7, 11, 25),
+        "accent": RGBColor(129, 140, 248),
+        "accent_secondary": RGBColor(192, 132, 252),
+        "bg_slide": RGBColor(7, 11, 25),
+        "card_bg": RGBColor(16, 24, 48),
+        "card_border": RGBColor(129, 140, 248),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "SPACE & PHYSICS"
+    },
+    "sci_chemistry": {
+        "name": "🧪 Kimyo & Laboratoriya Reaksiyalari",
+        "primary": RGBColor(6, 36, 32),
+        "accent": RGBColor(45, 212, 191),
+        "accent_secondary": RGBColor(163, 230, 53),
+        "bg_slide": RGBColor(6, 36, 32),
+        "card_bg": RGBColor(12, 52, 46),
+        "card_border": RGBColor(45, 212, 191),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "CHEMISTRY LAB"
+    },
+    "eng_civil": {
+        "name": "🏗 Qurilish, Geodeziya & Arxitektura",
+        "primary": RGBColor(31, 36, 45),
+        "accent": RGBColor(249, 115, 22),
+        "accent_secondary": RGBColor(251, 191, 36),
+        "bg_slide": RGBColor(31, 36, 45),
+        "card_bg": RGBColor(45, 52, 64),
+        "card_border": RGBColor(249, 115, 22),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "CIVIL ENGINEERING"
+    },
+    "eng_energy": {
+        "name": "⚡️ Energetika & Qayta Tiklanuvchi Quvvat",
+        "primary": RGBColor(24, 34, 21),
+        "accent": RGBColor(234, 179, 8),
+        "accent_secondary": RGBColor(34, 197, 94),
+        "bg_slide": RGBColor(24, 34, 21),
+        "card_bg": RGBColor(36, 50, 32),
+        "card_border": RGBColor(234, 179, 8),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "POWER & ENERGY"
+    },
+    # ================= 8. EKOLOGIYA, QISHLOQ & SUV XO'JALIGI =================
+    "eco_green": {
+        "name": "🌿 Ekologiya & Yashil Makon",
+        "primary": RGBColor(6, 51, 32),
+        "accent": RGBColor(16, 185, 129),
+        "accent_secondary": RGBColor(52, 211, 153),
+        "bg_slide": RGBColor(6, 51, 32),
+        "card_bg": RGBColor(10, 72, 46),
+        "card_border": RGBColor(16, 185, 129),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "ECOLOGY & NATURE"
+    },
+    "agro_harvest": {
+        "name": "🌾 Qishloq Xo'jaligi & Agrotexnologiya",
+        "primary": RGBColor(41, 30, 10),
+        "accent": RGBColor(234, 179, 8),
+        "accent_secondary": RGBColor(132, 204, 22),
+        "bg_slide": RGBColor(41, 30, 10),
+        "card_bg": RGBColor(58, 42, 16),
+        "card_border": RGBColor(234, 179, 8),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "AGRICULTURE"
+    },
+    "water_hydro": {
+        "name": "💧 Gidrologiya & Suv Resurslari",
+        "primary": RGBColor(8, 44, 60),
+        "accent": RGBColor(6, 182, 212),
+        "accent_secondary": RGBColor(56, 189, 248),
+        "bg_slide": RGBColor(8, 44, 60),
+        "card_bg": RGBColor(14, 62, 84),
+        "card_border": RGBColor(6, 182, 212),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "HYDROLOGY"
+    },
+    # ================= 9. SAN'AT, SPORT & TURIZM =================
+    "art_design": {
+        "name": "🎨 Zamonaviy San'at & Grafik Dizayn",
+        "primary": RGBColor(40, 17, 34),
+        "accent": RGBColor(244, 63, 94),
+        "accent_secondary": RGBColor(251, 146, 60),
+        "bg_slide": RGBColor(40, 17, 34),
+        "card_bg": RGBColor(58, 25, 50),
+        "card_border": RGBColor(244, 63, 94),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "CREATIVE DESIGN"
+    },
+    "tourism_uzbek": {
+        "name": "🕌 Samarqand Firuzasi & O'zbekiston Turizmi",
+        "primary": RGBColor(7, 43, 56),
+        "accent": RGBColor(56, 189, 248),
+        "accent_secondary": RGBColor(251, 191, 36),
+        "bg_slide": RGBColor(7, 43, 56),
+        "card_bg": RGBColor(12, 62, 80),
+        "card_border": RGBColor(56, 189, 248),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "TOURISM & SILK ROAD"
+    },
+    "sport_fitness": {
+        "name": "🏅 Sport, Fitnes & Dinamik Atletika",
+        "primary": RGBColor(17, 24, 39),
+        "accent": RGBColor(132, 204, 22),
+        "accent_secondary": RGBColor(34, 197, 94),
+        "bg_slide": RGBColor(17, 24, 39),
+        "card_bg": RGBColor(28, 38, 58),
+        "card_border": RGBColor(132, 204, 22),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "SPORT & FITNESS"
+    },
+    "art_music": {
+        "name": "🎵 Musiqa San'ati & Sahna Madaniyati",
+        "primary": RGBColor(34, 14, 46),
+        "accent": RGBColor(217, 70, 239),
+        "accent_secondary": RGBColor(168, 85, 247),
+        "bg_slide": RGBColor(34, 14, 46),
+        "card_bg": RGBColor(50, 22, 68),
+        "card_border": RGBColor(217, 70, 239),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "MUSIC & STAGE"
+    },
+    # ================= 10. MINIMALIST & DAVLAT BOSHQARUVI =================
+    "minimal_platinum": {
+        "name": "✨ Toza Monoxrom Tipografika",
+        "primary": RGBColor(17, 24, 39),
+        "accent": RGBColor(241, 245, 249),
+        "accent_secondary": RGBColor(148, 163, 184),
+        "bg_slide": RGBColor(17, 24, 39),
+        "card_bg": RGBColor(26, 36, 54),
+        "card_border": RGBColor(241, 245, 249),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "CLEAN MONO"
+    },
+    "gov_official": {
+        "name": "🏛 Davlat Boshqaruvi & Rasmiy Strategiya",
+        "primary": RGBColor(13, 30, 56),
+        "accent": RGBColor(234, 179, 8),
+        "accent_secondary": RGBColor(56, 189, 248),
+        "bg_slide": RGBColor(13, 30, 56),
+        "card_bg": RGBColor(20, 44, 80),
+        "card_border": RGBColor(234, 179, 8),
+        "text_dark": RGBColor(255, 255, 255),
+        "text_muted": RGBColor(226, 232, 240),
+        "white": RGBColor(255, 255, 255),
+        "bullet_icon": "✦",
+        "tag": "OFFICIAL GOVERNMENT"
     }
 }
 
+# Gamma va yo'nalishlar taxalluslar (aliases)
+THEMES["gamma_cyber"] = THEMES["cyber"]
+THEMES["gamma_violet"] = THEMES["ai_violet"]
+THEMES["gamma_obsidian"] = THEMES["biz_pitch"]
+THEMES["gamma_ocean"] = THEMES["biz_bank"]
+THEMES["gamma_crimson"] = THEMES["biz_lead"]
+THEMES["gamma_amber"] = THEMES["history_heritage"]
+THEMES["gamma_solar"] = THEMES["edu_pedagogy"]
+THEMES["gamma_emerald"] = THEMES["med_clinic"]
+THEMES["gamma_nordic"] = THEMES["med_lab"]
+THEMES["gamma_pastel"] = THEMES["art_design"]
+THEMES["gamma_mono"] = THEMES["minimal_platinum"]
+THEMES["gamma_forest"] = THEMES["eco_green"]
+THEMES["gamma_space"] = THEMES["sci_physics"]
+THEMES["gamma_blueprint"] = THEMES["eng_math"]
+THEMES["gamma"] = THEMES["office"]
+THEMES["gamma_auto"] = THEMES["office"]
+THEMES["auto"] = THEMES["office"]
+
 # Moslik uchun taxalluslar (aliases)
-THEMES["tech"] = THEMES["circuit"]
-THEMES["business"] = THEMES["office"]
-THEMES["nature"] = THEMES["facet"]
-THEMES["science"] = THEMES["celestial"]
-THEMES["art"] = THEMES["ion"]
-THEMES["history"] = THEMES["retrospect"]
+THEMES["tech"] = THEMES["cyber"]
+THEMES["business"] = THEMES["biz_pitch"]
+THEMES["nature"] = THEMES["eco_green"]
+THEMES["science"] = THEMES["sci_physics"]
+THEMES["art"] = THEMES["art_design"]
+THEMES["history"] = THEMES["history_heritage"]
 
 def detect_theme(topic: str, ai_theme: str = "") -> str:
-    """Mavzu matniga qarab mos rang va fon mavzusini aniqlaydi."""
+    """Mavzu matniga qarab har bir yo'nalish uchun mos rang va fon mavzusini aniqlaydi."""
     ai_theme = (ai_theme or "").lower().strip()
     if ai_theme in THEMES:
         return ai_theme
         
     t = topic.lower()
     
-    # 1. Tarix, madaniyat, qadimgi davr, buyuk shaxslar
-    if any(k in t for k in ["tarix", "history", "qadimgi", "sulol", "urush", "amir temur", "bobur", "xonlik", "arxeolog", "madaniyat", "imperiya", "inqilob", "sovet", "jadid", "asr"]):
-        return "history"
+    # 1. Sun'iy intellekt va robototexnika (neyron tarmoqlar ham shu yerda)
+    if any(k in t for k in ["sun'iy intellekt", " ai", "ai ", "neyron", "robot", "mashinaviy o'rganish", "machine learning", "deep learning", "chatgpt", "generativ"]):
+        return "ai_violet"
+    # 2. Kiberxavfsizlik va kompyuter tarmoqlari
+    if any(k in t for k in ["kiber", "cyber", "xavfsizlik", "tarmoq", "hujum", "hacker", "firewall", "shifrlash", "vpn", "antivirus", "parol"]):
+        return "cyber"
+    # 3. Dasturlash va axborot texnologiyalari
+    if any(k in t for k in ["dastur", "program", "python", "java", "javascript", "c++", "c#", "kod", "algoritm", "backend", "frontend", "devops", "linux", "sql"]):
+        return "tech_matrix"
+    # 4. Bulutli texnologiyalar va Big Data
+    if any(k in t for k in ["bulut", "cloud", "aws", "azure", "katta ma'lumot", "big data", "server", "data science", "infratuzilma"]):
+        return "tech_cloud"
+    # 5. Mobil dasturlash
+    if any(k in t for k in ["mobil", "android", "ios", "flutter", "swift", "kotlin", "smartfon"]):
+        return "tech_mobile"
         
-    # 2. Dasturlash, IT, AI, kompyuter, texnologiya
-    if any(k in t for k in ["dastur", "program", " it", "it ", "kompyuter", "python", "java", "kod", "texnolog", "sun'iy intellekt", "ai", "kiber", "robot", "tarmoq", "algoritm", "data", "web", "android", "ios", "xavfsizlik", "backend", "frontend"]):
-        return "tech"
-        
-    # 3. Tabiat, biologiya, tibbiyot, salomatlik, ekologiya
-    if any(k in t for k in ["tibbiyot", "salomatlik", "kasallik", "vrach", "shifokor", "biolog", "ekolog", "tabiat", "o'simlik", "hayvon", "yashil", "atrof-muhit", "dori", "anatomiya", "geograf", "virus"]):
-        return "nature"
-        
-    # 4. Biznes, iqtisod, moliya, marketing, savdo
-    if any(k in t for k in ["biznes", "iqtisod", "moliya", "marketing", "bank", "savdo", "investitsiya", "pul", "daromad", "menejment", "startap", "kompaniya", "bozor"]):
-        return "business"
-        
-    # 5. Ilm-fan, fizika, matematika, kimyo, kosmos
-    if any(k in t for k in ["fizika", "matematika", "kimyo", "astronom", "kosmos", "koinot", "formula", "ilmiy", "laboratoriya"]):
-        return "science"
-        
-    # 6. San'at, dizayn, ijod, musiqa
-    if any(k in t for k in ["san'at", "dizayn", "musiqa", "rasm", "kino", "teatr", "arxitektura", "she'riyat"]):
-        return "art"
-        
+    # 6. Tibbiyot - Kardiologiya va jarrohlik
+    if any(k in t for k in ["yurak", "qon tomir", "kardiolog", "jarroh", "operatsiya", "infarkt", "qon bosimi"]):
+        return "med_cardio"
+    # 7. Tibbiyot - Stomatologiya
+    if any(k in t for k in ["stomatolog", "tish", "plomba", "karies", "ortodont", "implant"]):
+        return "med_dental"
+    # 8. Tibbiyot - Farmatsevtika va dori vositalari
+    if any(k in t for k in ["farmatsevt", "dori", "preparat", "vaksina", "antibiotik", "farmakologiya"]):
+        return "med_pharma"
+    # 9. Tibbiyot - Biotexnologiya va genetika
+    if any(k in t for k in ["genetika", "dnk", "laboratoriya", "biotexnolog", "hujayra", "gen", "klonlash", "mikrobiolog"]):
+        return "med_lab"
+    # 10. Tibbiyot - Umumiy terapiya va shifoxona
+    if any(k in t for k in ["tibbiyot", "klinika", "vrach", "shifokor", "davolash", "terapiya", "kasallik", "anatomiya", "patologiya"]):
+        return "med_clinic"
+
+    # 11. Biznes - Kriptovalyuta va blokcheyn
+    if any(k in t for k in ["kripto", "bitcoin", "blokcheyn", "blockchain", "ethereum", "web3", "defi"]):
+        return "biz_crypto"
+    # 12. Biznes - Startap, pitch deck va investitsiya
+    if any(k in t for k in ["pitch deck", "startap", "investitsiya", "biznes reja", "venture", "kapital"]):
+        return "biz_pitch"
+    # 13. Biznes - Marketing, reklama va savdo
+    if any(k in t for k in ["marketing", "reklama", "smm", "savdo", "bozor", "e-commerce", "mijoz", "brend", "pr"]):
+        return "biz_marketing"
+    # 14. Biznes - Boshqaruv va korporativ liderlik
+    if any(k in t for k in ["boshqaruv", "menejment", "liderlik", "rahbar", "strategiya", "korporativ"]):
+        return "biz_lead"
+    # 15. Biznes - Bank, moliya, sug'urta va hisob
+    if any(k in t for k in ["bank", "moliya", "iqtisod", "kredit", "depozit", "sug'urta", "audit", "soliq", "buxgalter"]):
+        return "biz_bank"
+
+    # 16. OTM - Dissertatsiya va monografiya
+    if any(k in t for k in ["dissertatsiya", "phd", "monografiya", "fan nomzodi", "doktorant"]):
+        return "academic_phd"
+    # 17. OTM - Ilmiy maqola va scopus
+    if any(k in t for k in ["scopus", "maqola", "jurnal", "ilmiy tadqiqot", "retsenziya", "metodologiya"]):
+        return "academic_research"
+    # 18. OTM - Diplom va talabalik
+    if any(k in t for k in ["universitet", "otm", "diplom", "magistr", "bakalavr", "kurs ishi", "talaba"]):
+        return "academic_royal"
+
+    # 19. Ta'lim - Psixologiya
+    if any(k in t for k in ["psixolog", "ruhiyat", "stress", "temperament", "xarakter", "kognitiv", "munosabat"]):
+        return "edu_psychology"
+    # 20. Ta'lim - Maktabgacha ta'lim
+    if any(k in t for k in ["bog'cha", "maktabgacha", "kichkintoy", "bola"]):
+        return "edu_kids"
+    # 21. Ta'lim - Xorijiy tillar
+    if any(k in t for k in ["ingliz tili", "english", "ielts", "nemis", "fransuz", "rus tili", "tilshunoslik", "tarjima"]):
+        return "edu_languages"
+    # 22. Ta'lim - Pedagogika va maktab ta'limi
+    if any(k in t for k in ["pedagog", "metodika", "dars", "maktab", "o'qituvchi", "ta'lim", "tarbiya", "sinf"]):
+        return "edu_pedagogy"
+
+    # 23. Huquq va adliya
+    if any(k in t for k in ["huquq", "yuridik", "konstitutsiya", "sud", "qonun", "prokuror", "advokat", "jinoyat", "fuqarolik"]):
+        return "law_justice"
+    # 24. O'zbek tili va adabiyot
+    if any(k in t for k in ["adabiyot", "navoiy", "she'r", "g'azal", "roman", "shoir", "yozuvchi", "ona tili"]):
+        return "humanities_uzbek"
+    # 25. Falsafa va mantiq
+    if any(k in t for k in ["falsafa", "mantiq", "etika", "estetika", "dunyoqarash"]):
+        return "humanities_philosophy"
+    # 26. Tarix va madaniy meros
+    if any(k in t for k in ["tarix", "history", "qadimgi", "sulol", "amir temur", "bobur", "xonlik", "arxeolog", "jadid", "asr"]):
+        return "history_heritage"
+
+    # 27. Kimyo va laboratoriya
+    if any(k in t for k in ["kimyo", "organik", "molekula", "reaksiya", "eritma", "polimer", "kimyoviy"]):
+        return "sci_chemistry"
+    # 28. Fizika va kosmos
+    if any(k in t for k in ["fizika", "kosmos", "astronom", "koinot", "sayyora", "kvant", "yadro", "optika", "galaktika"]):
+        return "sci_physics"
+    # 29. Qurilish va arxitektura
+    if any(k in t for k in ["qurilish", "arxitektura", "bino", "inshoot", "geodeziya", "loyiha", "chizma"]):
+        return "eng_civil"
+    # 30. Energetika va quvvat
+    if any(k in t for k in ["energetika", "elektr", "quyosh paneli", "atom", "gidroelektro", "neft", "gaz", "yoqilg'i"]):
+        return "eng_energy"
+    # 31. Oliy matematika va hisoblash
+    if any(k in t for k in ["matematika", "algebra", "geometriya", "integral", "tenglama", "differensial", "matritsa"]):
+        return "eng_math"
+
+    # 32. Qishloq xo'jaligi va agrar
+    if any(k in t for k in ["qishloq xo'jaligi", "agrar", "paxta", "g'alla", "hosil", "dehqon", "chorvachilik", "o'simlik", "urug'"]):
+        return "agro_harvest"
+    # 33. Gidrologiya va suv resurslari
+    if any(k in t for k in ["suv", "gidrolog", "daryo", "ko'l", "sug'orish", "melioratsiya", "kanal"]):
+        return "water_hydro"
+    # 34. Ekologiya va tabiat
+    if any(k in t for k in ["ekolog", "tabiat", "yashil", "atrof-muhit", "iqlim", "atmosfera", "o'rmon"]):
+        return "eco_green"
+
+    # 35. Sport va fitnes
+    if any(k in t for k in ["sport", "futbol", "fitnes", "mashg'ulot", "olimpiada", "jismoniy", "musobaqa"]):
+        return "sport_fitness"
+    # 36. Turizm va mehmondo'stlik
+    if any(k in t for k in ["turizm", "sayyoh", "mehmonxona", "samarqand", "buxoro", "ipak yo'li"]):
+        return "tourism_uzbek"
+    # 37. Musiqa va teatr
+    if any(k in t for k in ["musiqa", "cholg'u", "qo'shiq", "opera", "teatr", "konsert"]):
+        return "art_music"
+    # 38. San'at va dizayn
+    if any(k in t for k in ["san'at", "dizayn", "grafika", "rang", "tasviriy", "haykaltarosh"]):
+        return "art_design"
+
+    # 35. San'at va dizayn
+    if any(k in t for k in ["san'at", "dizayn", "grafika", "rang", "tasviriy", "haykaltarosh"]):
+        return "art_design"
+    # 36. Turizm va mehmondo'stlik
+    if any(k in t for k in ["turizm", "sayyoh", "mehmonxona", "samarqand", "buxoro", "ipak yo'li"]):
+        return "tourism_uzbek"
+    # 37. Sport va fitnes
+    if any(k in t for k in ["sport", "futbol", "fitnes", "mashg'ulot", "olimpiada", "jismoniy", "musobaqa"]):
+        return "sport_fitness"
+    # 38. Musiqa va teatr
+    if any(k in t for k in ["musiqa", "cholg'u", "qo'shiq", "opera", "teatr", "konsert"]):
+        return "art_music"
+
+    # 39. Davlat boshqaruvi va vazirliklar
+    if any(k in t for k in ["davlat", "vazirlik", "hokimiyat", "prezident", "davlat xizmati", "qaror", "farmon"]):
+        return "gov_official"
+
     return "blue"
 
 EMOJI_PATTERN = re.compile(
