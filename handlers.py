@@ -1694,31 +1694,9 @@ async def process_theme_choice(callback: CallbackQuery, state: FSMContext):
         except Exception:
             pass
 
-    await state.clear()
-
-    try:
-        await callback.message.edit_reply_markup(reply_markup=None)
-    except Exception:
-        pass
-
-    theme_title = THEME_TITLES.get(theme_key, theme_key)
-    status_msg = await callback.message.answer(
-        f"✅ <b>Tanlangan fan / dizayn:</b> {theme_title}\n\n"
-        f"🚀 <b>Taqdimotingiz tayyorlanmoqda...</b>",
-        parse_mode="HTML"
-    )
-
-    await generate_and_send_presentation(
-        chat_message=status_msg,
-        user_id=callback.from_user.id,
-        topic=topic,
-        slide_count=slide_count,
-        author_info=author_info,
-        theme_choice=theme_key,
-        custom_bg=None,
-        context_document=context_doc,
-        slide_language=slide_lang
-    )
+    await state.update_data(theme_choice=theme_key, custom_bg=None)
+    # Slayd tayyorlashdan oldin foydalanuvchidan ruxsat va tasdiq so'raymiz
+    await show_slide_confirmation(callback.message, state, callback.from_user.id, edit=True)
 
 @router.message(F.web_app_data)
 async def process_web_app_theme(message: Message, state: FSMContext):
@@ -1741,31 +1719,9 @@ async def process_web_app_theme(message: Message, state: FSMContext):
             pass
 
     if topic:
-        slide_count = data.get("slide_count", 8)
-        author_info = data.get("author_info", "")
-        context_doc = data.get("context_document", "")
-        slide_lang = data.get("slide_language", "uz")
-
-        await state.clear()
-
-        theme_title = THEME_TITLES.get(theme_key, theme_key)
-        status_msg = await message.answer(
-            f"✅ <b>Tanlangan fan / dizayn:</b> {theme_title}\n\n"
-            f"🚀 <b>Taqdimotingiz tayyorlanmoqda...</b>",
-            parse_mode="HTML"
-        )
-
-        await generate_and_send_presentation(
-            chat_message=status_msg,
-            user_id=message.from_user.id,
-            topic=topic,
-            slide_count=slide_count,
-            author_info=author_info,
-            theme_choice=theme_key,
-            custom_bg=None,
-            context_document=context_doc,
-            slide_language=slide_lang
-        )
+        await state.update_data(theme_choice=theme_key, custom_bg=None)
+        # Slayd tayyorlashdan oldin foydalanuvchidan ruxsat va tasdiq so'raymiz
+        await show_slide_confirmation(message, state, message.from_user.id, edit=False)
     else:
         theme_title = THEME_TITLES.get(theme_key, theme_key)
         await state.update_data(theme_choice=theme_key, custom_bg=None)
@@ -1800,32 +1756,31 @@ async def handle_theme_from_webapp(user_id: int, theme_id: str, bot: Bot, dp: Di
             pass
 
     if topic:
+        await state.update_data(theme_choice=theme_key, custom_bg=None)
+        await state.set_state(SlideCreation.waiting_for_confirmation)
+        user = await database.get_user(user_id) or {}
+        user_lang = user.get("language") or "uz"
         slide_count = data.get("slide_count", 8)
         author_info = data.get("author_info", "")
-        context_doc = data.get("context_document", "")
         slide_lang = data.get("slide_language", "uz")
 
-        await state.clear()
-
         theme_title = THEME_TITLES.get(theme_key, theme_key)
-        status_msg = await bot.send_message(
-            user_id,
-            f"✅ <b>Tanlangan fan / dizayn:</b> {theme_title}\n\n"
-            f"🚀 <b>Taqdimotingiz tayyorlanmoqda...</b>",
-            parse_mode="HTML"
-        )
+        lang_info = locales.get_slide_lang_info(slide_lang)
+        lang_name = lang_info.get("name", slide_lang)
+        safe_topic = html.escape(topic)
+        safe_author = html.escape(author_info) if author_info else ("Koʻrsatilmadi" if user_lang == "uz" else "Не указан")
 
-        await generate_and_send_presentation(
-            chat_message=status_msg,
-            user_id=user_id,
-            topic=topic,
-            slide_count=slide_count,
-            author_info=author_info,
-            theme_choice=theme_key,
-            custom_bg=None,
-            context_document=context_doc,
-            slide_language=slide_lang
+        confirm_text = locales.get_text(
+            "confirm_title",
+            user_lang,
+            topic=safe_topic,
+            slide_lang=lang_name,
+            count=slide_count,
+            author=safe_author,
+            theme=theme_title
         )
+        reply_kb = keyboards.get_confirm_generation_keyboard(user_lang)
+        await bot.send_message(user_id, confirm_text, reply_markup=reply_kb, parse_mode="HTML")
     else:
         theme_title = THEME_TITLES.get(theme_key, theme_key)
         await state.update_data(theme_choice=theme_key, custom_bg=None)

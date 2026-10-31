@@ -789,6 +789,23 @@ def start_health_server():
 threading.Thread(target=start_health_server, daemon=True).start()
 
 
+_ADMIN_NOTIFIED = False
+
+async def render_keep_alive_loop():
+    """Render Free tier xizmatini uyquga (spin-down) ketib qolishdan asrash uchun har 8 daqiqada o'zini ping qilib turadi."""
+    render_url = os.getenv("RENDER_EXTERNAL_URL") or "https://slayd-bot-2.onrender.com"
+    health_url = f"{render_url.rstrip('/')}/health"
+    await asyncio.sleep(60)  # Ishga tushgandan 1 daqiqa o'tgach boshlaymiz
+    while True:
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(health_url, timeout=aiohttp.ClientTimeout(total=15)) as resp:
+                    if resp.status == 200:
+                        logger.debug("Render keep-alive ping muvaffaqiyatli yuborildi.")
+        except Exception as e:
+            logger.debug(f"Render keep-alive ping ogohlantirish: {e}")
+        await asyncio.sleep(480)  # Har 8 daqiqada takrorlanadi (Render 15 daqiqada o'chadi)
+
 async def setup_bot_commands(bot: Bot):
     commands = [
         BotCommand(command="start", description="🚀 Qayta ishga tushirish / Start"),
@@ -817,18 +834,21 @@ async def setup_bot_commands(bot: Bot):
     except Exception as e:
         logger.warning(f"MenuButtonWebApp o'rnatishda xatolik: {e}")
 
-    try:
-        render_url = os.getenv("RENDER_EXTERNAL_URL", "Aniqlanmadi (lokal)")
-        await bot.send_message(
-            config.ADMIN_ID,
-            f"🚀 <b>Bot muvaffaqiyatli ishga tushdi!</b>\n\n"
-            f"🌐 <b>Render URL:</b> <code>{render_url}</code>\n"
-            f"📱 <b>THEMES_WEBAPP_URL:</b> <code>{config.THEMES_WEBAPP_URL}</code>\n"
-            f"✨ Asosiy menyu va pastki chat menyusida Mini ilova tugmasi faollashtirildi!",
-            parse_mode="HTML"
-        )
-    except Exception as e:
-        logger.warning(f"Admin startup xabari xatosi: {e}")
+    global _ADMIN_NOTIFIED
+    if not _ADMIN_NOTIFIED:
+        try:
+            render_url = os.getenv("RENDER_EXTERNAL_URL", "https://slayd-bot-2.onrender.com")
+            await bot.send_message(
+                config.ADMIN_ID,
+                f"🚀 <b>Bot muvaffaqiyatli ishga tushdi!</b>\n\n"
+                f"🌐 <b>Render URL:</b> <code>{render_url}</code>\n"
+                f"📱 <b>THEMES_WEBAPP_URL:</b> <code>{config.THEMES_WEBAPP_URL}</code>\n"
+                f"✨ Asosiy menyu va pastki chat menyusida Mini ilova tugmasi faollashtirildi!",
+                parse_mode="HTML"
+            )
+            _ADMIN_NOTIFIED = True
+        except Exception as e:
+            logger.warning(f"Admin startup xabari xatosi: {e}")
 
 async def main():
     if not config.BOT_TOKEN:
@@ -858,6 +878,9 @@ async def main():
     MAIN_LOOP = asyncio.get_running_loop()
     BOT_INSTANCE = bot
     DP_INSTANCE = dp
+
+    # Render bulutida botni 24/7 uyg'oq (faol) ushlab turish uchun keep-alive
+    asyncio.create_task(render_keep_alive_loop())
 
 
     try:

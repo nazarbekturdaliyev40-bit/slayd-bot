@@ -536,6 +536,7 @@ async def generate_presentation_content(topic: str, slide_count: int = 8, langua
     context_clause = f"\nASOSIY MANBA MATN (Kitob/Konspekt/Hujjat):\n```\n{context_document[:8000]}\n```\nYuqoridagi manba matnidan foydalanib, undagi asosiy dalillar, faktlar va tushunchalar asosida taqdimot tuzing." if context_document else ""
     
     has_agenda, intro_count, closing_count, num_content = calculate_slide_distribution(slide_count)
+    num_agenda = min(num_content, 5) if num_content >= 3 else num_content
 
     prompt = f"""
 Siz universitet va oliy ta'lim talabalari uchun akademik va professional taqdimotlar tayyorlovchi yetuk AI mutaxassisiz.
@@ -546,14 +547,27 @@ FOYDALANUVCHI YUBORGAN TAQDIMOT MAVZUSI VA TALABLARI:
 \"\"\"{author_clause}{theme_clause}{context_clause}
 
 ======================================================================
-ENG QAT'IY VA ASOSIY TALAB: SLAYDDA MUTLAQO BO'SH JOY QOLMASIN!
-HAR BIR SLAYD YUQORIDAN PASTGACHA MAZMUN, ILMIY FAKTLAR VA TAHLILLAR BILAN 100% TO'LIQ TO'LDIRILSIN!
+ENG ASOSIY TALAB: REJADAGI BARCHA BANDLAR SLAYDLARDA 100% TUSHUNTIRILSIN!
+HAR BIR SLAYDDA QAYSI REJA BANDI TUSHUNTIRILAYOTGANI ANIQ BELGILANSIN!
+SLAYDDA MUTLAQO BO'SH JOY QOLMASIN!
 ======================================================================
-1. SLAYDNING HAR BIR BURCHAGINI MAZMUN BILAN TO'LDIRISH (ZERO EMPTY SPACE):
+1. TAQDIMOT REJASI ("agenda") VA SLAYDLAR BIR-BIRIGA 100% MOS KELSIN:
+- 'agenda' massivida taqdimot mavzusi bo'yicha RO'PPA-ROSA {num_agenda} ta ketma-ket, bir-birini to'ldiruvchi asosiy ilmiy reja bandi tuzing.
+- Reja bandlari mavzuning barcha asosiy qismlarini to'liq qamrab olsin (masalan: 1-reja: Asosiy tushunchalar va topologiyalar; 2-reja: Standartlar va modellar; 3-reja: Aloqa texnologiyalari; 4-reja: Xavfsizlik va himoya).
+- 'slides' massividagi BARCHA {num_content} ta slayd aynan 'agenda' dagi reja bandlarini 1-banddan boshlab tartib bilan to'liq, chuqur va bafurja tushuntirib bersin!
+- REJADAGI BIRORTA HAM BAND TASHAB KETILMASIN! Foydalanuvchi rejadagi barcha ma'lumotlar slaydlarda to'liq tushuntirilishini talab qildi.
+
+2. HAR BIR SLAYDDA QAYSI REJA TUSHUNTIRILAYOTGANINI ANIQ BELGILASH:
+- 'slides' dagi har bir slayd obyektida quyidagi maydonlar qat'iy bo'lsin:
+  * "agenda_num": Ushbu slayd qaysi reja bandiga tegishli (1, 2, 3 ...);
+  * "agenda_title": Reja bandining to'liq nomi;
+  * "title": Shu reja bandini tushuntiruvchi aniq, salmoqli ilmiy sarlavha;
+
+3. SLAYDNING HAR BIR BURCHAGINI MAZMUN BILAN TO'LDIRISH (ZERO EMPTY SPACE):
 - Slaydlar hech qachon 1-2 qator qisqa gaplar bilan bo'm-bo'sh, yarim-yorti tashlab ketilmasligi SHART!
 - Har bir slayd, har bir kartochka va har bir ustun pastigacha to'liq, mazmunli va mukammal infografik matn bilan to'ldirilishi kerak.
 
-2. HAR BIR LAYOUT UCHUN TO'LIQ VA BOYITILGAN TARKIB:
+4. HAR BIR LAYOUT UCHUN TO'LIQ VA BOYITILGAN TARKIB:
 A) "steps" (Bosqichlar / Jarayonlar / Texnologiyalar) layouti uchun:
   - 'steps_data' ichida roppa-rosa 3 ta asosiy bosqich yoki texnologiya bo'lsin ("step": "01", "02", "03").
   - Har bir bosqichda:
@@ -578,17 +592,10 @@ D) "standard" (Umumiy mazmunli slaydlar) layouti uchun:
   - 'bullet_points' massivida KAMIDA 5 tadan 6 tagacha sifatli, chuqur va faktlarga boy bandlar bo'lsin.
   - Har bir band: "Kalit atama / tushuncha: Mazkur tushunchaning ilmiy-nazariy mohiyati, asosiy tamoyillari, aniq dalillar, qonuniyatlar, raqamlar va amaliyotdagi real ahamiyatini tushuntiruvchi 30-45 ta so'zdan iborat to'liq, chuqur tahliliy fikr".
 
-3. MAVZULARNI KENG QAMROVLI VA TO'LIQ QAMRAB OLISH:
-- Foydalanuvchi taqdim etgan HAR BIR mavzu, reja bandi yoki so'ralgan yo'nalish 100% to'liq qamrab olinsin! Birorta ham mavzu, masala yoki reja bandi chetda qolib ketmasin.
-- Agar foydalanuvchi bitta umumiy mavzu yuborgan bo'lsa ham, uni tor doirada emas, sohaning barcha tarmoqlari, funksiyalari, zamonaviy tendensiyalari va yechimlarini to'liq qamrab olgan holda KENG VA BAFURJA yoritib bering!
-
-4. SLAYD GIDROLOGIYASI VA STRUKTURASI:
+5. SLAYD GIDROLOGIYASI VA STRUKTURASI:
 - Titul (muqova), mundarija (reja), xulosa va adabiyotlar slaydlari dastur tomonidan avtomatik yaratiladi.
 - Shu sababli 'slides' massividagi BARCHA {num_content} ta slayd 100% BEVOSITA MAVZUNING O'ZIGA bag'ishlansin!
 - 'slides' boshida quruq "Kirish" yoki oxirida ortiqcha "Xulosa" kabi slaydlar qo'shilmasin — barcha slaydlar bevosita mavzuni to'liq yoritish uchun ishlatilsin!
-
-5. TAQDIMOT REJASI ("agenda"):
-- 4 tadan 5 tagacha asosiy reja bandi, har biri mavzuning haqiqiy yo'nalishlarini aks ettirsin.
 
 6. XULOSA VA ADABIYOTLAR:
 - 'conclusion': 4-5 ta chuqur, tahliliy xulosalar (sohaning nazariy, amaliy va kelajakdagi rivojlanishiga doir, har biri 25-35 so'z).
@@ -1141,7 +1148,7 @@ def _add_header(slide, title_text: str, theme: dict, slide_num: int = None, tota
     # Category breadcrumb (hech qachon bot ichki tema nomini chiqarmaymiz)
     if not category:
         category = "ILMIY TAQDIMOT"
-    tag_tb = slide.shapes.add_textbox(Inches(0.9), Inches(0.12), Inches(8.5), Inches(0.28))
+    tag_tb = slide.shapes.add_textbox(Inches(0.9), Inches(0.12), Inches(10.0), Inches(0.28))
     tag_tf = tag_tb.text_frame
     tag_tf.word_wrap = True
     tag_p = tag_tf.paragraphs[0]
@@ -1844,7 +1851,31 @@ def create_pptx_file(content: dict, output_path: str, theme_name: str = "", imag
         s_title = s_data.get("title", f"Boʻlim {idx}")
         content_slide_num = len(prs.slides)
         sec_lbl = lang_info.get("section_label", "BOʻLIM")
-        _add_header(c_slide, s_title, curr_theme, slide_num=content_slide_num, total_slides=total_slides, category=f"{sec_lbl} {idx}")
+        reja_lbl = lang_info.get("agenda", "Reja").upper()
+
+        # Har bir slayd qaysi reja bandiga tegishli ekanligini aniq aytib ketish
+        ag_list = content.get("agenda") or []
+        ag_num = s_data.get("agenda_num")
+        if not ag_num or not isinstance(ag_num, int) or ag_num < 1:
+            if ag_list and len(slides_data) <= len(ag_list):
+                ag_num = idx
+            elif ag_list:
+                ag_num = min(len(ag_list), max(1, int((idx - 1) * len(ag_list) / len(slides_data)) + 1))
+            else:
+                ag_num = idx
+
+        ag_title = str(s_data.get("agenda_title") or "").strip()
+        if (not ag_title or ag_title.lower().startswith("reja")) and ag_list and 0 < ag_num <= len(ag_list):
+            ag_title = ag_list[ag_num - 1]
+
+        if ag_list and 0 < ag_num <= len(ag_list):
+            reja_category = f"{reja_lbl} {ag_num}/{len(ag_list)}: {ag_title[:45]}"
+        elif ag_list:
+            reja_category = f"{reja_lbl} {ag_num}: {ag_title[:45]}"
+        else:
+            reja_category = f"{sec_lbl} {idx}"
+
+        _add_header(c_slide, s_title, curr_theme, slide_num=content_slide_num, total_slides=total_slides, category=reja_category)
 
         img_path = images_map.get(idx) if images_map else None
         bullets = s_data.get("bullet_points") or s_data.get("bullets", [])
